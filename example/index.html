@@ -8,6 +8,17 @@
   var Logdown = (function() {
     'use strict'
 
+    var instances = []
+    var lastUsedColorIndex = null;
+    var colors = [
+      'lightseagreen',
+      'forestgreen',
+      'goldenrod',
+      'dodgerblue',
+      'darkorchid',
+      'crimson'
+    ]
+
     function Logdown(opts) {
       // enforces new
       if (!(this instanceof Logdown)) {
@@ -20,7 +31,9 @@
       this.prefix = opts.prefix || ''
 
       //
-      Logdown._instances.push(this)
+      instances.push(this)
+
+      this.prefixColor = getNextColor(lastUsedColorIndex, colors)
 
       return this
     }
@@ -28,14 +41,25 @@
     // Static
     // ------
 
-    Logdown._instances = []
-
     Logdown.enable = function() {
 
     }
 
     Logdown.disable = function() {
 
+    }
+
+    function getNextColor(lastUsedIndex, colors) {
+      if (!lastUsedIndex) {
+        lastUsedIndex = 0
+      }
+
+      if (lastUsedIndex + 1 === colors.length) {
+        lastUsedIndex = 0
+        return colors[0]
+      } else {
+        return colors[lastUsedIndex]
+      }
     }
 
     // Public
@@ -54,6 +78,11 @@
 
       parsedText = parsedText || text
       styles = styles || []
+
+      if (this.prefix) {
+        parsedText = '%c' + this.prefix + '%c ' + parsedText
+        styles.unshift('color:' + this.prefixColor + '; font-weight:bold;', '')
+      }
 
       console.log.apply(console, [parsedText].concat(styles))
     }
@@ -151,7 +180,7 @@
   //   timestamp: true
   // })
 
-  var log = new Logdown()
+  var log = new Logdown({prefix: 'exp'})
   log.log('lorem *ipsum* dolor sit _amet_ foo bar')
   log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
   // log.markdown = false
