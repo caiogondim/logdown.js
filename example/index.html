@@ -19,6 +19,8 @@
       'darkorchid',
       'crimson'
     ]
+    var disabledInstancesRegExp = /$^/ // RegExp that matches nothing
+    var enabledInstancesRegExp = /$^/ // RegExp that matches nothing
 
     function Logdown(opts) {
       // enforces new
@@ -38,20 +40,25 @@
       this.prefixColor = colors[nextColorIndex]
       lastUsedColorIndex = nextColorIndex
 
-      this._isEnabled = true
-
       return this
     }
 
     // Static
     // ------
 
-    Logdown.enable = function() {
-
+    Logdown.enable = function(str) {
+      enabledInstancesRegExp = prepareRegExpForPrefixSearch(str)
     }
 
-    Logdown.disable = function() {
+    Logdown.disable = function(str) {
+      disabledInstancesRegExp = prepareRegExpForPrefixSearch(str)
+    }
 
+    function prepareRegExpForPrefixSearch(str) {
+      var regExpStr = str.replace(/\*/g, '.*?')
+      var regExp = new RegExp(regExpStr)
+
+      return regExp
     }
 
     function getNextColorIndex(lastUsedColorIndex, colors) {
@@ -73,6 +80,11 @@
       var parsedMarkdown
       var parsedText
       var styles
+
+      if (disabledInstancesRegExp.test(this.prefix) &&
+          !enabledInstancesRegExp.test(this.prefix)) {
+        return
+      }
 
       if (this.markdown) {
         parsedMarkdown = parseMarkdown(text)
@@ -174,16 +186,7 @@
   }())
 </script>
 <script>
-  // var log1 = new Logdown({markdown: true)
-  // var log2 = new Logdown({markdown: false, type: 'log')
-  // var log2 = new Logdown({markdown: false, prefix: 'foo', type: 'info')
-  // var log2 = new Logdown({
-  //   markdown: false,
-  //   prefix: 'foo',
-  //   type: 'info',
-  //   timestamp: true
-  // })
-
+  Logdown.disable('*')
   var log = new Logdown({prefix: 'exp:foo'})
   log.log('lorem *ipsum* dolor sit _amet_ foo bar')
   log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
@@ -192,9 +195,38 @@
   log1.log('lorem *ipsum* dolor sit _amet_ foo bar')
   log1.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
-  var log2 = new Logdown({prefix: 'exp:qux'})
+  var log2 = new Logdown({prefix: 'baz:qux'})
   log2.log('lorem *ipsum* dolor sit _amet_ foo bar')
   log2.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  //
+  Logdown.disable('exp:*')
+
+  var log3 = new Logdown({prefix: 'exp:foo2'})
+  log.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  var log4 = new Logdown({prefix: 'exp:bar2'})
+  log1.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log1.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  var log5 = new Logdown({prefix: 'baz:qux2'})
+  log2.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log2.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  Logdown.enable('baz:*')
+
+  var log6 = new Logdown({prefix: 'exp:foo2'})
+  log6.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log6.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  var log7 = new Logdown({prefix: 'exp:bar2'})
+  log7.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log7.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  var log8 = new Logdown({prefix: 'baz:qux2'})
+  log8.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log8.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
 </script>
 </body>
