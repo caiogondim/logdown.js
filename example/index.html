@@ -9,7 +9,8 @@
     'use strict'
 
     var instances = []
-    var lastUsedColorIndex = null;
+    var lastUsedColorIndex
+    var nextColorIndex
     var colors = [
       'lightseagreen',
       'forestgreen',
@@ -33,7 +34,11 @@
       //
       instances.push(this)
 
-      this.prefixColor = getNextColor(lastUsedColorIndex, colors)
+      nextColorIndex = getNextColorIndex(lastUsedColorIndex, colors)
+      this.prefixColor = colors[nextColorIndex]
+      lastUsedColorIndex = nextColorIndex
+
+      this._isEnabled = true
 
       return this
     }
@@ -49,16 +54,15 @@
 
     }
 
-    function getNextColor(lastUsedIndex, colors) {
-      if (!lastUsedIndex) {
-        lastUsedIndex = 0
+    function getNextColorIndex(lastUsedColorIndex, colors) {
+      if (lastUsedColorIndex === undefined) {
+        return 0
       }
 
-      if (lastUsedIndex + 1 === colors.length) {
-        lastUsedIndex = 0
-        return colors[0]
+      if (lastUsedColorIndex + 1 >= colors.length) {
+        return 0
       } else {
-        return colors[lastUsedIndex]
+        return lastUsedColorIndex + 1
       }
     }
 
@@ -180,11 +184,17 @@
   //   timestamp: true
   // })
 
-  var log = new Logdown({prefix: 'exp'})
+  var log = new Logdown({prefix: 'exp:foo'})
   log.log('lorem *ipsum* dolor sit _amet_ foo bar')
   log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-  // log.markdown = false
-  log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  var log1 = new Logdown({prefix: 'exp:bar'})
+  log1.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log1.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  var log2 = new Logdown({prefix: 'exp:qux'})
+  log2.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log2.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
 </script>
 </body>
