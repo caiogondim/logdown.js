@@ -54,25 +54,6 @@
       disabledInstancesRegExp = prepareRegExpForPrefixSearch(str)
     }
 
-    function prepareRegExpForPrefixSearch(str) {
-      var regExpStr = str.replace(/\*/g, '.*?')
-      var regExp = new RegExp(regExpStr)
-
-      return regExp
-    }
-
-    function getNextColorIndex(lastUsedColorIndex, colors) {
-      if (lastUsedColorIndex === undefined) {
-        return 0
-      }
-
-      if (lastUsedColorIndex + 1 >= colors.length) {
-        return 0
-      } else {
-        return lastUsedColorIndex + 1
-      }
-    }
-
     // Public
     // ------
 
@@ -234,6 +215,25 @@
       )
     }
 
+    function prepareRegExpForPrefixSearch(str) {
+      var regExpStr = str.replace(/\*/g, '.*?')
+      var regExp = new RegExp(regExpStr)
+
+      return regExp
+    }
+
+    function getNextColorIndex(lastUsedColorIndex, colors) {
+      if (lastUsedColorIndex === undefined) {
+        return 0
+      }
+
+      if (lastUsedColorIndex + 1 >= colors.length) {
+        return 0
+      } else {
+        return lastUsedColorIndex + 1
+      }
+    }
+
     return Logdown
 
   }())
@@ -273,9 +273,9 @@
   log6.log('lorem *ipsum* dolor sit _amet_ foo bar')
   log6.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
-  var log7 = new Logdown({prefix: 'exp:bar2'})
-  log7.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log7.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  // var log7 = new Logdown({prefix: 'exp:bar2'})
+  // log7.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // log7.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
   var log8 = new Logdown({prefix: 'baz:qux2'})
   log8.log('lorem *ipsum* dolor sit _amet_ foo bar')
