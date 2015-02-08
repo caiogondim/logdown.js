@@ -77,42 +77,63 @@
     // ------
 
     Logdown.prototype.log = function(text) {
-      var parsedMarkdown
-      var parsedText
-      var styles
+      var preparedOutput
 
-      if (disabledInstancesRegExp.test(this.prefix) &&
-          !enabledInstancesRegExp.test(this.prefix)) {
+      if (isDisabled(this)) {
         return
       }
 
-      if (this.markdown) {
-        parsedMarkdown = parseMarkdown(text)
-        parsedText = parsedMarkdown.text
-        styles = parsedMarkdown.styles
+      preparedOutput = prepareOutput(text, this)
+
+      console.log.apply(
+        console,
+        [preparedOutput.parsedText].concat(preparedOutput.styles)
+      )
+    }
+
+    Logdown.prototype.info = function(text) {
+      var preparedOutput
+
+      if (isDisabled(this)) {
+        return
       }
 
-      parsedText = parsedText || text
-      styles = styles || []
+      preparedOutput = prepareOutput(text, this)
 
-      if (this.prefix) {
-        parsedText = '%c' + this.prefix + '%c ' + parsedText
-        styles.unshift('color:' + this.prefixColor + '; font-weight:bold;', '')
+      console.info.apply(
+        console,
+        [preparedOutput.parsedText].concat(preparedOutput.styles)
+      )
+    }
+
+    Logdown.prototype.error = function(text) {
+      var preparedOutput
+
+      if (isDisabled(this)) {
+        return
       }
 
-      console.log.apply(console, [parsedText].concat(styles))
+      preparedOutput = prepareOutput(text, this)
+
+      console.error.apply(
+        console,
+        [preparedOutput.parsedText].concat(preparedOutput.styles)
+      )
     }
 
-    Logdown.prototype.info = function(args) {
-      // method body
-    }
+    Logdown.prototype.warn = function(text) {
+      var preparedOutput
 
-    Logdown.prototype.error = function(args) {
-      // method body
-    }
+      if (isDisabled(this)) {
+        return
+      }
 
-    Logdown.prototype.warning = function(args) {
-      // method body
+      preparedOutput = prepareOutput(text, this)
+
+      console.warn.apply(
+        console,
+        [preparedOutput.parsedText].concat(preparedOutput.styles)
+      )
     }
 
     // Private
@@ -181,6 +202,38 @@
       return matches[0]
     }
 
+    function prepareOutput(text, instance) {
+      var parsedMarkdown
+      var parsedText
+      var styles
+
+      if (instance.markdown) {
+        parsedMarkdown = parseMarkdown(text)
+        parsedText = parsedMarkdown.text
+        styles = parsedMarkdown.styles
+      }
+
+      parsedText = parsedText || text
+      styles = styles || []
+
+      if (instance.prefix) {
+        parsedText = '%c' + instance.prefix + '%c ' + parsedText
+        styles.unshift('color:' + instance.prefixColor + '; font-weight:bold;', '')
+      }
+
+      return {
+        parsedText: parsedText,
+        styles: styles
+      }
+    }
+
+    function isDisabled(instance) {
+      return (
+        disabledInstancesRegExp.test(instance.prefix) &&
+        !enabledInstancesRegExp.test(instance.prefix)
+      )
+    }
+
     return Logdown
 
   }())
@@ -227,6 +280,9 @@
   var log8 = new Logdown({prefix: 'baz:qux2'})
   log8.log('lorem *ipsum* dolor sit _amet_ foo bar')
   log8.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  log8.warn('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  log8.info('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  log8.error('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
 </script>
 </body>
