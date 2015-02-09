@@ -19,8 +19,8 @@
       'darkorchid',
       'crimson'
     ]
-    var disabledInstancesRegExp = /$^/ // RegExp that matches nothing
-    var enabledInstancesRegExp = /$^/ // RegExp that matches nothing
+    var disabledInstancesRegExps = []
+    var enabledInstancesRegExps = [] // RegExp that matches nothing
 
     function Logdown(opts) {
       // enforces new
@@ -47,11 +47,13 @@
     // ------
 
     Logdown.enable = function(str) {
-      enabledInstancesRegExp = prepareRegExpForPrefixSearch(str)
+      var regExp = prepareRegExpForPrefixSearch(str)
+      enabledInstancesRegExps.push(regExp)
     }
 
     Logdown.disable = function(str) {
-      disabledInstancesRegExp = prepareRegExpForPrefixSearch(str)
+      var regExp = prepareRegExpForPrefixSearch(str)
+      disabledInstancesRegExps.push(regExp)
     }
 
     // Public
@@ -213,10 +215,24 @@
     }
 
     function isDisabled(instance) {
-      return (
-        disabledInstancesRegExp.test(instance.prefix) &&
-        !enabledInstancesRegExp.test(instance.prefix)
-      )
+      var isDisabled = false
+      var isEnabled = false
+
+      disabledInstancesRegExps.forEach(function(regExp) {
+        if (regExp.test(instance.prefix)) {
+          isDisabled = true
+          return
+        }
+      })
+
+      enabledInstancesRegExps.forEach(function(regExp) {
+        if (regExp.test(instance.prefix)) {
+          isEnabled = true
+          return
+        }
+      })
+
+      return (isDisabled && !isEnabled)
     }
 
     function prepareRegExpForPrefixSearch(str) {
@@ -244,6 +260,7 @@
 </script>
 <script>
   Logdown.disable('*')
+  Logdown.enable('*')
   var log = new Logdown({prefix: 'exp:foo'})
   log.log('lorem *ipsum* dolor sit _amet_ foo bar')
   log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
@@ -257,7 +274,7 @@
   log2.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
   //
-  Logdown.disable('exp:*')
+  Logdown.enable('exp:*')
 
   var log3 = new Logdown({prefix: 'exp:foo2'})
   log.log('lorem *ipsum* dolor sit _amet_ foo bar')
