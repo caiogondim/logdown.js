@@ -11,13 +11,16 @@
     var instances = []
     var lastUsedColorIndex
     var nextColorIndex
+    // Solarized accent colors http://ethanschoonover.com/solarized
     var colors = [
-      'lightseagreen',
-      'forestgreen',
-      'goldenrod',
-      'dodgerblue',
-      'darkorchid',
-      'crimson'
+      '#B58900',
+      '#CB4B16',
+      '#DC322F',
+      '#D33682',
+      '#6C71C4',
+      '#268BD2',
+      '#2AA198',
+      '#859900'
     ]
     var disabledInstancesRegExps = []
     var enabledInstancesRegExps = [] // RegExp that matches nothing
@@ -277,16 +280,16 @@
   Logdown.enable('exp:*')
 
   var log3 = new Logdown({prefix: 'exp:foo2'})
-  log.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  log3.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log3.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
   var log4 = new Logdown({prefix: 'exp:bar2'})
-  log1.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log1.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  log4.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log4.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
   var log5 = new Logdown({prefix: 'baz:qux2'})
-  log2.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log2.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  log5.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log5.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
   Logdown.enable('baz:*')
 
