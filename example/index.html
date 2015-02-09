@@ -150,14 +150,18 @@
           replacer: function(match, submatch1) {
             return '%c' + submatch1 + '%c'
           },
-          style: 'font-style: italic'
+          style: 'font-style: italic;'
         },
         {
           regexp: /\`([^\`]+)\`/,
           replacer: function(match, submatch1) {
             return "%c" + submatch1 + "%c";
           },
-          style: 'background: rgb(255, 255, 219); padding: 1px 5px; border: 1px solid rgba(0, 0, 0, 0.1)'
+          style:
+            'background: #FDF6E3;' +
+            'color: #586E75;' +
+            'padding: 1px 5px;' +
+            'border-radius: 4px;'
         }
       ]
 
