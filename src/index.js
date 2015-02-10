@@ -2,7 +2,7 @@ var Logdown = (function() {
   'use strict'
 
   var instances = []
-  var lastUsedColorIndex
+  var lastUsedColorIndex = 0
   var nextColorIndex
   // Solarized accent colors http://ethanschoonover.com/solarized
   var colors = [
@@ -32,9 +32,7 @@ var Logdown = (function() {
     //
     instances.push(this)
 
-    nextColorIndex = getNextColorIndex(lastUsedColorIndex, colors)
-    this.prefixColor = colors[nextColorIndex]
-    lastUsedColorIndex = nextColorIndex
+    this.prefixColor = colors[lastUsedColorIndex++ % colors.length]
 
     return this
   }
@@ -236,18 +234,6 @@ var Logdown = (function() {
     var regExp = new RegExp(regExpStr)
 
     return regExp
-  }
-
-  function getNextColorIndex(lastUsedColorIndex, colors) {
-    if (lastUsedColorIndex === undefined) {
-      return 0
-    }
-
-    if (lastUsedColorIndex + 1 >= colors.length) {
-      return 0
-    } else {
-      return lastUsedColorIndex + 1
-    }
   }
 
   return Logdown
