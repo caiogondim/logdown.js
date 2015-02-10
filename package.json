@@ -7,7 +7,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
@@ -27,5 +27,12 @@
   "bugs": {
     "url": "https://github.com/caiogondim/logdown/issues"
   },
-  "homepage": "https://github.com/caiogondim/logdown"
+  "homepage": "https://github.com/caiogondim/logdown",
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "gulp": "^3.8.11",
+    "gulp-mocha": "^2.0.0",
+    "mocha": "^2.1.0",
+    "sinon": "^1.12.2"
+  }
 }

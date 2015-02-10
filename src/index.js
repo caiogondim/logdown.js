@@ -1,4 +1,4 @@
-var Logdown = (function() {
+;(function() {
   'use strict'
 
   var instances = []
@@ -236,6 +236,11 @@ var Logdown = (function() {
     return regExp
   }
 
-  return Logdown
+  // FIX: do an export the right way
+  if (module && module.exports) {
+    module.exports = Logdown
+  } else {
+    window.Logdown = Logdown
+  }
 
 }())
