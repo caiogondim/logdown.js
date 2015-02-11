@@ -41,11 +41,17 @@
   // ------
 
   Logdown.enable = function(str) {
+    if (str === '*') {
+      disabledInstancesRegExps = []
+    }
     var regExp = prepareRegExpForPrefixSearch(str)
     enabledInstancesRegExps.push(regExp)
   }
 
   Logdown.disable = function(str) {
+    if (str === '*') {
+      enabledInstancesRegExps = []
+    }
     var regExp = prepareRegExpForPrefixSearch(str)
     disabledInstancesRegExps.push(regExp)
   }
@@ -230,10 +236,7 @@
   }
 
   function prepareRegExpForPrefixSearch(str) {
-    var regExpStr = str.replace(/\*/g, '.*?')
-    var regExp = new RegExp(regExpStr)
-
-    return regExp
+    return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
   }
 
   // FIX: do an export the right way
