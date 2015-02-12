@@ -15,8 +15,7 @@
     '#2AA198',
     '#859900'
   ]
-  var disabledInstancesRegExps = []
-  var enabledInstancesRegExps = [] // RegExp that matches nothing
+  var filterRegExps = []
 
   function Logdown(opts) {
     // enforces new
@@ -41,19 +40,35 @@
   // ------
 
   Logdown.enable = function(str) {
-    if (str === '*') {
-      disabledInstancesRegExps = []
-    }
     var regExp = prepareRegExpForPrefixSearch(str)
-    enabledInstancesRegExps.push(regExp)
+
+    if (str === '*') {
+      filterRegExps = [{
+        type: 'enable',
+        regExp: regExp
+      }]
+    } else {
+      filterRegExps.push({
+        type: 'enable',
+        regExp: regExp
+      })
+    }
   }
 
   Logdown.disable = function(str) {
-    if (str === '*') {
-      enabledInstancesRegExps = []
-    }
     var regExp = prepareRegExpForPrefixSearch(str)
-    disabledInstancesRegExps.push(regExp)
+
+    if (str === '*') {
+      filterRegExps = [{
+        type: 'disable',
+        regExp: regExp
+      }]
+    } else {
+      filterRegExps.push({
+        type: 'disable',
+        regExp: regExp
+      })
+    }
   }
 
   // Public
@@ -216,23 +231,16 @@
 
   function isDisabled(instance) {
     var isDisabled = false
-    var isEnabled = false
 
-    disabledInstancesRegExps.forEach(function(regExp) {
-      if (regExp.test(instance.prefix)) {
+    filterRegExps.forEach(function(filter) {
+      if (filter.type === 'enable' && filter.regExp.test(instance.prefix)) {
+        isDisabled = false
+      } else if (filter.type === 'disable' && filter.regExp.test(instance.prefix)) {
         isDisabled = true
-        return
       }
     })
 
-    enabledInstancesRegExps.forEach(function(regExp) {
-      if (regExp.test(instance.prefix)) {
-        isEnabled = true
-        return
-      }
-    })
-
-    return (isDisabled && !isEnabled)
+    return isDisabled
   }
 
   function prepareRegExpForPrefixSearch(str) {
