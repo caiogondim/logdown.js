@@ -247,8 +247,8 @@
     return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
   }
 
-  // FIX: do an export the right way
-  if (module && module.exports) {
+  // Export module
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = Logdown
   } else {
     window.Logdown = Logdown
