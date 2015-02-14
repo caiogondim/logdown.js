@@ -166,3 +166,32 @@ describe('Logdown.disable', function() {
     sinon.assert.calledTwice(console.log)
   })
 })
+
+describe('Logdown::log', function() {
+  var sandbox
+
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create()
+
+    sandbox.stub(global.console, 'log')
+  })
+
+  afterEach(function(){
+    sandbox.restore()
+  })
+
+  it('should parse markdown if enabled', function() {
+    var foo = new Logdown({prefix: 'foo'})
+
+    foo.log('lorem *ipsum*')
+
+    sinon.assert.calledWith(
+      console.log,
+      '%cfoo%c lorem %cipsum%c',
+      'color:' + foo.prefixColor + '; font-weight:bold;',
+      '',
+      'font-weight: bold;',
+      ''
+    )
+  })
+})
