@@ -124,6 +124,25 @@ describe('Logdown.enable', function() {
 
     sandbox.restore()
   })
+
+  it('should accept N arguments', function() {
+    var foo = new Logdown({prefix: 'foo'})
+    var bar = new Logdown({prefix: 'bar'})
+    var foobar = new Logdown({prefix: 'foobar'})
+    var barfoo = new Logdown({prefix: 'barfoo'})
+
+    Logdown.disable('*')
+    Logdown.enable('foo', 'barfoo')
+
+    bar.log('lorem')
+    foobar.log('lorem')
+    assert.notCalled(console.log)
+    foo.log('lorem')
+    barfoo.log('lorem')
+    assert.calledTwice(console.log)
+
+    sandbox.restore()
+  })
 })
 
 describe('`Logdown.disable`', function() {
@@ -200,6 +219,25 @@ describe('`Logdown.disable`', function() {
     assert.notCalled(console.log)
     bar.log('lorem')
     barfoo.log('lorem')
+    assert.calledTwice(console.log)
+
+    sandbox.restore()
+  })
+
+  it('should accept N arguments', function() {
+    var foo = new Logdown({prefix: 'foo'})
+    var bar = new Logdown({prefix: 'bar'})
+    var foobar = new Logdown({prefix: 'foobar'})
+    var barfoo = new Logdown({prefix: 'barfoo'})
+
+    Logdown.enable('*')
+    Logdown.disable('foo', 'barfoo')
+
+    foo.log('lorem')
+    barfoo.log('lorem')
+    assert.notCalled(console.log)
+    bar.log('lorem')
+    foobar.log('lorem')
     assert.calledTwice(console.log)
 
     sandbox.restore()

@@ -46,36 +46,40 @@
   // Static
   // ------
 
-  Logdown.enable = function(str) {
-    var regExp = prepareRegExpForPrefixSearch(str)
+  Logdown.enable = function() {
+    Array.prototype.forEach.call(arguments, function(str) {
+      var regExp = prepareRegExpForPrefixSearch(str)
 
-    if (str === '*') {
-      filterRegExps = [{
-        type: 'enable',
-        regExp: regExp
-      }]
-    } else {
-      filterRegExps.push({
-        type: 'enable',
-        regExp: regExp
-      })
-    }
+      if (str === '*') {
+        filterRegExps = [{
+          type: 'enable',
+          regExp: regExp
+        }]
+      } else {
+        filterRegExps.push({
+          type: 'enable',
+          regExp: regExp
+        })
+      }
+    })
   }
 
   Logdown.disable = function(str) {
-    var regExp = prepareRegExpForPrefixSearch(str)
+    Array.prototype.forEach.call(arguments, function(str) {
+      var regExp = prepareRegExpForPrefixSearch(str)
 
-    if (str === '*') {
-      filterRegExps = [{
-        type: 'disable',
-        regExp: regExp
-      }]
-    } else {
-      filterRegExps.push({
-        type: 'disable',
-        regExp: regExp
-      })
-    }
+      if (str === '*') {
+        filterRegExps = [{
+          type: 'disable',
+          regExp: regExp
+        }]
+      } else {
+        filterRegExps.push({
+          type: 'disable',
+          regExp: regExp
+        })
+      }
+    })
   }
 
   // Public
