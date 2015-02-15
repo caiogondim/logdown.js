@@ -115,7 +115,7 @@
     while (match) {
       text = text.replace(match.rule.regexp, match.rule.replacer)
       styles.push(match.rule.style)
-      styles.push('')
+      styles.push('color:inherit;')
 
       match = getNextMatch(text)
     }
@@ -131,14 +131,14 @@
         replacer: function(match, submatch1) {
           return '%c' + submatch1 + '%c'
         },
-        style: 'font-weight: bold;'
+        style: 'font-weight:bold;'
       },
       {
         regexp: /\_([^\_]+)\_/,
         replacer: function(match, submatch1) {
           return '%c' + submatch1 + '%c'
         },
-        style: 'font-style: italic;'
+        style: 'font-style:italic;'
       },
       {
         regexp: /\`([^\`]+)\`/,
@@ -146,10 +146,10 @@
           return "%c" + submatch1 + "%c";
         },
         style:
-          'background: #FDF6E3;' +
-          'color: #586E75;' +
-          'padding: 1px 5px;' +
-          'border-radius: 4px;'
+          'background:#FDF6E3; ' +
+          'color:#586E75; ' +
+          'padding:1px 5px; ' +
+          'border-radius:4px;'
       }
     ]
 
@@ -191,7 +191,7 @@
 
     if (instance.prefix) {
       parsedText = '%c' + instance.prefix + '%c ' + parsedText
-      styles.unshift('color:' + instance.prefixColor + '; font-weight:bold;', '')
+      styles.unshift('color:' + instance.prefixColor + '; font-weight:bold;', 'color:inherit;')
     }
 
     return {

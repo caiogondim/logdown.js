@@ -224,6 +224,22 @@ describe('`Logdown.disable`', function() {
     sandbox.restore()
   })
 
+  // it('(\'-*\') should enable all instances', function() {
+
+  // })
+
+  // it('`(\'-foo\')` should enable only instances with “foo” prefix', function() {
+
+  // })
+
+  // it ('`(\'*foo\')` should disable only instances with names ending with “foo”', function() {
+
+  // })
+
+  // it('`(\'foo*\')` should disable only instances with names beginning with “foo”', function() {
+
+  // })
+
   it('should accept N arguments', function() {
     var foo = new Logdown({prefix: 'foo'})
     var bar = new Logdown({prefix: 'bar'})
@@ -266,36 +282,36 @@ methods.forEach(function(method) {
       assert.calledWith(
         console[method],
         'lorem %cipsum%c',
-        'font-weight: bold;',
-        ''
+        'font-weight:bold;',
+        'color:inherit;'
       )
 
       foo[method]('lorem _ipsum_')
       assert.calledWith(
         console[method],
         'lorem %cipsum%c',
-        'font-style: italic;',
-        ''
+        'font-style:italic;',
+        'color:inherit;'
       )
 
       foo[method]('lorem `ipsum`')
       assert.calledWith(
         console[method],
         'lorem %cipsum%c',
-        'background: #FDF6E3;color: #586E75;padding: 1px 5px;border-radius: 4px;',
-        ''
+        'background:#FDF6E3; color:#586E75; padding:1px 5px; border-radius:4px;',
+        'color:inherit;'
       )
 
       foo[method]('lorem `ipsum` *dolor* sit _amet_')
       assert.calledWith(
         console[method],
         'lorem %cipsum%c %cdolor%c sit %camet%c',
-        'background: #FDF6E3;color: #586E75;padding: 1px 5px;border-radius: 4px;',
-        '',
-        'font-weight: bold;',
-        '',
-        'font-style: italic;',
-        ''
+        'background:#FDF6E3; color:#586E75; padding:1px 5px; border-radius:4px;',
+        'color:inherit;',
+        'font-weight:bold;',
+        'color:inherit;',
+        'font-style:italic;',
+        'color:inherit;'
       )
 
       sandbox.restore()
