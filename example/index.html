@@ -47,10 +47,15 @@
 
   var log8 = new Logdown({prefix: 'baz:qux2'})
   log8.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  log8.log('lorem `ipsum` *dolor* sit _amet_')
   log8.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
   log8.warn('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
   log8.info('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
   log8.error('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  Logdown.enable('*')
+  var foo = new Logdown({prefix: 'foo'})
+  foo.log('lorem ipsum')
 
 </script>
 </body>

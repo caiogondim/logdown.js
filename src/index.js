@@ -25,7 +25,7 @@
 
     //
     opts = opts || {}
-    this.markdown = opts.markdown || true
+    this.markdown = opts.markdown === undefined ? true : opts.markdown
     this.prefix = opts.prefix || ''
 
     //
@@ -197,9 +197,9 @@
     }
 
     //
-    // matches.sort(function(a, b) {
-    //   return a.match.index - b.match.index
-    // })
+    matches.sort(function(a, b) {
+      return a.match.index - b.match.index
+    })
 
     return matches[0]
   }

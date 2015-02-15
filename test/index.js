@@ -1,7 +1,9 @@
 var chai = require('chai')
-var assert = require('assert')
 var sinon = require('sinon')
 var Logdown = require('../src/index')
+
+sinon.assert.expose(chai.assert, {prefix: ''})
+var assert = chai.assert
 
 function createInstances() {
   return [
@@ -21,11 +23,11 @@ describe('Logdown.enable', function() {
     sandbox.stub(global.console, 'log')
   })
 
-  afterEach(function(){
+  afterEach(function() {
     sandbox.restore()
   })
 
-  it('`Logdown.enable(*)` should enable all instances', function() {
+  it('`(\'*\')` should enable all instances', function() {
     Logdown.disable('*')
     Logdown.enable('*')
     var instances = createInstances()
@@ -33,10 +35,11 @@ describe('Logdown.enable', function() {
       instance.log('Lorem')
     })
 
-    sinon.assert.called(console.log)
+    assert.called(console.log)
+    sandbox.restore()
   })
 
-  it('Logdown.enable(\'foo\') should enable only instances with “foo” prefix', function() {
+  it('`(\'foo\')` should enable only instances with “foo” prefix', function() {
     var foo = new Logdown({prefix: 'foo'})
     var bar = new Logdown({prefix: 'bar'})
     var quz = new Logdown({prefix: 'quz'})
@@ -47,16 +50,18 @@ describe('Logdown.enable', function() {
 
 
     bar.log('lorem')
-    sinon.assert.notCalled(console.log)
+    assert.notCalled(console.log)
     quz.log('lorem')
-    sinon.assert.notCalled(console.log)
+    assert.notCalled(console.log)
     baz.log('lorem')
-    sinon.assert.notCalled(console.log)
+    assert.notCalled(console.log)
     foo.log('lorem')
-    sinon.assert.called(console.log)
+    assert.called(console.log)
+
+    sandbox.restore()
   })
 
-  it('Logdown.enable(\'*foo\') should enable only instances with names ending with “foo”', function() {
+  it('`(\'*foo\')` should enable only instances with names ending with “foo”', function() {
     var foo = new Logdown({prefix: 'foo'})
     var bar = new Logdown({prefix: 'bar'})
     var foobar = new Logdown({prefix: 'foobar'})
@@ -67,13 +72,15 @@ describe('Logdown.enable', function() {
 
     bar.log('lorem')
     foobar.log('lorem')
-    sinon.assert.notCalled(console.log)
+    assert.notCalled(console.log)
     foo.log('lorem')
     barfoo.log('lorem')
-    sinon.assert.calledTwice(console.log)
+    assert.calledTwice(console.log)
+
+    sandbox.restore()
   })
 
-  it('Logdown.enable(\'foo*\') should enable only instances with names beginning with “foo”', function() {
+  it('`(\'foo*\')` should enable only instances with names beginning with “foo”', function() {
     var foo = new Logdown({prefix: 'foo'})
     var bar = new Logdown({prefix: 'bar'})
     var foobar = new Logdown({prefix: 'foobar'})
@@ -84,14 +91,16 @@ describe('Logdown.enable', function() {
 
     bar.log('lorem')
     barfoo.log('lorem')
-    sinon.assert.notCalled(console.log)
+    assert.notCalled(console.log)
     foobar.log('lorem')
     foo.log('lorem')
-    sinon.assert.calledTwice(console.log)
+    assert.calledTwice(console.log)
+
+    sandbox.restore()
   })
 })
 
-describe('Logdown.disable', function() {
+describe('`Logdown.disable`', function() {
   var sandbox
 
   beforeEach(function() {
@@ -100,11 +109,7 @@ describe('Logdown.disable', function() {
     sandbox.stub(global.console, 'log')
   })
 
-  afterEach(function(){
-    sandbox.restore()
-  })
-
-  it('`Logdown.disable(*)` should disable all instances', function() {
+  it('`(\'*\')` should disable all instances', function() {
     Logdown.enable('*')
     Logdown.disable('*')
     var instances = createInstances()
@@ -112,10 +117,12 @@ describe('Logdown.disable', function() {
       instance.log('Lorem')
     })
 
-    sinon.assert.notCalled(console.log)
+    assert.notCalled(console.log)
+
+    sandbox.restore()
   })
 
-  it('Logdown.disable(\'foo\') should disable only instances with “foo” prefix', function() {
+  it('`(\'foo\')` should disable only instances with “foo” prefix', function() {
     var foo = new Logdown({prefix: 'foo'})
     var bar = new Logdown({prefix: 'bar'})
     var quz = new Logdown({prefix: 'quz'})
@@ -125,14 +132,16 @@ describe('Logdown.disable', function() {
     Logdown.disable('foo')
 
     foo.log('lorem')
-    sinon.assert.notCalled(console.log)
+    assert.notCalled(console.log)
     bar.log('lorem')
     quz.log('lorem')
     baz.log('lorem')
-    sinon.assert.calledThrice(console.log)
+    assert.calledThrice(console.log)
+
+    sandbox.restore()
   })
 
-  it('Logdown.disable(\'*foo\') should disable only instances with names ending with “foo”', function() {
+  it('`(\'*foo\')` should disable only instances with names ending with “foo”', function() {
     var foo = new Logdown({prefix: 'foo'})
     var bar = new Logdown({prefix: 'bar'})
     var foobar = new Logdown({prefix: 'foobar'})
@@ -143,13 +152,15 @@ describe('Logdown.disable', function() {
 
     foo.log('lorem')
     barfoo.log('lorem')
-    sinon.assert.notCalled(console.log)
+    assert.notCalled(console.log)
     bar.log('lorem')
     foobar.log('lorem')
-    sinon.assert.calledTwice(console.log)
+    assert.calledTwice(console.log)
+
+    sandbox.restore()
   })
 
-  it('Logdown.disable(\'foo*\') should disable only instances with names beginning with “foo”', function() {
+  it('`(\'foo*\')` should disable only instances with names beginning with “foo”', function() {
     var foo = new Logdown({prefix: 'foo'})
     var bar = new Logdown({prefix: 'bar'})
     var foobar = new Logdown({prefix: 'foobar'})
@@ -160,38 +171,113 @@ describe('Logdown.disable', function() {
 
     foobar.log('lorem')
     foo.log('lorem')
-    sinon.assert.notCalled(console.log)
+    assert.notCalled(console.log)
     bar.log('lorem')
     barfoo.log('lorem')
-    sinon.assert.calledTwice(console.log)
+    assert.calledTwice(console.log)
+
+    sandbox.restore()
   })
 })
 
-describe('Logdown::log', function() {
-  var sandbox
+var methods = ['log', 'info', 'warn', 'error']
+methods.forEach(function(method) {
+  describe('Logdown::' + method, function() {
+    var sandbox
 
-  beforeEach(function() {
-    sandbox = sinon.sandbox.create()
+    beforeEach(function() {
+      sandbox = sinon.sandbox.create()
 
-    sandbox.stub(global.console, 'log')
-  })
+      sandbox.stub(global.console, method)
+    })
 
-  afterEach(function(){
-    sandbox.restore()
-  })
+    afterEach(function() {
+      sandbox.restore()
+    })
 
-  it('should parse markdown if enabled', function() {
-    var foo = new Logdown({prefix: 'foo'})
+    it('should parse markdown if enabled', function() {
+      var foo = new Logdown({markdown: true})
 
-    foo.log('lorem *ipsum*')
+      foo[method]('lorem *ipsum*')
+      assert.calledWith(
+        console[method],
+        'lorem %cipsum%c',
+        'font-weight: bold;',
+        ''
+      )
 
-    sinon.assert.calledWith(
-      console.log,
-      '%cfoo%c lorem %cipsum%c',
-      'color:' + foo.prefixColor + '; font-weight:bold;',
-      '',
-      'font-weight: bold;',
-      ''
-    )
+      foo[method]('lorem _ipsum_')
+      assert.calledWith(
+        console[method],
+        'lorem %cipsum%c',
+        'font-style: italic;',
+        ''
+      )
+
+      foo[method]('lorem `ipsum`')
+      assert.calledWith(
+        console[method],
+        'lorem %cipsum%c',
+        'background: #FDF6E3;color: #586E75;padding: 1px 5px;border-radius: 4px;',
+        ''
+      )
+
+      foo[method]('lorem `ipsum` *dolor* sit _amet_')
+      assert.calledWith(
+        console[method],
+        'lorem %cipsum%c %cdolor%c sit %camet%c',
+        'background: #FDF6E3;color: #586E75;padding: 1px 5px;border-radius: 4px;',
+        '',
+        'font-weight: bold;',
+        '',
+        'font-style: italic;',
+        ''
+      )
+
+      sandbox.restore()
+    })
+
+    it('should not parse markdown if disabled', function() {
+      var foo = new Logdown({markdown: false})
+
+      foo[method]('lorem *ipsum*')
+      assert.calledWith(
+        console[method],
+        'lorem *ipsum*'
+      )
+
+      foo[method]('lorem _ipsum_ dolor')
+      assert.calledWith(
+        console[method],
+        'lorem _ipsum_ dolor'
+      )
+
+      foo[method]('lorem `ipsum` dolor')
+      assert.calledWith(
+        console[method],
+        'lorem `ipsum` dolor'
+      )
+
+      sandbox.restore()
+    })
+
+    it('should print prefix if present', function() {
+      // var foo = new Logdown({prefix: 'foo'})
+
+      // foo[method]('lorem ipsum')
+      // try {
+      //   assert.calledWith(
+      //     console[method],
+      //     '%cfoo%c lorem ipsum',
+      //     'color:' + foo.prefixColor + '; font-weight:bold;',
+      //     ''
+      //   )
+      // } catch(error) {
+      //   sandbox.restore()
+      //   throw error
+      // }
+
+      // sandbox.restore()
+    })
   })
 })
