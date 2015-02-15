@@ -81,69 +81,25 @@
   // Public
   // ------
 
-  Logdown.prototype.log = function(text) {
-    var preparedOutput
+  var methods = ['log', 'info', 'warn', 'error']
+  methods.forEach(function(method) {
+    Logdown.prototype[method] = function(text) {
+      var preparedOutput
 
-    if (isDisabled(this)) {
-      return
+      if (isDisabled(this)) {
+        return
+      }
+
+      text = sanitizeString(text)
+      preparedOutput = prepareOutput(text, this)
+
+      console[method].apply(
+        console,
+        [preparedOutput.parsedText].concat(preparedOutput.styles)
+      )
     }
+  })
 
-    text = sanitizeString(text)
-    preparedOutput = prepareOutput(text, this)
-
-    console.log.apply(
-      console,
-      [preparedOutput.parsedText].concat(preparedOutput.styles)
-    )
-  }
-
-  Logdown.prototype.info = function(text) {
-    var preparedOutput
-
-    if (isDisabled(this)) {
-      return
-    }
-
-    text = sanitizeString(text)
-    preparedOutput = prepareOutput(text, this)
-
-    console.info.apply(
-      console,
-      [preparedOutput.parsedText].concat(preparedOutput.styles)
-    )
-  }
-
-  Logdown.prototype.error = function(text) {
-    var preparedOutput
-
-    if (isDisabled(this)) {
-      return
-    }
-
-    text = sanitizeString(text)
-    preparedOutput = prepareOutput(text, this)
-
-    console.error.apply(
-      console,
-      [preparedOutput.parsedText].concat(preparedOutput.styles)
-    )
-  }
-
-  Logdown.prototype.warn = function(text) {
-    var preparedOutput
-
-    if (isDisabled(this)) {
-      return
-    }
-
-    text = sanitizeString(text)
-    preparedOutput = prepareOutput(text, this)
-
-    console.warn.apply(
-      console,
-      [preparedOutput.parsedText].concat(preparedOutput.styles)
-    )
-  }
 
   // Private
   // -------
