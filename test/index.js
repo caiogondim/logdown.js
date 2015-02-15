@@ -309,5 +309,20 @@ methods.forEach(function(method) {
 
       // sandbox.restore()
     })
+
+    it('should sanitize strings', function() {
+      var foo = new Logdown()
+      foo[method]('lorem %cipsum%c sit %cdolor%c amet')
+      assert.calledWith(console[method], 'lorem ipsum sit dolor amet')
+
+      // var bar = new Logdown({prefix: 'bar'})
+      // bar.log('lorem %cipsum% sit %cdolor% amet')
+      // assert.calledWith(
+      //   console[method],
+      //   '%c' + bar.prefix + '%clorem ipsum sit dolor amet',
+      //   'color:' + bar.prefixColor + '; font-weight:bold;',
+      //   ''
+      // )
+    })
   })
 })

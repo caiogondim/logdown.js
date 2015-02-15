@@ -23,14 +23,15 @@
       return new Logdown(opts)
     }
 
-    var prefix = opts.prefix || ''
+    opts = opts || {}
+
+    var prefix = opts.prefix === undefined ? '' : opts.prefix
     prefix = sanitizeString(prefix)
     if (prefix && isPrefixAlreadyInUse(prefix, instances)) {
       return getInstanceByPrefix(prefix, instances)
     }
 
     //
-    opts = opts || {}
     this.markdown = opts.markdown === undefined ? true : opts.markdown
     this.prefix = prefix
 
@@ -87,6 +88,7 @@
       return
     }
 
+    text = sanitizeString(text)
     preparedOutput = prepareOutput(text, this)
 
     console.log.apply(
@@ -102,6 +104,7 @@
       return
     }
 
+    text = sanitizeString(text)
     preparedOutput = prepareOutput(text, this)
 
     console.info.apply(
@@ -117,6 +120,7 @@
       return
     }
 
+    text = sanitizeString(text)
     preparedOutput = prepareOutput(text, this)
 
     console.error.apply(
@@ -132,6 +136,7 @@
       return
     }
 
+    text = sanitizeString(text)
     preparedOutput = prepareOutput(text, this)
 
     console.warn.apply(
