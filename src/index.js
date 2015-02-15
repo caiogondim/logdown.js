@@ -48,6 +48,10 @@
 
   Logdown.enable = function() {
     Array.prototype.forEach.call(arguments, function(str) {
+      if (str[0] === '-') {
+        Logdown.disable(str.substr(1))
+      }
+
       var regExp = prepareRegExpForPrefixSearch(str)
 
       if (str === '*') {
@@ -66,6 +70,10 @@
 
   Logdown.disable = function(str) {
     Array.prototype.forEach.call(arguments, function(str) {
+      if (str[0] === '-') {
+        Logdown.enable(str.substr(1))
+      }
+
       var regExp = prepareRegExpForPrefixSearch(str)
 
       if (str === '*') {

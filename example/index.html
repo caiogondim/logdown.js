@@ -6,56 +6,65 @@
 <body>
 <script src="/src/index.js"></script>
 <script>
-  Logdown.disable('*')
-  Logdown.enable('*')
-  var log = new Logdown({prefix: 'exp:foo'})
-  log.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  // Logdown.disable('*')
+  // Logdown.enable('*')
+  // var log = new Logdown({prefix: 'exp:foo'})
+  // log.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
-  var log1 = new Logdown({prefix: 'exp:bar'})
-  log1.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log1.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  // var log1 = new Logdown({prefix: 'exp:bar'})
+  // log1.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // log1.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
-  var log2 = new Logdown({prefix: 'baz:qux'})
-  log2.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log2.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  // var log2 = new Logdown({prefix: 'baz:qux'})
+  // log2.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // log2.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  // //
+  // Logdown.enable('exp:*')
+
+  // var log3 = new Logdown({prefix: 'exp:foo2'})
+  // log3.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // log3.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  // var log4 = new Logdown({prefix: 'exp:bar2'})
+  // log4.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // log4.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  // var log5 = new Logdown({prefix: 'baz:qux2'})
+  // log5.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // log5.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  // Logdown.enable('baz:*')
+
+  // var log6 = new Logdown({prefix: 'exp:foo2'})
+  // log6.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // log6.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  // // var log7 = new Logdown({prefix: 'exp:bar2'})
+  // // log7.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // // log7.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+
+  // var log8 = new Logdown({prefix: 'baz:qux2'})
+  // log8.log('lorem *ipsum* dolor sit _amet_ foo bar')
+  // log8.log('lorem `ipsum` *dolor* sit _amet_')
+  // log8.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  // log8.warn('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  // log8.info('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+  // log8.error('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
 
   //
-  Logdown.enable('exp:*')
-
-  var log3 = new Logdown({prefix: 'exp:foo2'})
-  log3.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log3.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-
-  var log4 = new Logdown({prefix: 'exp:bar2'})
-  log4.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log4.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-
-  var log5 = new Logdown({prefix: 'baz:qux2'})
-  log5.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log5.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-
-  Logdown.enable('baz:*')
-
-  var log6 = new Logdown({prefix: 'exp:foo2'})
-  log6.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log6.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-
-  // var log7 = new Logdown({prefix: 'exp:bar2'})
-  // log7.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  // log7.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-
-  var log8 = new Logdown({prefix: 'baz:qux2'})
-  log8.log('lorem *ipsum* dolor sit _amet_ foo bar')
-  log8.log('lorem `ipsum` *dolor* sit _amet_')
-  log8.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-  log8.warn('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-  log8.info('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-  log8.error('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
-
-  Logdown.enable('*')
   var foo = new Logdown({prefix: 'foo'})
-  foo.log('lorem ipsum')
+  var bar = new Logdown({prefix: 'bar'})
+  var foobar = new Logdown({prefix: 'foobar'})
+  var barfoo = new Logdown({prefix: 'barfoo'})
+
+  Logdown.enable('-*')
+
+  foobar.log('lorem')
+  foo.log('lorem')
+  bar.log('lorem')
+  barfoo.log('lorem')
 
 </script>
 </body>
