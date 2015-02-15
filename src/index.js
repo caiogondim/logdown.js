@@ -1,9 +1,10 @@
+/* global console, module, window */
+
 ;(function() {
   'use strict'
 
   var instances = []
   var lastUsedColorIndex = 0
-  var nextColorIndex
   // Solarized accent colors http://ethanschoonover.com/solarized
   var colors = [
     '#B58900',
@@ -38,7 +39,8 @@
     //
     instances.push(this)
 
-    this.prefixColor = colors[lastUsedColorIndex++ % colors.length]
+    this.prefixColor = colors[lastUsedColorIndex % colors.length]
+    lastUsedColorIndex += 1
 
     return this
   }
@@ -68,7 +70,7 @@
     })
   }
 
-  Logdown.disable = function(str) {
+  Logdown.disable = function() {
     Array.prototype.forEach.call(arguments, function(str) {
       if (str[0] === '-') {
         Logdown.enable(str.substr(1))
@@ -112,7 +114,6 @@
     }
   })
 
-
   // Private
   // -------
 
@@ -151,7 +152,7 @@
       {
         regexp: /\`([^\`]+)\`/,
         replacer: function(match, submatch1) {
-          return "%c" + submatch1 + "%c";
+          return '%c' + submatch1 + '%c';
         },
         style:
           'background:#FDF6E3; ' +
@@ -199,7 +200,10 @@
 
     if (instance.prefix) {
       parsedText = '%c' + instance.prefix + '%c ' + parsedText
-      styles.unshift('color:' + instance.prefixColor + '; font-weight:bold;', 'color:inherit;')
+      styles.unshift(
+        'color:' + instance.prefixColor + '; font-weight:bold;',
+        'color:inherit;'
+      )
     }
 
     return {
@@ -209,17 +213,18 @@
   }
 
   function isDisabled(instance) {
-    var isDisabled = false
+    var isDisabled_ = false
 
     filterRegExps.forEach(function(filter) {
       if (filter.type === 'enable' && filter.regExp.test(instance.prefix)) {
-        isDisabled = false
-      } else if (filter.type === 'disable' && filter.regExp.test(instance.prefix)) {
-        isDisabled = true
+        isDisabled_ = false
+      } else if (filter.type === 'disable' &&
+                 filter.regExp.test(instance.prefix)) {
+        isDisabled_ = true
       }
     })
 
-    return isDisabled
+    return isDisabled_
   }
 
   function prepareRegExpForPrefixSearch(str) {
@@ -227,16 +232,16 @@
   }
 
   function isPrefixAlreadyInUse(prefix, instances) {
-    var isPrefixAlreadyInUse = false
+    var isPrefixAlreadyInUse_ = false
 
     instances.forEach(function(instance) {
       if (instance.prefix === prefix) {
-        isPrefixAlreadyInUse = true
+        isPrefixAlreadyInUse_ = true
         return
       }
     })
 
-    return isPrefixAlreadyInUse
+    return isPrefixAlreadyInUse_
   }
 
   function getInstanceByPrefix(prefix, instances) {
@@ -262,5 +267,4 @@
   } else {
     window.Logdown = Logdown
   }
-
 }())
