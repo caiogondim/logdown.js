@@ -23,14 +23,16 @@
       return new Logdown(opts)
     }
 
-    if (opts.prefix && isPrefixAlreadyInUse(opts.prefix, instances)) {
-      return getInstanceByPrefix(opts.prefix, instances)
+    var prefix = opts.prefix || ''
+    prefix = sanitizeString(prefix)
+    if (prefix && isPrefixAlreadyInUse(prefix, instances)) {
+      return getInstanceByPrefix(prefix, instances)
     }
 
     //
     opts = opts || {}
     this.markdown = opts.markdown === undefined ? true : opts.markdown
-    this.prefix = opts.prefix || ''
+    this.prefix = prefix
 
     //
     instances.push(this)
@@ -275,6 +277,10 @@
     })
 
     return instance
+  }
+
+  function sanitizeString(str) {
+    return str.replace(/\%c/g, '')
   }
 
   // Export module

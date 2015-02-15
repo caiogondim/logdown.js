@@ -30,6 +30,14 @@ describe('new Logdown()', function() {
     assert.notEqual(foo.prefixColor, quz.prefixColor)
     assert.notEqual(foo.prefixColor, baz.prefixColor)
   })
+
+  it('should sanitize prefixes name', function() {
+    var log1 = new Logdown({prefix: '%cfoo%c'})
+    assert.equal(log1.prefix, 'foo')
+
+    var log2 = new Logdown({prefix: '%cba%cr'})
+    assert.equal(log2.prefix, 'bar')
+  })
 })
 
 describe('Logdown.enable', function() {
@@ -277,6 +285,10 @@ methods.forEach(function(method) {
       )
 
       sandbox.restore()
+    })
+
+    it('should sanitize forbidden characters', function() {
+
     })
 
     it('should print prefix if present', function() {
