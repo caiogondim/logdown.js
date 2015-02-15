@@ -23,6 +23,10 @@
       return new Logdown(opts)
     }
 
+    if (opts.prefix && isPrefixAlreadyInUse(opts.prefix, instances)) {
+      return getInstanceByPrefix(opts.prefix, instances)
+    }
+
     //
     opts = opts || {}
     this.markdown = opts.markdown === undefined ? true : opts.markdown
@@ -245,6 +249,32 @@
 
   function prepareRegExpForPrefixSearch(str) {
     return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
+  }
+
+  function isPrefixAlreadyInUse(prefix, instances) {
+    var isPrefixAlreadyInUse = false
+
+    instances.forEach(function(instance) {
+      if (instance.prefix === prefix) {
+        isPrefixAlreadyInUse = true
+        return
+      }
+    })
+
+    return isPrefixAlreadyInUse
+  }
+
+  function getInstanceByPrefix(prefix, instances) {
+    var instance
+
+    instances.forEach(function(instanceCur) {
+      if (instanceCur.prefix === prefix) {
+        instance = instanceCur
+        return
+      }
+    })
+
+    return instance
   }
 
   // Export module

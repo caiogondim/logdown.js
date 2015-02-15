@@ -14,6 +14,14 @@ function createInstances() {
   ]
 }
 
+describe('new Logdown()', function() {
+  it('should return an existing instance if the prefix is already in use', function() {
+    var foo = new Logdown({prefix: 'foo'})
+    var foo2 = new Logdown({prefix: 'foo'})
+    assert.equal(foo, foo2)
+  })
+})
+
 describe('Logdown.enable', function() {
   var sandbox
 
