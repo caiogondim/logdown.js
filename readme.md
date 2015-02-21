@@ -1,4 +1,4 @@
-# Logdown [Travis CI](https://travis-ci.org/caiogondim/logdown.svg?branch=master) [David DM](https://david-dm.org/caiogondim/logdown/dev-status.svg)
+# Logdown <img src="https://travis-ci.org/caiogondim/logdown.svg?branch=master" alt="Travis CI"> <img src="https://david-dm.org/caiogondim/logdown/dev-status.svg" alt="David DM">
 
 <img src="http://raw.github.com/caiogondim/logdown/master/icon/icon.png" align="right" width="256">
 
