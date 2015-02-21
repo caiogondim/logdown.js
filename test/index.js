@@ -46,6 +46,12 @@ function mockIEEnviroment() {
                                'WOW64; en-US)'
 }
 
+function unmockBrowserEnviroment() {
+  delete global.window
+  delete global.document
+  delete global.navigator
+}
+
 describe('new Logdown()', function() {
   it('should return an existing instance if the prefix is already in use',
      function() {
@@ -694,7 +700,7 @@ methods.forEach(function(method) {
       sandbox.restore()
     })
 
-    it('should not print special characters if the enviroment does not' +
+    it('should not print special characters if the enviroment does not ' +
        'support colors', function() {
       try {
         mockIEEnviroment()
@@ -721,5 +727,18 @@ methods.forEach(function(method) {
       mockWebkitEnviroment()
       sandbox.restore()
     })
+
+    // if (method === 'info' || method === 'warn' || method === 'error') {
+    //   it('should prepend symbols on node.js', function() {
+    //     unmockBrowserEnviroment()
+
+    //     var bar = new Logdown()
+    //     bar[method]('lorem *ipsum* dolor sit _amet_')
+    //     assert.calledWith(
+    //       console[method],
+    //       'lorem *ipsum* dolor sit _amet_'
+    //     )
+    //   })
+    // }
   })
 })
