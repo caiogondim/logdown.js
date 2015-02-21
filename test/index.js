@@ -19,6 +19,33 @@ function createInstances() {
   ]
 }
 
+function mockWebkitEnviroment() {
+  global.document = {}
+  global.document.documentElement = {}
+  global.document.documentElement.style = {}
+  global.document.documentElement.style = {'WebkitAppearance': null}
+  global.window = {}
+  global.window.document = global.document
+
+  global.navigator = {}
+  global.navigator.userAgent = 'Lorem'
+}
+mockWebkitEnviroment()
+
+function mockIEEnviroment() {
+  global.document = {}
+  global.document.documentElement = {}
+  global.document.documentElement.style = {}
+  global.window = {}
+  global.window.document = global.document
+
+  global.navigator = {}
+  global.navigator.userAgent = 'Mozilla/5.0 (compatible; MSIE 8.0; ' +
+                               'Windows NT 6.1; Trident/4.0; GTB7.4; ' +
+                               'InfoPath.2; SV1; .NET CLR 3.3.69573; ' +
+                               'WOW64; en-US)'
+}
+
 describe('new Logdown()', function() {
   it('should return an existing instance if the prefix is already in use',
      function() {
@@ -537,7 +564,6 @@ methods.forEach(function(method) {
 
     beforeEach(function() {
       sandbox = sinon.sandbox.create()
-
       sandbox.stub(global.console, method)
     })
 
@@ -665,6 +691,34 @@ methods.forEach(function(method) {
         throw error
       }
 
+      sandbox.restore()
+    })
+
+    it('should not print special characters if the enviroment does not' +
+       'support colors', function() {
+      try {
+        mockIEEnviroment()
+
+        var bar = new Logdown()
+        bar[method]('lorem *ipsum* dolor sit _amet_')
+        assert.calledWith(
+          console[method],
+          'lorem *ipsum* dolor sit _amet_'
+        )
+
+        // var foo = new Logdown({prefix: 'foo'})
+        // foo[method]('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1`')
+        // assert.calledWith(
+        //   console[method],
+        //   '[foo] lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1`'
+        // )
+      } catch (error) {
+        mockWebkitEnviroment()
+        sandbox.restore()
+        throw error
+      }
+
+      mockWebkitEnviroment()
       sandbox.restore()
     })
   })
