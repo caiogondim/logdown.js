@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/caiogondim/logdown",
   "devDependencies": {
-    "chai": "^1.10.0",
+    "chai": "^2.0.0",
     "gulp": "^3.8.11",
     "gulp-header": "^1.2.2",
     "gulp-jscs": "^1.4.0",
