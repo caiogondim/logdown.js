@@ -6,6 +6,11 @@ var gulp = require('gulp')
 var mocha = require('gulp-mocha')
 var jshint = require('gulp-jshint')
 var jscs = require('gulp-jscs')
+var uglify = require('gulp-uglify')
+var header = require('gulp-header')
+
+// Test
+// ----
 
 var jsFilesToBeStyleChecked = [
   './src/*.js',
@@ -32,3 +37,25 @@ gulp.task('jscs', function() {
 })
 
 gulp.task('test', ['mocha'])
+
+// Build
+// -----
+
+var pkg = require('./package.json')
+var banner = [
+  '/**',
+  ' * <%= pkg.name %> - <%= pkg.description %>',
+  ' *',
+  ' * @version v<%= pkg.version %>',
+  ' * @link <%= pkg.homepage %>',
+  ' * @author <%= pkg.author %>',
+  ' * @license <%= pkg.license %>',
+  ' */',
+  ''].join('\n');
+
+gulp.task('build', function() {
+  gulp.src('src/index.js')
+    .pipe(uglify())
+    .pipe(header(banner, {pkg: pkg}))
+    .pipe(gulp.dest('dist'))
+})
