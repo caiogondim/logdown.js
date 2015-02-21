@@ -46,11 +46,11 @@ function mockIEEnviroment() {
                                'WOW64; en-US)'
 }
 
-function unmockBrowserEnviroment() {
-  delete global.window
-  delete global.document
-  delete global.navigator
-}
+// function unmockBrowserEnviroment() {
+//   delete global.window
+//   delete global.document
+//   delete global.navigator
+// }
 
 describe('new Logdown()', function() {
   it('should return an existing instance if the prefix is already in use',
