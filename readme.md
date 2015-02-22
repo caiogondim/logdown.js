@@ -10,6 +10,30 @@ cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
+## Using
+
+In node.js or io.js
+
+```js
+var Logdown = require('logdown')
+var debug = new Logdown({prefix: 'foo'})
+debug.log('lorem')
+debug.warn('ipsum')
+debug.info('dolor')
+debug.error('sit amet')
+```
+
+In the browser
+
+```js
+var debug = new Logdown({prefix: 'foo'})
+debug.log('lorem')
+debug.warn('ipsum')
+debug.info('dolor')
+debug.error('sit amet')
+```
+
+
 ## Support
 
 ### Browser
