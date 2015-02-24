@@ -34,6 +34,115 @@ debug.error('sit amet')
 ```
 
 
+## API
+
+### `new Logdown(opts)`
+
+When creating a new `Logdown` object, you can pass the following values.
+
+#### `opts.prefix`
+
+Type: 'String'
+Default: `''`
+
+```js
+var debug = new Logdown({prefix: 'foo'})
+debug.log('Lorem ipsum') // Will use console.log with a prefix
+```
+
+You should use the name of your module.
+You can, also, use `:` to separate modules inside one big module.
+
+```js
+var bar = new Logdown({prefix: 'foo:bar'})
+bar.log('Lorem ipsum')
+
+var quz = new Logdown({prefix: 'foo:quz'})
+quz.log('Lorem Ipsum')
+```
+
+This way it is clear each module are logging information, and it is also easier
+to disable/enable some of them.
+
+#### `opts.markdown`
+
+Type: 'Boolean'
+Default: `true`
+
+If setted to `false`, the markdown will not be parsed and stylized accordingly.
+
+```js
+var bar = new Logdown({markdown: false})
+bar.log('Lorem *ipsum*') // Will not parse the markdown
+```
+
+### `instance.log()`
+
+In the server and the browser will use the `console.log()` native method, plus
+prefix and stylized markdown.
+
+```js
+var bar = new Logdown()
+bar.log('Lorem *ipsum*')
+```
+
+### `instance.info()`
+
+In the browser will use the `console.info()` native method, plus prefix and
+stylized markdown. In the server will use `console.log()`, plus a blue `ℹ` (to
+better mimic the browser behavior), prefix and stylized markdown.
+
+```js
+var bar = new Logdown()
+bar.info('Lorem *ipsum*')
+```
+
+### `instance.warn()`
+
+In the browser will use the `console.warn()` native method, plus prefix and
+stylized markdown. In the server will use `console.log()`, plus a yellow `⚠` (to
+better mimic the browser behavior), prefix and stylized markdown.
+
+```js
+var bar = new Logdown()
+bar.warn('Lorem *ipsum*')
+```
+
+### `instance.error()`
+
+In the browser will use the `console.error()` native method, plus prefix and
+stylized markdown. In the server will use `console.log()`, plus a red `✖` (to
+better mimic the browser behavior), prefix and stylized markdown.
+
+```js
+var bar = new Logdown()
+bar.error('Lorem *ipsum*')
+```
+
+### `Logdown.enable()`
+
+Enable some loggers by its prefix.
+It is possible to use `*` as wildcard and `-` as negation.
+
+```js
+var foo = new Logdown({prefix: 'foo'})
+var bar = new Logdown({prefix: 'bar'})
+
+// Will enable all Logdown instances, but the one with *foo* prefix
+Logdown.enable('*, -foo')
+```
+
+### `Logdown.disable()`
+
+Disable some loggers by its prefix.
+It is possible to use `*` as wildcard and `-` as negation.
+
+```js
+// Disable all Logdown instances but the one with bar prefix
+Logdown.disable('*, -bar')
+```
+
+
 ## Support
 
 ### Browser
