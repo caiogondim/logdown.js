@@ -1,6 +1,6 @@
 # Logdown <img src="https://travis-ci.org/caiogondim/logdown.svg?branch=master" alt="Travis CI"> <img src="https://david-dm.org/caiogondim/logdown/dev-status.svg" alt="David DM">
 
-<img src="http://raw.github.com/caiogondim/logdown/master/icon/icon.svg" width="256">
+<img src="http://rawgit.com/caiogondim/logdown/master/icon/icon.svg" width="256">
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
