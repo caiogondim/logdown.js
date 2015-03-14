@@ -20,10 +20,9 @@ var jsFilesToBeStyleChecked = [
   './test/*.js',
   'gulpfile.js'
 ]
-var jsFilesToBeTested = ['test/index.js']
 
 gulp.task('jscs', function() {
-  return gulp.src(jsFilesToBeTested)
+  return gulp.src(jsFilesToBeStyleChecked)
     .pipe(jscs())
 })
 
@@ -35,11 +34,11 @@ gulp.task('jshint', ['jscs'], function() {
 })
 
 gulp.task('mocha', ['jshint'], function() {
-  return gulp.src(jsFilesToBeTested)
+  return gulp.src('test/server.js')
     .pipe(mocha())
 })
 
-gulp.task('karma', function(done) {
+gulp.task('karma', ['mocha'], function(done) {
   karma.start({
     configFile: __dirname + '/test/karma.conf.js',
     singleRun: true

@@ -1,5 +1,5 @@
 /* global describe, afterEach, beforeEach, console, it, require, window,
-global */
+global, Logdown, chai, sinon */
 /* jshint -W038 */
 /* jshint unused:false */
 

@@ -143,7 +143,7 @@
         return
       }
 
-      if(isBrowser()) {
+      if (isBrowser()) {
         text = sanitizeStringToBrowser(text)
         preparedOutput = prepareOutputToBrowser(text, this)
         console[method].apply(
@@ -156,19 +156,19 @@
 
         if (method === 'warn') {
           preparedOutput.parsedText =
-            '\u001b['+ ansiColors.colors.yellow[0] + 'm' +
+            '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
             '⚠' +
-            '\u001b[' +ansiColors.colors.yellow[1] + 'm ' +
+            '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
             preparedOutput.parsedText
-        } else if(method === 'error') {
+        } else if (method === 'error') {
           preparedOutput.parsedText =
-            '\u001b['+ ansiColors.colors.red[0] + 'm' +
+            '\u001b[' + ansiColors.colors.red[0] + 'm' +
             '✖' +
             '\u001b[' + ansiColors.colors.red[1] + 'm ' +
             preparedOutput.parsedText
         } else if (method === 'info') {
           preparedOutput.parsedText =
-            '\u001b['+ ansiColors.colors.blue[0] + 'm' +
+            '\u001b[' + ansiColors.colors.blue[0] + 'm' +
             'ℹ' +
             '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
             preparedOutput.parsedText
@@ -239,7 +239,7 @@
         {
           regexp: /\*([^\*]+)\*/,
           replacer: function(match, submatch1) {
-            return '\u001b['+ ansiColors.modifiers.bold[0] + 'm' +
+            return '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
                    submatch1 +
                    '\u001b[' + ansiColors.modifiers.bold[1] + 'm'
           }
@@ -247,7 +247,7 @@
         {
           regexp: /\_([^\_]+)\_/,
           replacer: function(match, submatch1) {
-            return '\u001b['+ ansiColors.modifiers.italic[0] + 'm' +
+            return '\u001b[' + ansiColors.modifiers.italic[0] + 'm' +
                    submatch1 +
                    '\u001b[' + ansiColors.modifiers.italic[1] + 'm'
           }
@@ -255,8 +255,8 @@
         {
           regexp: /\`([^\`]+)\`/,
           replacer: function(match, submatch1) {
-            return '\u001b['+ ansiColors.bgColors.bgYellow[0] + 'm' +
-                   '\u001b['+ ansiColors.colors.black[0] + 'm' +
+            return '\u001b[' + ansiColors.bgColors.bgYellow[0] + 'm' +
+                   '\u001b[' + ansiColors.colors.black[0] + 'm' +
                    ' ' + submatch1 + ' ' +
                    '\u001b[' + ansiColors.colors.black[1] + 'm' +
                    '\u001b[' + ansiColors.bgColors.bgYellow[1] + 'm'
@@ -319,23 +319,27 @@
     }
   }
 
-  function prepareOutputToNode(text ,instance) {
+  function prepareOutputToNode(text, instance) {
     var parsedText = text
 
     if (instance.prefix) {
       if (isColorSupported()) {
         parsedText =
           '\u001b[' + instance.prefixColor[0] + 'm' +
-          '\u001b['+ ansiColors.modifiers.bold[0] + 'm' +
+          '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
           instance.prefix +
-          '\u001b['+ ansiColors.modifiers.bold[1] + 'm' +
+          '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
           '\u001b[' + instance.prefixColor[1] + 'm ' + parsedText
       } else {
         parsedText = '[' + instance.prefix + '] ' + parsedText
       }
     }
 
-    parsedText = parseMarkdown(parsedText).text
+    if (instance.markdown) {
+      parsedText = parseMarkdown(parsedText).text
+    } else {
+      parsedText = text
+    }
 
     return {
       parsedText: parsedText,
