@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+<svg width="790px" height="256px" viewBox="0 0 790 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
     <!-- Generator: Sketch 3.2.2 (9983) - http://www.bohemiancoding.com/sketch -->
     <title>Slice 1</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="Oval-1-+-noun_6571_cc" sketch:type="MSLayerGroup">
-            <circle id="Oval-1" fill="#EFF1F5" sketch:type="MSShapeGroup" cx="512" cy="512" r="512"></circle>
-            <g id="noun_6571_cc" transform="translate(282.000000, 192.000000)" sketch:type="MSShapeGroup">
-                <rect id="Rectangle-path" fill="#2B303A" x="40.1078219" y="0.52209145" width="419.02596" height="627.568513"></rect>
-                <rect id="Rectangle-path" fill="#2B303A" x="0.866218401" y="0.52209145" width="29.4333745" height="627.568513"></rect>
-                <path d="M90.5563477,637.925329 L61.1316608,637.925329 L61.1316608,742.216916 L75.8396605,720.589227 L90.5563477,742.216916 L90.5563477,637.925329 Z" id="Shape" fill="#BF616A"></path>
-                <g id="markdown-mark" transform="translate(114.563492, 73.595326)" fill="#EFF1F5">
-                    <path d="M37.7280744,127.446995 L37.7280744,37.9158588 L63.9105339,37.9158588 L90.0929934,70.8317176 L116.275453,37.9158588 L142.457912,37.9158588 L142.457912,127.446995 L116.275453,127.446995 L116.275453,76.0982551 L90.0929934,109.014114 L63.9105339,76.0982551 L63.9105339,127.446995 L37.7280744,127.446995 Z M201.368446,127.446995 L162.094757,83.9980612 L188.277217,83.9980612 L188.277217,37.9158588 L214.459676,37.9158588 L214.459676,83.9980612 L240.642136,83.9980612 L201.368446,127.446995 Z" id="Shape"></path>
-                    <path d="M264.206349,10 L259.206349,5 L259.206349,160.362854 L264.206349,155.362854 L5,155.362854 L10,160.362854 L10,5 L5,10 L264.206349,10 Z M0,0 L0,5 L0,160.362854 L0,165.362854 L5,165.362854 L264.206349,165.362854 L269.206349,165.362854 L269.206349,160.362854 L269.206349,5 L269.206349,0 L264.206349,0 L5,0 L0,0 Z" id="Rectangle-path"></path>
+        <g id="Oval-1-+-noun_6571_cc" sketch:type="MSLayerGroup" transform="translate(267.000000, 0.000000)">
+            <circle id="Oval-1" fill="#EFF1F5" sketch:type="MSShapeGroup" cx="128" cy="128" r="128"></circle>
+            <g id="noun_6571_cc" transform="translate(70.500000, 48.000000)" sketch:type="MSShapeGroup">
+                <rect id="Rectangle-path" fill="#2B303A" x="10.0269555" y="0.130522862" width="104.75649" height="156.892128"></rect>
+                <rect id="Rectangle-path" fill="#2B303A" x="0.2165546" y="0.130522862" width="7.35834362" height="156.892128"></rect>
+                <path d="M22.6390869,159.481332 L15.2829152,159.481332 L15.2829152,185.554229 L18.9599151,180.147307 L22.6390869,185.554229 L22.6390869,159.481332 Z" id="Shape" fill="#BF616A"></path>
+                <g id="markdown-mark" transform="translate(29.890873, 19.648831)" fill="#EFF1F5">
+                    <path d="M8.1820186,30.6117487 L8.1820186,8.2289647 L14.7276335,8.2289647 L21.2732484,16.4579294 L27.8188632,8.2289647 L34.3644781,8.2289647 L34.3644781,30.6117487 L27.8188632,30.6117487 L27.8188632,17.7745638 L21.2732484,26.0035285 L14.7276335,17.7745638 L14.7276335,30.6117487 L8.1820186,30.6117487 Z M49.0921116,30.6117487 L39.2736893,19.7495153 L45.8193042,19.7495153 L45.8193042,8.2289647 L52.364919,8.2289647 L52.364919,19.7495153 L58.9105339,19.7495153 L49.0921116,30.6117487 Z" id="Shape"></path>
+                    <path d="M64.8015873,1.25 L63.5515873,0 L63.5515873,38.8407134 L64.8015873,37.5907134 L0,37.5907134 L1.25,38.8407134 L1.25,0 L0,1.25 L64.8015873,1.25 Z M-1.25,-1.25 L-1.25,0 L-1.25,38.8407134 L-1.25,40.0907134 L0,40.0907134 L64.8015873,40.0907134 L66.0515873,40.0907134 L66.0515873,38.8407134 L66.0515873,0 L66.0515873,-1.25 L64.8015873,-1.25 L0,-1.25 L-1.25,-1.25 Z" id="Rectangle-path"></path>
                 </g>
             </g>
         </g>
