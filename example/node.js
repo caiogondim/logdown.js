@@ -2,46 +2,64 @@
 
 var Logdown = require('../src/index')
 
-Logdown.disable('*')
-Logdown.enable('*')
-var log = new Logdown({prefix: 'exp:foo'})
-log.log('lorem *ipsum* dolor sit _amet_ foo bar')
-log.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+var demo = new Logdown({prefix: 'demo'})
 
-var log1 = new Logdown({prefix: 'exp:bar'})
-log1.log('lorem *ipsum* dolor sit _amet_ foo bar')
-log1.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+var gap = 2000
+var i = 1
+var timeout
 
-var log2 = new Logdown({prefix: 'baz:qux'})
-log2.log('lorem *ipsum* dolor sit _amet_ foo bar')
-log2.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+demo.log('Initializing demo')
 
-//
-Logdown.enable('exp:*')
+timeout = i * gap
+i += 1
+setTimeout(function() {
+  var log1 = new Logdown({prefix: 'foo:bar'})
+  log1.log('Lorem *ipsum* dolor sit _amet_ foo bar')
+  log1.warn('The method `foo()` is deprecated. You should use `bar()`')
+}, timeout)
 
-var log3 = new Logdown({prefix: 'exp:foo2'})
-log3.log('lorem *ipsum* dolor sit _amet_ foo bar')
-log3.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+timeout = i * gap
+i += 1
+setTimeout(function() {
+  var log2 = new Logdown({prefix: 'foo:quz'})
+  log2.log('Lorem *ipsum* dolor sit _amet_ foo bar')
+  log2.warn('The method `foo()` is deprecated. You should use `bar()`')
+}, timeout)
 
-var log4 = new Logdown({prefix: 'exp'})
-log4.log('lorem *ipsum* dolor sit _amet_ foo bar')
-log4.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+timeout = i * gap
+i += 1
+setTimeout(function() {
+  var log3 = new Logdown({prefix: 'baz'})
+  log3.info('Sit viderer eripuit tincidunt an')
+  log3.error('The method `dolor()` is no longer supported.')
+}, timeout)
 
-var log5 = new Logdown({prefix: 'baz:qux2'})
-log5.log('lorem *ipsum* dolor sit _amet_ foo bar')
-log5.log('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1` lorem')
+timeout = i * gap
+i += 1
+setTimeout(function() {
+  var log4 = new Logdown({prefix: 'corge'})
+  log4.log('Id ius atqui interpretaris. Usu ea *dolor* alterum labores')
+  log4.warn('Simul *nonumes* qui ei.')
+}, timeout)
 
-Logdown.enable('baz:*')
+timeout = i * gap
+i += 1
+setTimeout(function() {
+  var log4 = new Logdown({prefix: 'grault'})
+  log4.log('Molestie nominati _recteque_ no eam, qui *ei* putant delicatissi')
+  log4.log('Cum at delenit *apeirian* forensibus.')
+}, timeout)
 
-//
-var foo = new Logdown({prefix: 'foo'})
-var bar = new Logdown({prefix: 'bar'})
-var foobar = new Logdown({prefix: 'foobar'})
-var barfoo = new Logdown({prefix: 'barfoo'})
+timeout = i * gap
+i += 1
+setTimeout(function() {
+  var log6 = new Logdown({prefix: 'waldo'})
+  log6.log('Molestie nominati _recteque_ no eam, qui *ei* putant delicatissi')
+  log6.log('Cum at delenit *apeirian* forensibus.')
+}, timeout)
 
-Logdown.enable('-*')
-
-foobar.log('lorem')
-foo.log('lorem')
-bar.log('lorem')
-barfoo.log('lorem')
+timeout = i * gap
+i += 1
+setTimeout(function() {
+  demo.log('Demo finished')
+}, timeout)

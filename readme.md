@@ -13,8 +13,10 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 ## Preview
 
 ### Browser
-
 <img src="http://rawgit.com/caiogondim/logdown/master/browser-preview.gif">
+
+### Node.js / io.js
+<img src="http://rawgit.com/caiogondim/logdown/master/node-preview.gif">
 
 
 ## Using
