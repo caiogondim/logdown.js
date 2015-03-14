@@ -1,7 +1,7 @@
 {
   "name": "logdown",
   "version": "1.0.0",
-  "description": "Debug utility with markdown support that runs on the browser and node.js / io.js",
+  "description": "Debug utility with markdown support that runs on browser and server",
   "main": "index.js",
   "directories": {
     "example": "example"
