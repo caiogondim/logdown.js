@@ -146,9 +146,14 @@
       if (isBrowser()) {
         text = sanitizeStringToBrowser(text)
         preparedOutput = prepareOutputToBrowser(text, this)
-        console[method].apply(
+
+        // IE9 workaround
+        // http://stackoverflow.com/questions/5538972/
+        //  console-log-apply-not-working-in-ie9
+        Function.prototype.apply.call(
+          console[method],
           console,
-          [preparedOutput.parsedText].concat(preparedOutput.styles)
+          [[preparedOutput.parsedText].concat(preparedOutput.styles)]
         )
       } else if (isNode()) {
         text = sanitizeStringToNode(text)
