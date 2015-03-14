@@ -10,6 +10,7 @@ var uglify = require('gulp-uglify')
 var header = require('gulp-header')
 var ghPages = require('gulp-gh-pages')
 var rename = require('gulp-rename')
+var karma = require('karma').server
 
 // Test
 // ----
@@ -21,9 +22,9 @@ var jsFilesToBeStyleChecked = [
 ]
 var jsFilesToBeTested = ['test/index.js']
 
-gulp.task('mocha', ['jshint'], function() {
+gulp.task('jscs', function() {
   return gulp.src(jsFilesToBeTested)
-    .pipe(mocha())
+    .pipe(jscs())
 })
 
 gulp.task('jshint', ['jscs'], function() {
@@ -33,12 +34,19 @@ gulp.task('jshint', ['jscs'], function() {
     .pipe(jshint.reporter('fail'))
 })
 
-gulp.task('jscs', function() {
+gulp.task('mocha', ['jshint'], function() {
   return gulp.src(jsFilesToBeTested)
-    .pipe(jscs())
+    .pipe(mocha())
 })
 
-gulp.task('test', ['mocha'])
+gulp.task('karma', function(done) {
+  karma.start({
+    configFile: __dirname + '/test/karma.conf.js',
+    singleRun: true
+  }, done)
+})
+
+gulp.task('test', ['karma'])
 
 // Build
 // -----
