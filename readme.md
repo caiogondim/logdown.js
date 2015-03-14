@@ -10,6 +10,13 @@ cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
+## Preview
+
+### Browser
+
+<img src="http://rawgit.com/caiogondim/logdown/master/browser-preview.gif">
+
+
 ## Using
 
 In node.js or io.js
