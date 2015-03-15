@@ -8,7 +8,6 @@ It does not have any dependencies and is only 2K gzipped.
 
 ## Using
 
-Logdown works on the browser and on the server.
 The simplest use of the library in both platforms could be done as follows.
 
 ```js
@@ -22,12 +21,17 @@ var debug = new Logdown({prefix: 'foo'})
 var debug = new Logdown({prefix: 'foo'})
 ```
 It is highly recommended to use a prefix for your instance, this way you get
-
 a nice prefixed message on console and it is possible to silence instances
-based on the prefix name.
+based on the prefix name, as we will see after.
 
 After creating your object, you can use the regular `log`, `warn`, `info` and
 `error` methods as we have on `console`, but now with Markdown support.
+
+```js
+debug.log('lorem *ipsum*')
+debug.info('dolor _sit_ amet')
+debug.warn('consectetur `adipiscing` elit')
+```
 
 
 ### New objects
@@ -62,16 +66,15 @@ Type: 'Boolean'
 
 Default: `true`
 
-If setted to `false`, the markdown will not be parsed and stylized accordingly.
+If setted to `false`, markdown will not be parsed.
 
 ```js
 var bar = new Logdown({markdown: false})
 bar.log('Lorem *ipsum*') // Will not parse the markdown
 ```
 
-### Markdown support
-
 For Markdown, the following mark-up is supported:
+
 ```js
 // Bold with "*"" between words
 debug.log('lorem *ipsum*')
@@ -88,8 +91,7 @@ You can see it in action in the [example page](//caiogondim.github.io/logdown)
 
 ## Enabling/disabling instances
 
-Logdown was made to be the only one library for logging on JS applications. It
-is possible to enable/disable the output of instances using the
+It is possible to enable/disable the output of instances using the
 `Logdown.disable` or `Logdown.enable` methods.
 
 ```js
@@ -105,7 +107,7 @@ Logdown.diable('*') // disables all instances
 Logdown.enable('foo*') // enables all instances with a prefix starting with *foo*
 ```
 
-Use the `-` to negate
+Use `-` to do a negation.
 
 ```js
 // enables all instances but the one with *foo* prefix
