@@ -11,7 +11,7 @@
     "build": "gulp build",
     "deploy:example": "gulp deploy:example",
     "test:travisci": "gulp test:travisci",
-    "prepublish": "build"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

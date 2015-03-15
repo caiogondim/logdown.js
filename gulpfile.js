@@ -70,7 +70,7 @@ var banner = [
   ' */',
   ''].join('\n');
 
-gulp.task('build', function() {
+gulp.task('build', ['test'], function() {
   gulp.src('src/index.js')
     .pipe(uglify())
     .pipe(header(banner, {pkg: pkg}))
