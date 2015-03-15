@@ -5,7 +5,7 @@
 
 var chai = require('chai')
 var sinon = require('sinon')
-var Logdown = require('../src/index')
+var Logdown = require('logdown')
 
 sinon.assert.expose(chai.assert, {prefix: ''})
 var assert = chai.assert
