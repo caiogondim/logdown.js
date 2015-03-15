@@ -2,56 +2,42 @@
 
 # Logdown <img src="https://travis-ci.org/caiogondim/logdown.svg?branch=master" alt="Travis CI"> <img src="https://david-dm.org/caiogondim/logdown/dev-status.svg" alt="David DM">
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-
-## Preview
-
-### Browser
-<img src="http://rawgit.com/caiogondim/logdown/master/browser-preview.gif">
-
-### Node.js / io.js
-<img src="http://rawgit.com/caiogondim/logdown/master/node-preview.gif">
+Logdown is a debug utility for the browser and the server with Markdown support.
+It does not have any dependencies and is only 2K gzipped.
 
 
 ## Using
 
-In node.js or io.js
+Logdown works on the browser and on the server.
+The simplest use of the library in both platforms could be done as follows.
 
 ```js
+// In the server-side or client-side with Browserify
 var Logdown = require('logdown')
 var debug = new Logdown({prefix: 'foo'})
-debug.log('lorem')
-debug.warn('ipsum')
-debug.info('dolor')
-debug.error('sit amet')
 ```
-
-In the browser
 
 ```js
+// In the browser
 var debug = new Logdown({prefix: 'foo'})
-debug.log('lorem')
-debug.warn('ipsum')
-debug.info('dolor')
-debug.error('sit amet')
 ```
+It is highly recommended to use a prefix for your instance, this way you get
+
+a nice prefixed message on console and it is possible to silence instances
+based on the prefix name.
+
+After creating your object, you can use the regular `log`, `warn`, `info` and
+`error` methods as we have on `console`, but now with Markdown support.
 
 
-## API
+### New objects
 
-### `new Logdown(opts)`
-
-When creating a new `Logdown` object, you can pass the following values.
+The constructor accepts one object for configuration on instantiation time.
 
 #### `opts.prefix`
 
 Type: 'String'
+
 Default: `''`
 
 ```js
@@ -70,12 +56,10 @@ var quz = new Logdown({prefix: 'foo:quz'})
 quz.log('Lorem Ipsum')
 ```
 
-This way it is clear each module are logging information, and it is also easier
-to disable/enable some of them.
-
 #### `opts.markdown`
 
 Type: 'Boolean'
+
 Default: `true`
 
 If setted to `false`, the markdown will not be parsed and stylized accordingly.
@@ -85,71 +69,59 @@ var bar = new Logdown({markdown: false})
 bar.log('Lorem *ipsum*') // Will not parse the markdown
 ```
 
-### `instance.log()`
+### Markdown support
 
-In the server and the browser will use the `console.log()` native method, plus
-prefix and stylized markdown.
-
+For Markdown, the following mark-up is supported:
 ```js
-var bar = new Logdown()
-bar.log('Lorem *ipsum*')
+// Bold with "*"" between words
+debug.log('lorem *ipsum*')
+
+// Italic with "_" between words
+debug.log('lorem _ipsum_')
+
+// Code with ` (backtick) between words
+debug.log('lorem `ipsum`')
 ```
 
-### `instance.info()`
+You can see it in action in the [example page](//caiogondim.github.io/logdown)
 
-In the browser will use the `console.info()` native method, plus prefix and
-stylized markdown. In the server will use `console.log()`, plus a blue `ℹ` (to
-better mimic the browser behavior), prefix and stylized markdown.
 
-```js
-var bar = new Logdown()
-bar.info('Lorem *ipsum*')
-```
+## Enabling/disabling instances
 
-### `instance.warn()`
-
-In the browser will use the `console.warn()` native method, plus prefix and
-stylized markdown. In the server will use `console.log()`, plus a yellow `⚠` (to
-better mimic the browser behavior), prefix and stylized markdown.
+Logdown was made to be the only one library for logging on JS applications. It
+is possible to enable/disable the output of instances using the
+`Logdown.disable` or `Logdown.enable` methods.
 
 ```js
-var bar = new Logdown()
-bar.warn('Lorem *ipsum*')
+Logdown.disable('foo') // will disable the instance with *foo* prefix
+Logdown.enable('bar') // will enable the instance with *bar* prefix
 ```
 
-### `instance.error()`
-
-In the browser will use the `console.error()` native method, plus prefix and
-stylized markdown. In the server will use `console.log()`, plus a red `✖` (to
-better mimic the browser behavior), prefix and stylized markdown.
+You can also use wildcards.
 
 ```js
-var bar = new Logdown()
-bar.error('Lorem *ipsum*')
+Logdown.enable('*') // enables all instances
+Logdown.diable('*') // disables all instances
+Logdown.enable('foo*') // enables all instances with a prefix starting with *foo*
 ```
 
-### `Logdown.enable()`
-
-Enable some loggers by its prefix.
-It is possible to use `*` as wildcard and `-` as negation.
+Use the `-` to negate
 
 ```js
-var foo = new Logdown({prefix: 'foo'})
-var bar = new Logdown({prefix: 'bar'})
-
-// Will enable all Logdown instances, but the one with *foo* prefix
-Logdown.enable('*, -foo')
+// enables all instances but the one with *foo* prefix
+Logdown.enable('*', '-foo')
+// disables all intances with foo in the prefix, but don't disable *foobar*
+Logdown.disable('*foo*', '-foobar')
 ```
 
-### `Logdown.disable()`
 
-Disable some loggers by its prefix.
-It is possible to use `*` as wildcard and `-` as negation.
+## Preview
 
-```js
-// Disable all Logdown instances but the one with bar prefix
-Logdown.disable('*, -bar')
-```
+### Browser
+<img src="http://rawgit.com/caiogondim/logdown/master/browser-preview.gif">
+
+### Server
+<img src="http://rawgit.com/caiogondim/logdown/master/node-preview.gif">
 
 
 ## Support
