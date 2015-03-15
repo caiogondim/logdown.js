@@ -153,7 +153,7 @@
         Function.prototype.apply.call(
           console[method],
           console,
-          [[preparedOutput.parsedText].concat(preparedOutput.styles)]
+          [preparedOutput.parsedText].concat(preparedOutput.styles)
         )
       } else if (isNode()) {
         text = sanitizeStringToNode(text)
