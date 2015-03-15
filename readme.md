@@ -5,6 +5,9 @@
 Logdown is a debug utility for the browser and the server with Markdown support.
 It does not have any dependencies and is only 2K gzipped.
 
+You can see it in action in the [example page](//caiogondim.github.io/logdown)
+or in the preview below.
+
 
 ## Preview
 
@@ -17,7 +20,7 @@ It does not have any dependencies and is only 2K gzipped.
 
 ## Using
 
-The simplest use of the library in both platforms could be done as follows.
+The simplest use of the library in both platforms could be done as follow.
 
 ```js
 // In the server-side or client-side with Browserify
@@ -94,8 +97,6 @@ debug.log('lorem _ipsum_')
 // Code with ` (backtick) between words
 debug.log('lorem `ipsum`')
 ```
-
-You can see it in action in the [example page](//caiogondim.github.io/logdown)
 
 
 ## Enabling/disabling instances
