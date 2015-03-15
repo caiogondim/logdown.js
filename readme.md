@@ -6,6 +6,15 @@ Logdown is a debug utility for the browser and the server with Markdown support.
 It does not have any dependencies and is only 2K gzipped.
 
 
+## Preview
+
+### Browser
+<img src="http://rawgit.com/caiogondim/logdown/master/browser-preview.gif">
+
+### Server
+<img src="http://rawgit.com/caiogondim/logdown/master/node-preview.gif">
+
+
 ## Using
 
 The simplest use of the library in both platforms could be done as follows.
@@ -115,15 +124,6 @@ Logdown.enable('*', '-foo')
 // disables all intances with foo in the prefix, but don't disable *foobar*
 Logdown.disable('*foo*', '-foobar')
 ```
-
-
-## Preview
-
-### Browser
-<img src="http://rawgit.com/caiogondim/logdown/master/browser-preview.gif">
-
-### Server
-<img src="http://rawgit.com/caiogondim/logdown/master/node-preview.gif">
 
 
 ## Support
