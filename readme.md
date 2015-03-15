@@ -1,4 +1,4 @@
-<img src="http://rawgit.com/caiogondim/logdown/master/icon/icon.svg">
+<img src="http://rawgit.com/caiogondim/logdown/master/img/icon.svg">
 
 # Logdown <img src="https://travis-ci.org/caiogondim/logdown.svg?branch=master" alt="Travis CI"> <img src="https://david-dm.org/caiogondim/logdown/dev-status.svg" alt="David DM">
 
@@ -12,10 +12,10 @@ or in the preview below.
 ## Preview
 
 ### Browser
-<img src="http://rawgit.com/caiogondim/logdown/master/browser-preview.gif">
+<img src="http://rawgit.com/caiogondim/logdown/master/img/browser-preview.gif">
 
 ### Server
-<img src="http://rawgit.com/caiogondim/logdown/master/node-preview.gif">
+<img src="http://rawgit.com/caiogondim/logdown/master/img/node-preview.gif">
 
 
 ## Using
