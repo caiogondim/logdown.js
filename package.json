@@ -10,7 +10,7 @@
     "test": "gulp test",
     "build": "gulp build",
     "deploy:example": "gulp deploy:example",
-    "karma": "gulp karma"
+    "test:travisci": "gulp test:travisci"
   },
   "repository": {
     "type": "git",

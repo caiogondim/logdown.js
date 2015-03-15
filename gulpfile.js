@@ -45,7 +45,15 @@ gulp.task('karma', ['mocha'], function(done) {
   }, done)
 })
 
+gulp.task('karma-travisci', ['mocha'], function(done) {
+  karma.start({
+    configFile: __dirname + '/test/karma-travisci.conf.js',
+    singleRun: true
+  }, done)
+})
+
 gulp.task('test', ['karma'])
+gulp.task('test:travisci', ['karma-travisci'])
 
 // Build
 // -----
