@@ -1,7 +1,7 @@
 /**
  * logdown - Debug utility with markdown support that runs on browser and server
  *
- * @version v1.0.5
+ * @version v1.0.6
  * @link https://github.com/caiogondim/logdown
  * @author Caio Gondim <me@caiogondim.com> (http://caiogondim.com)
  * @license ISC
