@@ -10,7 +10,8 @@
     "test": "gulp test",
     "build": "gulp build",
     "deploy:example": "gulp deploy:example",
-    "test:travisci": "gulp test:travisci"
+    "test:travisci": "gulp test:travisci",
+    "prepublish": "build"
   },
   "repository": {
     "type": "git",
