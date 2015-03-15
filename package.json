@@ -1,6 +1,6 @@
 {
   "name": "logdown",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Debug utility with markdown support that runs on browser and server",
   "main": "dist/index.js",
   "directories": {
