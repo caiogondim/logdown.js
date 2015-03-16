@@ -730,5 +730,29 @@ methods.forEach(function(method) {
 
       sandbox.restore()
     })
+
+    // https://github.com/caiogondim/logdown/issues/14
+    xit('should print not-string arguments as is', function() {
+      try {
+        var foo = new Logdown()
+        var obj = {foo: 1, bar: 2}
+        foo[method](obj)
+        assert.calledWith(
+          console[method],
+          symbol +
+          '\u001b[' + foo.prefixColor[0] + 'm' +
+          '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
+          foo.prefix +
+          '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
+          '\u001b[' + foo.prefixColor[1] + 'm',
+          obj
+        )
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
   })
 })

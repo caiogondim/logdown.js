@@ -138,6 +138,7 @@
   methods.forEach(function(method) {
     Logdown.prototype[method] = function(text) {
       var preparedOutput
+      var args = []
 
       if (isDisabled(this)) {
         return
@@ -153,7 +154,8 @@
         Function.prototype.apply.call(
           console[method],
           console,
-          [preparedOutput.parsedText].concat(preparedOutput.styles)
+          [preparedOutput.parsedText]
+            .concat(preparedOutput.styles, [preparedOutput.notText])
         )
       } else if (isNode()) {
         text = sanitizeStringToNode(text)
@@ -179,9 +181,15 @@
             preparedOutput.parsedText
         }
 
+        //
+        args.push(preparedOutput.parsedText)
+        if (preparedOutput.notText) {
+          args.push(preparedOutput.notText)
+        }
+
         console[method].apply(
           console,
-          [preparedOutput.parsedText]
+          args
         )
       }
     }
@@ -292,19 +300,28 @@
     return matches[0]
   }
 
-  function prepareOutputToBrowser(text, instance) {
+  function prepareOutputToBrowser(data, instance) {
     var parsedMarkdown
     var parsedText
     var styles
+    //
+    var notText
 
-    if (instance.markdown && isColorSupported()) {
-      parsedMarkdown = parseMarkdown(text)
-      parsedText = parsedMarkdown.text
-      styles = parsedMarkdown.styles
+    if (typeof data === 'string') {
+      if (instance.markdown &&
+          isColorSupported()) {
+        parsedMarkdown = parseMarkdown(data)
+        parsedText = parsedMarkdown.text
+        styles = parsedMarkdown.styles
+      } else {
+        parsedText = data
+        styles = []
+      }
+    } else {
+      parsedText = parsedText || ''
+      styles = styles || []
+      notText = data
     }
-
-    parsedText = parsedText || text
-    styles = styles || []
 
     if (instance.prefix) {
       if (isColorSupported()) {
@@ -320,12 +337,14 @@
 
     return {
       parsedText: parsedText,
-      styles: styles
+      styles: styles,
+      notText: notText
     }
   }
 
-  function prepareOutputToNode(text, instance) {
-    var parsedText = text
+  function prepareOutputToNode(data, instance) {
+    var parsedText = ''
+    var notText
 
     if (instance.prefix) {
       if (isColorSupported()) {
@@ -334,21 +353,26 @@
           '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
           instance.prefix +
           '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-          '\u001b[' + instance.prefixColor[1] + 'm ' + parsedText
+          '\u001b[' + instance.prefixColor[1] + 'm '
       } else {
-        parsedText = '[' + instance.prefix + '] ' + parsedText
+        parsedText = '[' + instance.prefix + '] '
       }
     }
 
-    if (instance.markdown) {
-      parsedText = parseMarkdown(parsedText).text
+    if (typeof data === 'string') {
+      if (instance.markdown) {
+        parsedText += parseMarkdown(data).text
+      } else {
+        parsedText += data
+      }
     } else {
-      parsedText = text
+      notText = data
     }
 
     return {
       parsedText: parsedText,
-      styles: []
+      styles: [],
+      notText: notText
     }
   }
 
@@ -398,7 +422,11 @@
   }
 
   function sanitizeStringToBrowser(str) {
-    return str.replace(/\%c/g, '')
+    if (typeof str === 'string') {
+      return str.replace(/\%c/g, '')
+    } else {
+      return str
+    }
   }
 
   /**

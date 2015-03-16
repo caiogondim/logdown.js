@@ -1,5 +1,5 @@
 /* global describe, afterEach, beforeEach, console, it, require, window,
-global, Logdown, chai, sinon */
+global, Logdown, chai, sinon, xit */
 /* jshint -W038 */
 /* jshint unused:false */
 
@@ -705,6 +705,21 @@ global, Logdown, chai, sinon */
           //   'color:' + bar.prefixColor + '; font-weight:bold;',
           //   ''
           // )
+        } catch (error) {
+          sandbox.restore()
+          throw error
+        }
+
+        sandbox.restore()
+      })
+
+      // https://github.com/caiogondim/logdown/issues/14
+      xit('should print not-string arguments as is', function() {
+        try {
+          var foo = new Logdown()
+          var obj = {foo: 1, bar: 2}
+          foo[method](obj)
+          assert.calledWith()
         } catch (error) {
           sandbox.restore()
           throw error
