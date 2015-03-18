@@ -113,7 +113,7 @@ You can also use wildcards.
 
 ```js
 Logdown.enable('*') // enables all instances
-Logdown.diable('*') // disables all instances
+Logdown.disable('*') // disables all instances
 Logdown.enable('foo*') // enables all instances with a prefix starting with *foo*
 ```
 
