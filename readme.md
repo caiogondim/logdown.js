@@ -23,15 +23,24 @@ or in the preview below.
 The simplest use of the library in both platforms could be done as follows:
 
 ```js
+// In the browser
+var debug = new Logdown({prefix: 'foo'})
+```
+
+If on the server, install it through npm:
+
+```bash
+npm install --save-dev logdown
+```
+
+And then use it.
+
+```js
 // In the server-side or client-side with Browserify
 var Logdown = require('logdown')
 var debug = new Logdown({prefix: 'foo'})
 ```
 
-```js
-// In the browser
-var debug = new Logdown({prefix: 'foo'})
-```
 It is highly recommended to use a prefix for your instance, this way you get
 a nice prefixed message on console and it is possible to silence instances
 based on the prefix name, as we will see after.
