@@ -20,7 +20,7 @@ or in the preview below.
 
 ## Using
 
-The simplest use of the library in both platforms could be done as follow.
+The simplest use of the library in both platforms could be done as follows:
 
 ```js
 // In the server-side or client-side with Browserify
