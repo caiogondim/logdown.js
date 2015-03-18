@@ -30,7 +30,7 @@ var debug = new Logdown({prefix: 'foo'})
 If on the server, install it through npm:
 
 ```bash
-npm install --save-dev logdown
+npm install --save logdown
 ```
 
 And then use it.
