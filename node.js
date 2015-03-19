@@ -1,6 +1,6 @@
 'use strict'
 
-var Logdown = require('../src/index')
+var Logdown = require('../')
 
 var demo = new Logdown({prefix: 'demo'})
 
