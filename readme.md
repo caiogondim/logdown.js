@@ -24,7 +24,7 @@ The simplest use of the library in both platforms could be done as follows:
 
 ```js
 // In the browser
-var debug = new Logdown({prefix: 'foo'})
+var logger = new Logdown({prefix: 'foo'})
 ```
 
 If on the server, install it through npm:
@@ -38,7 +38,7 @@ And then use it.
 ```js
 // In the server-side or client-side with Browserify
 var Logdown = require('logdown')
-var debug = new Logdown({prefix: 'foo'})
+var logger = new Logdown({prefix: 'foo'})
 ```
 
 It is highly recommended to use a prefix for your instance, this way you get
@@ -49,9 +49,9 @@ After creating your object, you can use the regular `log`, `warn`, `info` and
 `error` methods as we have on `console`, but now with Markdown support.
 
 ```js
-debug.log('lorem *ipsum*')
-debug.info('dolor _sit_ amet')
-debug.warn('consectetur `adipiscing` elit')
+logger.log('lorem *ipsum*')
+logger.info('dolor _sit_ amet')
+logger.warn('consectetur `adipiscing` elit')
 ```
 
 
@@ -66,8 +66,8 @@ Type: 'String'
 Default: `''`
 
 ```js
-var debug = new Logdown({prefix: 'foo'})
-debug.log('Lorem ipsum') // Will use console.log with a prefix
+var logger = new Logdown({prefix: 'foo'})
+logger.log('Lorem ipsum') // Will use console.log with a prefix
 ```
 
 You should use the name of your module.
@@ -98,13 +98,13 @@ For Markdown, the following mark-up is supported:
 
 ```js
 // Bold with "*"" between words
-debug.log('lorem *ipsum*')
+logger.log('lorem *ipsum*')
 
 // Italic with "_" between words
-debug.log('lorem _ipsum_')
+logger.log('lorem _ipsum_')
 
 // Code with ` (backtick) between words
-debug.log('lorem `ipsum`')
+logger.log('lorem `ipsum`')
 ```
 
 
