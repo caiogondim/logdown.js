@@ -74,11 +74,11 @@ You should use the name of your module.
 You can, also, use `:` to separate modules inside one big module.
 
 ```js
-var bar = new Logdown({prefix: 'foo:bar'})
-bar.log('Lorem ipsum')
+var fooBarLogger = new Logdown({prefix: 'foo:bar'})
+fooBarLogger.log('Lorem ipsum')
 
-var quz = new Logdown({prefix: 'foo:quz'})
-quz.log('Lorem Ipsum')
+var fooQuzLogger = new Logdown({prefix: 'foo:quz'})
+fooQuzLogger.log('Lorem Ipsum')
 ```
 
 #### `opts.markdown`
@@ -90,8 +90,8 @@ Default: `true`
 If setted to `false`, markdown will not be parsed.
 
 ```js
-var bar = new Logdown({markdown: false})
-bar.log('Lorem *ipsum*') // Will not parse the markdown
+var logger = new Logdown({markdown: false})
+logger.log('Lorem *ipsum*') // Will not parse the markdown
 ```
 
 For Markdown, the following mark-up is supported:
