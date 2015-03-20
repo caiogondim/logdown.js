@@ -54,6 +54,13 @@ logger.info('dolor _sit_ amet')
 logger.warn('consectetur `adipiscing` elit')
 ```
 
+You can pass multiple arguments
+
+```js
+logger.log('lorem', '*ipsum*')
+logger.info('dolor _sit_', 'amet')
+logger.warn('consectetur', '`adipiscing` elit')
+```
 
 ### New objects
 

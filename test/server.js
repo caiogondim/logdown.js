@@ -600,6 +600,46 @@ methods.forEach(function(method) {
       sandbox.restore()
     })
 
+    it('should output multiple arguments', function() {
+      try {
+        var foo = new Logdown({markdown: true})
+
+        foo[method]('one', 'two', 'three')
+        assert.calledWith(
+          console[method],
+          symbol +
+          'one two three'
+        )
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
+    it('should parse markdown in multiple arguments', function() {
+      try {
+        var foo = new Logdown({markdown: true})
+
+        foo[method]('one', '*two*', 'three')
+        assert.calledWith(
+          console[method],
+          symbol +
+          'one ' +
+          '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
+          'two' +
+          '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
+          ' three'
+        )
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
     it('should parse markdown if enabled', function() {
       try {
         var foo = new Logdown({markdown: true})

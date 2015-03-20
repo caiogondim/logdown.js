@@ -136,13 +136,16 @@
 
   var methods = ['log', 'info', 'warn', 'error']
   methods.forEach(function(method) {
-    Logdown.prototype[method] = function(text) {
+    Logdown.prototype[method] = function() {
       var preparedOutput
       var args = []
 
       if (isDisabled(this)) {
         return
       }
+
+      var text = Array.prototype.slice.call(arguments, 0).join(' ');
+      // var text = arguments[0];
 
       if (isBrowser()) {
         text = sanitizeStringToBrowser(text)
