@@ -163,6 +163,16 @@ Latest ✔ | Latest ✔ | 9+ ✔ | Latest ✔ | 8.0+ ✔ |
 - Markdown icon by [Dustin Curtis](https://github.com/dcurtis/markdown-mark)
 
 
+## Contributors
+
+```
+101 Caio Gondim     97.1%
+1   Bent Cardan     1.0%
+1   Dan Lukinykh    1.0%
+1   Gleb Bahmutov   1.0%
+```
+
+
 ## License
 The MIT License (MIT)
 
