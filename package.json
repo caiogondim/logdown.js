@@ -47,6 +47,7 @@
     "karma-chrome-launcher": "^0.1.7",
     "karma-cli": "0.0.4",
     "karma-firefox-launcher": "^0.1.4",
+    "karma-ie-launcher": "^0.1.5",
     "karma-mocha": "^0.1.10",
     "karma-safari-launcher": "^0.1.1",
     "karma-sinon": "^1.0.4",
