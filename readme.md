@@ -22,15 +22,20 @@ or in the preview below.
 
 The simplest use of the library in both platforms could be done as follows:
 
-```js
-// In the browser
-var logger = new Logdown({prefix: 'foo'})
-```
-
 If on the server, install it through npm:
 
 ```bash
 npm install --save logdown
+```
+
+In the browser you can use as in the server if you use
+[Browserify](http://browserify.org/), or you can just download it
+[here](https://github.com/caiogondim/logdown/archive/master.zip) and put the
+`dist/index.js` file in your public folder.
+
+```js
+// In the browser
+var logger = new Logdown({prefix: 'foo'})
 ```
 
 And then use it.
@@ -161,6 +166,16 @@ Latest ✔ | Latest ✔ | 9+ ✔ | Latest ✔ | 8.0+ ✔ |
 ## Credits
 - Moleskine icon by [Monika Ciapala](http://thenounproject.com/merdesign/)
 - Markdown icon by [Dustin Curtis](https://github.com/dcurtis/markdown-mark)
+
+
+## Contributors
+
+```
+101 Caio Gondim     97.1%
+1   Bent Cardan     1.0%
+1   Dan Lukinykh    1.0%
+1   Gleb Bahmutov   1.0%
+```
 
 
 ## License
