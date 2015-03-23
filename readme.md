@@ -147,6 +147,19 @@ Logdown.enable('*', '-foo')
 Logdown.disable('*foo*', '-foobar')
 ```
 
+## Logging all errors
+
+You can show errors, even if a particular logger is disabled.
+
+```js
+// create a logger that even if disabled will output .error messages
+new Logdown({ prefix: 'foo', logAllErrors: true })
+// set logAllErrors flag on all loggers (static method)
+Logdown.logAllErrors(true)
+```
+
+This is helpful if you are not interested in normal logs, but still want to have any unexpected
+runtime information logged.
 
 ## Support
 
