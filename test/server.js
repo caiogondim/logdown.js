@@ -796,3 +796,63 @@ methods.forEach(function(method) {
     })
   })
 })
+
+describe('logAllErrors', function() {
+  var sandbox
+
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create()
+    sandbox.stub(global.console, 'log')
+    sandbox.stub(global.console, 'error')
+  })
+
+  it('should output errors even if this logger is disabled', function() {
+    Logdown.enable('*')
+    Logdown.disable('*')
+
+    var fooBar = new Logdown({
+      prefix: 'fooBar',
+      logAllErrors: true
+    })
+
+    Logdown.disable('fooBar')
+
+    try {
+      fooBar.log('Lorem')
+      assert.notCalled(console.log, 'fooBar.log is disabled')
+
+      fooBar.error('no!!!')
+      assert.called(console.error, 'fooBar.error is working')
+    } catch (error) {
+      sandbox.restore()
+      throw error
+    }
+
+    sandbox.restore()
+  })
+
+  it('enabled log all errors for all', function() {
+    Logdown.enable('*')
+    Logdown.disable('*')
+
+    var barBaz = new Logdown({
+      prefix: 'barBaz'
+    })
+
+    Logdown.disable('barBaz')
+    Logdown.logAllErrors(true)
+
+    try {
+      barBaz.log('Lorem')
+      assert.notCalled(console.log, 'barBaz.log is disabled')
+
+      barBaz.error('oh no!!!')
+      assert.called(console.error, 'barBaz.error is working')
+    } catch (error) {
+      sandbox.restore()
+      throw error
+    }
+
+    sandbox.restore()
+  })
+})

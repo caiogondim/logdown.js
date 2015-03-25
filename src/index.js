@@ -72,6 +72,9 @@
     this.prefix = prefix
 
     //
+    this.logErrors = Boolean(opts.logAllErrors)
+
+    //
     instances.push(this)
 
     if (isBrowser()) {
@@ -131,6 +134,12 @@
     })
   }
 
+  Logdown.logAllErrors = function(value) {
+    instances.forEach(function(instance) {
+      instance.logErrors = !!value;
+    })
+  }
+
   // Public
   // ------
 
@@ -141,7 +150,9 @@
       var args = []
 
       if (isDisabled(this)) {
-        return
+        if (!(method === 'error' && this.logErrors)) {
+          return
+        }
       }
 
       var text = Array.prototype.slice.call(arguments, 0).join(' ');
