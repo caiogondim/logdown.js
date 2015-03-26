@@ -158,7 +158,8 @@
           console[method],
           console,
           [preparedOutput.parsedText]
-            .concat(preparedOutput.styles, [preparedOutput.notText])
+            .concat(preparedOutput.styles, 
+                          'undefined' !== typeof preparedOutput.notText? [preparedOutput.notText] : '')
         )
       } else if (isNode()) {
         text = sanitizeStringToNode(text)
