@@ -75,18 +75,16 @@ gulp.task('build', function() {
     .pipe(uglify())
     .pipe(header(banner, {pkg: pkg}))
     .pipe(gulp.dest('dist'))
+    .pipe(rename({
+      basename: 'logdown'
+    }))
+    .pipe(gulp.dest('./example/lib'))
 })
 
 // Deploy
 // ------
 
 gulp.task('deploy:example', ['build'], function() {
-  gulp.src('./dist/index.js')
-    .pipe(rename({
-      basename: 'logdown'
-    }))
-    .pipe(gulp.dest('./example/lib'))
-
   return gulp.src('./example/**')
     .pipe(ghPages())
 })
