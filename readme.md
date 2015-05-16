@@ -30,8 +30,14 @@ If on the server, install it through npm:
 npm install --save logdown
 ```
 
-In the browser you can use as in the server if you use
-[Browserify](http://browserify.org/), or you can just download it
+In the browser you can install it through [bower](http://bower.io).
+
+```bash
+bower install logdown
+```
+
+You can also use the lib in the browser in the same way as in the server if you
+use [Browserify](http://browserify.org/). Or you can just download it
 [here](https://github.com/caiogondim/logdown/archive/master.zip) and put the
 `dist/index.js` file in your public folder.
 
