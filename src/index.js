@@ -96,10 +96,7 @@
       var regExp = prepareRegExpForPrefixSearch(str)
 
       if (str === '*') {
-        filterRegExps = [{
-          type: 'enable',
-          regExp: regExp
-        }]
+        filterRegExps = []
       } else {
         filterRegExps.push({
           type: 'enable',
@@ -382,8 +379,22 @@
   }
 
   function isDisabled(instance) {
-    var isDisabled_ = false
+    // Parsing NODE_DEBUG env var
+    if (process !== undefined &&
+        process.env !== undefined &&
+        process.env.NODE_DEBUG !== undefined &&
+        process.env.NODE_DEBUG !== '' &&
+        filterRegExps.length === 0) {
+      Logdown.disable('*')
+      process.env.NODE_DEBUG
+        .split(',')
+        .forEach(function(regExp) {
+          Logdown.enable(regExp)
+        })
+    }
 
+    // Now checks if instance is disabled
+    var isDisabled_ = false
     filterRegExps.forEach(function(filter) {
       if (filter.type === 'enable' && filter.regExp.test(instance.prefix)) {
         isDisabled_ = false
