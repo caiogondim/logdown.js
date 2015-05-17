@@ -17,7 +17,7 @@ var karma = require('karma').server
 
 var jsFilesToBeStyleChecked = [
   './src/*.js',
-  './test/*.js',
+  './test/**/*.js',
   'gulpfile.js'
 ]
 
@@ -34,7 +34,7 @@ gulp.task('jshint', ['jscs'], function() {
 })
 
 gulp.task('mocha', ['jshint'], function() {
-  return gulp.src('test/server.js')
+  return gulp.src(['test/server/*.js', 'test/server.js'])
     .pipe(mocha())
 })
 

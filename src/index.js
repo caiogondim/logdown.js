@@ -379,7 +379,9 @@
   }
 
   function isDisabled(instance) {
-    // Parsing NODE_DEBUG env var
+    // Parsing NODE_DEBUG env var.
+    // We verify NODE_DEBUG and DEBUG env vars on runtime so it is
+    // easier to test.
     if (process !== undefined &&
         process.env !== undefined &&
         process.env.NODE_DEBUG !== undefined &&
