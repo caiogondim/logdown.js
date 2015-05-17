@@ -12,11 +12,18 @@ var assert = chai.assert
 
 describe('NODE_DEBUG and DEBUG environment variables', function() {
   var sandbox
+  // NODE_DEBUG is the official env var supported by Node
+  // https://nodejs.org/api/util.html#util_util_debuglog_section
+  // DEBUG is for compatibility with the debug lib
+  var envVars = ['NODE_DEBUG', 'DEBUG']
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create()
     sandbox.stub(global.console, 'log')
 
+    envVars.forEach(function(envVar) {
+      process.env[envVar] = ''
+    })
     Logdown.enable('*')
   })
 
@@ -24,189 +31,217 @@ describe('NODE_DEBUG and DEBUG environment variables', function() {
     sandbox.restore()
   })
 
-  it('`NODE_DEBUG=foo` should enable only instances with “foo” prefix',
-     function() {
-    try {
-      var foo = new Logdown({prefix: 'foo'})
-      var bar = new Logdown({prefix: 'bar'})
-      var quz = new Logdown({prefix: 'quz'})
-      var baz = new Logdown({prefix: 'baz'})
+  envVars.forEach(function(envVar) {
+    it('`' + envVar + '=foo` should enable only instances with “foo” prefix',
+       function() {
+      try {
+        var foo = new Logdown({prefix: 'foo'})
+        var bar = new Logdown({prefix: 'bar'})
+        var quz = new Logdown({prefix: 'quz'})
+        var baz = new Logdown({prefix: 'baz'})
 
-      process.env.NODE_DEBUG = 'foo'
+        process.env[envVar] = 'foo'
 
-      bar.log('lorem')
-      assert.notCalled(console.log)
-      quz.log('lorem')
-      assert.notCalled(console.log)
-      baz.log('lorem')
-      assert.notCalled(console.log)
-      foo.log('lorem')
-      assert.called(console.log)
+        bar.log('lorem')
+        assert.notCalled(console.log)
+        quz.log('lorem')
+        assert.notCalled(console.log)
+        baz.log('lorem')
+        assert.notCalled(console.log)
+        foo.log('lorem')
+        assert.called(console.log)
+
+        sandbox.restore()
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
 
       sandbox.restore()
-    } catch (error) {
-      sandbox.restore()
-      throw error
-    }
+    })
 
-    sandbox.restore()
+    xit('`' + envVar + '=*foo` should enable only instances with names ' +
+       'ending with “foo”', function() {
+      try {
+        var foo = new Logdown({prefix: 'foo'})
+        var bar = new Logdown({prefix: 'bar'})
+        var foobar = new Logdown({prefix: 'foobar'})
+        var barfoo = new Logdown({prefix: 'barfoo'})
+
+        process.env[envVar] = '*foo'
+
+        bar.log('lorem')
+        foobar.log('lorem')
+        assert.notCalled(console.log)
+        foo.log('lorem')
+        barfoo.log('lorem')
+        assert.calledTwice(console.log)
+
+        sandbox.restore()
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
+    xit('`' + envVar + '=foo*` should enable only instances with names ' +
+       'beginning with “foo”', function() {
+      try {
+        var foo = new Logdown({prefix: 'foo'})
+        var bar = new Logdown({prefix: 'bar'})
+        var foobar = new Logdown({prefix: 'foobar'})
+        var barfoo = new Logdown({prefix: 'barfoo'})
+
+        process.env[envVar] = 'foo*'
+
+        bar.log('lorem')
+        barfoo.log('lorem')
+        assert.notCalled(console.log)
+        foobar.log('lorem')
+        foo.log('lorem')
+        assert.calledTwice(console.log)
+
+        sandbox.restore()
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
+    it('`' + envVar + '=-*` should disable all instances', function() {
+      try {
+        var foo = new Logdown({prefix: 'foo'})
+        var bar = new Logdown({prefix: 'bar'})
+        var foobar = new Logdown({prefix: 'foobar'})
+        var barfoo = new Logdown({prefix: 'barfoo'})
+
+        process.env[envVar] = '-*'
+
+        foobar.log('lorem')
+        foo.log('lorem')
+        bar.log('lorem')
+        barfoo.log('lorem')
+        assert.notCalled(console.log)
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
+    it('`' + envVar + '=*,-foo` should enable all but only instances ' +
+       'with “foo” prefix', function() {
+      try {
+        var foo = new Logdown({prefix: 'foo'})
+        var bar = new Logdown({prefix: 'bar'})
+        var quz = new Logdown({prefix: 'quz'})
+        var baz = new Logdown({prefix: 'baz'})
+
+        process.env[envVar] = '*,-foo'
+
+        foo.log('lorem')
+        assert.notCalled(console.log)
+        bar.log('lorem')
+        quz.log('lorem')
+        baz.log('lorem')
+        assert.calledThrice(console.log)
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
+    it('`' + envVar + '=*,-*foo` should enable all but instances with names ' +
+       'ending with “foo”', function() {
+      try {
+        var foo = new Logdown({prefix: 'foo'})
+        var bar = new Logdown({prefix: 'bar'})
+        var foobar = new Logdown({prefix: 'foobar'})
+        var barfoo = new Logdown({prefix: 'barfoo'})
+
+        process.env[envVar] = '*,-*foo'
+
+        foo.log('lorem')
+        barfoo.log('lorem')
+        assert.notCalled(console.log)
+        bar.log('lorem')
+        foobar.log('lorem')
+        assert.calledTwice(console.log)
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
+    it('`' + envVar + '=*,-foo*` should enable all but instances with names ' +
+       'beginning with “foo”', function() {
+      try {
+        var foo = new Logdown({prefix: 'foo'})
+        var bar = new Logdown({prefix: 'bar'})
+        var foobar = new Logdown({prefix: 'foobar'})
+        var barfoo = new Logdown({prefix: 'barfoo'})
+
+        process.env[envVar] = '*,-foo*'
+
+        foobar.log('lorem')
+        foo.log('lorem')
+        assert.notCalled(console.log)
+        bar.log('lorem')
+        barfoo.log('lorem')
+        assert.calledTwice(console.log)
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
+    it('`' + envVar +   '` should accept N arguments', function() {
+      try {
+        var foo = new Logdown({prefix: 'foo'})
+        var bar = new Logdown({prefix: 'bar'})
+        var foobar = new Logdown({prefix: 'foobar'})
+        var barfoo = new Logdown({prefix: 'barfoo'})
+
+        Logdown.enable('*')
+        process.env[envVar] = 'foo,barfoo'
+
+        bar.log('lorem')
+        foobar.log('lorem')
+        assert.notCalled(console.log)
+        foo.log('lorem')
+        barfoo.log('lorem')
+        assert.calledTwice(console.log)
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
   })
 
-  xit('`NODE_DEBUG=*foo` should enable only instances with names ' +
-     'ending with “foo”', function() {
+  // If `NODE_DEBUG` and `DEBUG` is declared, we should omit `DEBUG` and only
+  // get the values in `NODE_DEBUG`
+  it('`NODE_DEBUG` should have precedence over `DEBUG`', function() {
     try {
       var foo = new Logdown({prefix: 'foo'})
       var bar = new Logdown({prefix: 'bar'})
       var foobar = new Logdown({prefix: 'foobar'})
       var barfoo = new Logdown({prefix: 'barfoo'})
 
-      process.env.NODE_DEBUG = '*foo'
-
-      bar.log('lorem')
-      foobar.log('lorem')
-      assert.notCalled(console.log)
-      foo.log('lorem')
-      barfoo.log('lorem')
-      assert.calledTwice(console.log)
-
-      sandbox.restore()
-    } catch (error) {
-      sandbox.restore()
-      throw error
-    }
-
-    sandbox.restore()
-  })
-
-  xit('`NODE_DEBUG=foo*` should enable only instances with names ' +
-     'beginning with “foo”', function() {
-    try {
-      var foo = new Logdown({prefix: 'foo'})
-      var bar = new Logdown({prefix: 'bar'})
-      var foobar = new Logdown({prefix: 'foobar'})
-      var barfoo = new Logdown({prefix: 'barfoo'})
-
-      process.env.NODE_DEBUG = 'foo*'
-
-      bar.log('lorem')
-      barfoo.log('lorem')
-      assert.notCalled(console.log)
-      foobar.log('lorem')
-      foo.log('lorem')
-      assert.calledTwice(console.log)
-
-      sandbox.restore()
-    } catch (error) {
-      sandbox.restore()
-      throw error
-    }
-
-    sandbox.restore()
-  })
-
-  it('`NODE_DEBUG=-*` should disable all instances', function() {
-    try {
-      var foo = new Logdown({prefix: 'foo'})
-      var bar = new Logdown({prefix: 'bar'})
-      var foobar = new Logdown({prefix: 'foobar'})
-      var barfoo = new Logdown({prefix: 'barfoo'})
-
-      process.env.NODE_DEBUG = '-*'
-
-      foobar.log('lorem')
-      foo.log('lorem')
-      bar.log('lorem')
-      barfoo.log('lorem')
-      assert.notCalled(console.log)
-    } catch (error) {
-      sandbox.restore()
-      throw error
-    }
-
-    sandbox.restore()
-  })
-
-  it('`NODE_DEBUG=*,-foo` should enable all but only instances ' +
-     'with “foo” prefix', function() {
-    try {
-      var foo = new Logdown({prefix: 'foo'})
-      var bar = new Logdown({prefix: 'bar'})
-      var quz = new Logdown({prefix: 'quz'})
-      var baz = new Logdown({prefix: 'baz'})
-
-      process.env.NODE_DEBUG = '*,-foo'
-
-      foo.log('lorem')
-      assert.notCalled(console.log)
-      bar.log('lorem')
-      quz.log('lorem')
-      baz.log('lorem')
-      assert.calledThrice(console.log)
-    } catch (error) {
-      sandbox.restore()
-      throw error
-    }
-
-    sandbox.restore()
-  })
-
-  it('`NODE_DEBUG=*,-*foo` should enable all but instances with names ' +
-     'ending with “foo”', function() {
-    try {
-      var foo = new Logdown({prefix: 'foo'})
-      var bar = new Logdown({prefix: 'bar'})
-      var foobar = new Logdown({prefix: 'foobar'})
-      var barfoo = new Logdown({prefix: 'barfoo'})
-
-      process.env.NODE_DEBUG = '*,-*foo'
-
-      foo.log('lorem')
-      barfoo.log('lorem')
-      assert.notCalled(console.log)
-      bar.log('lorem')
-      foobar.log('lorem')
-      assert.calledTwice(console.log)
-    } catch (error) {
-      sandbox.restore()
-      throw error
-    }
-
-    sandbox.restore()
-  })
-
-  it('NODE_DEBUG=`*,-foo*` should enable all but instances with names ' +
-     'beginning with “foo”', function() {
-    try {
-      var foo = new Logdown({prefix: 'foo'})
-      var bar = new Logdown({prefix: 'bar'})
-      var foobar = new Logdown({prefix: 'foobar'})
-      var barfoo = new Logdown({prefix: 'barfoo'})
-
-      process.env.NODE_DEBUG = '*,-foo*'
-
-      foobar.log('lorem')
-      foo.log('lorem')
-      assert.notCalled(console.log)
-      bar.log('lorem')
-      barfoo.log('lorem')
-      assert.calledTwice(console.log)
-    } catch (error) {
-      sandbox.restore()
-      throw error
-    }
-
-    sandbox.restore()
-  })
-
-  it('NODE_DEBUG should accept N arguments', function() {
-    try {
-      var foo = new Logdown({prefix: 'foo'})
-      var bar = new Logdown({prefix: 'bar'})
-      var foobar = new Logdown({prefix: 'foobar'})
-      var barfoo = new Logdown({prefix: 'barfoo'})
-
-      Logdown.enable('*')
       process.env.NODE_DEBUG = 'foo,barfoo'
+      process.env.DEBUG = 'bar,foobar'
 
       bar.log('lorem')
       foobar.log('lorem')

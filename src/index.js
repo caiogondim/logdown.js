@@ -379,20 +379,30 @@
   }
 
   function isDisabled(instance) {
-    // Parsing NODE_DEBUG env var.
-    // We verify NODE_DEBUG and DEBUG env vars on runtime so it is
+    // Parsing `NODE_DEBUG` and `DEBUG` env var.
+    // We verify `NODE_DEBUG` and `DEBUG` env vars on runtime so it is
     // easier to test.
+    var envVar = null
     if (typeof process !== 'undefined' &&
         process.env !== undefined &&
-        process.env.NODE_DEBUG !== undefined &&
-        process.env.NODE_DEBUG !== '' &&
         filterRegExps.length === 0) {
-      Logdown.disable('*')
-      process.env.NODE_DEBUG
-        .split(',')
-        .forEach(function(regExp) {
-          Logdown.enable(regExp)
-        })
+      // `NODE_DEBUG` has precedence over `DEBUG`
+      if (process.env.NODE_DEBUG !== undefined &&
+          process.env.NODE_DEBUG !== '') {
+        envVar = 'NODE_DEBUG'
+      } else if (process.env.DEBUG !== undefined &&
+                 process.env.DEBUG !== '') {
+        envVar = 'DEBUG'
+      }
+
+      if (envVar) {
+        Logdown.disable('*')
+        process.env[envVar]
+          .split(',')
+          .forEach(function(regExp) {
+            Logdown.enable(regExp)
+          })
+      }
     }
 
     // Now checks if instance is disabled
