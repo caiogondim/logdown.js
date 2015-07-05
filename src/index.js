@@ -131,7 +131,7 @@
   // Public
   // ------
 
-  var methods = ['log', 'info', 'warn', 'error']
+  var methods = ['debug', 'log', 'info', 'warn', 'error']
   methods.forEach(function(method) {
     Logdown.prototype[method] = function() {
       var preparedOutput
@@ -152,7 +152,7 @@
         // http://stackoverflow.com/questions/5538972/
         //  console-log-apply-not-working-in-ie9
         Function.prototype.apply.call(
-          console[method],
+          console[method] || console.log,
           console,
           [preparedOutput.parsedText]
             .concat(preparedOutput.styles,
@@ -180,6 +180,12 @@
             '\u001b[' + ansiColors.colors.blue[0] + 'm' +
             'ℹ' +
             '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
+            preparedOutput.parsedText
+        } else if (method === 'debug') {
+          preparedOutput.parsedText =
+            '\u001b[' + ansiColors.colors.gray[0] + 'm' +
+            '🐛' +
+            '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
             preparedOutput.parsedText
         }
 
