@@ -44,13 +44,18 @@ var ansiColors = {
   }
 };
 
-var methods = ['log', 'info', 'warn', 'error']
+var methods = ['debug', 'log', 'info', 'warn', 'error']
 methods.forEach(function(method) {
   describe('Logdown::' + method, function() {
     var sandbox
     var symbol = ''
 
-    if (method === 'info') {
+    if (method === 'debug') {
+      symbol =
+        '\u001b[' + ansiColors.colors.gray[0] + 'm' +
+        '🐛' +
+        '\u001b[' + ansiColors.colors.gray[1] + 'm '
+    } else if (method === 'info') {
       symbol =
         '\u001b[' + ansiColors.colors.blue[0] + 'm' +
         'ℹ' +
@@ -68,6 +73,7 @@ methods.forEach(function(method) {
     }
 
     beforeEach(function() {
+      global.console[method] = global.console[method] || global.console.log;
       sandbox = sinon.sandbox.create()
       sandbox.stub(global.console, method)
 
