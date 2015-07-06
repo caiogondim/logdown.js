@@ -73,6 +73,7 @@ methods.forEach(function(method) {
     }
 
     beforeEach(function() {
+      global.console[method] = global.console[method] || global.console.log;
       sandbox = sinon.sandbox.create()
       sandbox.stub(global.console, method)
 

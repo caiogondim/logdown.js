@@ -195,7 +195,7 @@
           args.push(preparedOutput.notText)
         }
 
-        console[method].apply(
+        (console[method] || console.log).apply(
           console,
           args
         )
