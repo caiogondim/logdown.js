@@ -14,6 +14,7 @@ var karma = require('karma').server
 var bump = require('gulp-bump')
 var runSequence = require('run-sequence')
 var tagVersion = require('gulp-tag-version')
+var git = require('gulp-git')
 
 // Test
 // ----
@@ -97,6 +98,7 @@ gulp.task('deploy:example', ['build'], function() {
 
 gulp.task('tag-version', function() {
   gulp.src(['./package.json'])
+    .pipe(git.commit('Version bump'))
     .pipe(tagVersion())
 })
 
@@ -123,9 +125,9 @@ gulp.task('release:major', function(callback) {
 })
 
 gulp.task('release:minor', function(callback) {
-  runSequence('bump:minor', 'build', 'tag-version',callback)
+  runSequence('bump:minor', 'build', 'tag-version', callback)
 })
 
 gulp.task('release:patch', function(callback) {
-  runSequence('bump:patch', 'build', 'tag-version',callback)
+  runSequence('bump:patch', 'build', 'tag-version', callback)
 })
