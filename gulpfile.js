@@ -13,6 +13,7 @@ var rename = require('gulp-rename')
 var karma = require('karma').server
 var bump = require('gulp-bump')
 var runSequence = require('run-sequence')
+var tagVersion = require('gulp-tag-version')
 
 // Test
 // ----
@@ -94,6 +95,11 @@ gulp.task('deploy:example', ['build'], function() {
 // Release
 // -------
 
+gulp.task('tag-version', function() {
+  gulp.src(['./package.json'])
+    .pipe(tagVersion())
+})
+
 gulp.task('bump:major', function() {
   return gulp.src(['package.json', 'bower.json'])
     .pipe(bump({type: 'major'}))
@@ -113,13 +119,13 @@ gulp.task('bump:patch', function() {
 })
 
 gulp.task('release:major', function(callback) {
-  runSequence('bump:major', 'build', callback)
+  runSequence('bump:major', 'build', 'tag-version', callback)
 })
 
 gulp.task('release:minor', function(callback) {
-  runSequence('bump:minor', 'build', callback)
+  runSequence('bump:minor', 'build', 'tag-version',callback)
 })
 
 gulp.task('release:patch', function(callback) {
-  runSequence('bump:patch', 'build', callback)
+  runSequence('bump:patch', 'build', 'tag-version',callback)
 })
