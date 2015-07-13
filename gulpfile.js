@@ -11,6 +11,8 @@ var header = require('gulp-header')
 var ghPages = require('gulp-gh-pages')
 var rename = require('gulp-rename')
 var karma = require('karma').server
+var bump = require('gulp-bump')
+var runSequence = require('run-sequence')
 
 // Test
 // ----
@@ -58,19 +60,19 @@ gulp.task('test:travisci', ['karma-travisci'])
 // Build
 // -----
 
-var pkg = require('./package.json')
-var banner = [
-  '/**',
-  ' * <%= pkg.name %> - <%= pkg.description %>',
-  ' *',
-  ' * @version v<%= pkg.version %>',
-  ' * @link <%= pkg.homepage %>',
-  ' * @author <%= pkg.author %>',
-  ' * @license <%= pkg.license %>',
-  ' */',
-  ''].join('\n');
-
 gulp.task('build', function() {
+  var pkg = require('./package.json')
+  var banner = [
+    '/**',
+    ' * <%= pkg.name %> - <%= pkg.description %>',
+    ' *',
+    ' * @version v<%= pkg.version %>',
+    ' * @link <%= pkg.homepage %>',
+    ' * @author <%= pkg.author %>',
+    ' * @license <%= pkg.license %>',
+    ' */',
+    ''].join('\n');
+
   gulp.src('src/index.js')
     .pipe(uglify())
     .pipe(header(banner, {pkg: pkg}))
@@ -87,4 +89,37 @@ gulp.task('build', function() {
 gulp.task('deploy:example', ['build'], function() {
   return gulp.src('./example/**')
     .pipe(ghPages())
+})
+
+// Release
+// -------
+
+gulp.task('bump:major', function() {
+  return gulp.src(['package.json', 'bower.json'])
+    .pipe(bump({type: 'major'}))
+    .pipe(gulp.dest('./'))
+})
+
+gulp.task('bump:minor', function() {
+  return gulp.src(['package.json', 'bower.json'])
+    .pipe(bump({type: 'minor'}))
+    .pipe(gulp.dest('./'))
+})
+
+gulp.task('bump:patch', function() {
+  return gulp.src(['package.json', 'bower.json'])
+    .pipe(bump({type: 'patch'}))
+    .pipe(gulp.dest('./'))
+})
+
+gulp.task('release:major', function(callback) {
+  runSequence('bump:major', 'build', callback)
+})
+
+gulp.task('release:minor', function(callback) {
+  runSequence('bump:minor', 'build', callback)
+})
+
+gulp.task('release:patch', function(callback) {
+  runSequence('bump:patch', 'build', callback)
 })
