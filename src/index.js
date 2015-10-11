@@ -146,6 +146,8 @@
       var text = Array.prototype.slice.call(arguments, 0).join(' ');
       // var text = arguments[0];
 
+      text = '*' + getTimestamp() + '* ' + text
+
       if (isBrowser()) {
         text = sanitizeStringToBrowser(text)
         preparedOutput = prepareOutputToBrowser(text, method, this)
@@ -208,12 +210,34 @@
   // Private
   // -------
 
-  function pad(str, len) {
+  function pad(str, len, fill, prepend) {
+    fill = fill || ' '
+
     while (str.length < len) {
-      str += ' '
+      str = prepend ? fill + str : str + fill
     }
 
     return str
+  }
+
+  function getTimestamp() {
+    var now = new Date()
+
+    return [
+      now.getFullYear(),
+      '-',
+      pad(String(now.getMonth()), 2, '0', true),
+      '-',
+      pad(String(now.getDate()), 2, '0', true),
+      '-',
+      pad(String(now.getHours()), 2, '0', true),
+      ':',
+      pad(String(now.getMinutes()), 2, '0', true),
+      ':',
+      pad(String(now.getSeconds()), 2, '0', true),
+      ':',
+      pad(String(now.getMilliseconds()), 3, '0', true)
+    ].join('')
   }
 
   function parseMarkdown(text) {
@@ -499,7 +523,6 @@
    * Code took from https://github.com/visionmedia/debug/blob/master/browser.js
    */
   function isColorSupported() {
-    return false;
     if (isBrowser()) {
       // Is webkit? http://stackoverflow.com/a/16459606/376773
       var isWebkit = ('WebkitAppearance' in document.documentElement.style)
