@@ -4,6 +4,8 @@
   'use strict'
 
   var instances = []
+  var timestampsEnabled = false
+  var maxPrefixLength = 0
   var lastUsedColorIndex = 0
   // Solarized accent colors http://ethanschoonover.com/solarized
   var colors = [
@@ -72,6 +74,7 @@
     this.prefix = prefix
 
     //
+    maxPrefixLength = Math.max(maxPrefixLength, this.prefix.length)
     instances.push(this)
 
     if (isBrowser()) {
@@ -128,6 +131,10 @@
     })
   }
 
+  Logdown.setTimestampsEnabled = function(enabled) {
+    timestampsEnabled = enabled
+  }
+
   // Public
   // ------
 
@@ -144,9 +151,13 @@
       var text = Array.prototype.slice.call(arguments, 0).join(' ');
       // var text = arguments[0];
 
+      if (timestampsEnabled) {
+        text = '*' + getTimestamp() + '* ' + text
+      }
+
       if (isBrowser()) {
         text = sanitizeStringToBrowser(text)
-        preparedOutput = prepareOutputToBrowser(text, this)
+        preparedOutput = prepareOutputToBrowser(text, method, this)
 
         // IE9 workaround
         // http://stackoverflow.com/questions/5538972/
@@ -161,7 +172,7 @@
         )
       } else if (isNode()) {
         text = sanitizeStringToNode(text)
-        preparedOutput = prepareOutputToNode(text, this)
+        preparedOutput = prepareOutputToNode(text, method, this)
 
         if (method === 'warn') {
           preparedOutput.parsedText =
@@ -205,6 +216,36 @@
 
   // Private
   // -------
+
+  function pad(str, len, fill, prepend) {
+    fill = fill || ' '
+
+    while (str.length < len) {
+      str = prepend ? fill + str : str + fill
+    }
+
+    return str
+  }
+
+  function getTimestamp() {
+    var now = new Date()
+
+    return [
+      now.getFullYear(),
+      '-',
+      pad(String(now.getMonth()), 2, '0', true),
+      '-',
+      pad(String(now.getDate()), 2, '0', true),
+      '-',
+      pad(String(now.getHours()), 2, '0', true),
+      ':',
+      pad(String(now.getMinutes()), 2, '0', true),
+      ':',
+      pad(String(now.getSeconds()), 2, '0', true),
+      ':',
+      pad(String(now.getMilliseconds()), 3, '0', true)
+    ].join('')
+  }
 
   function parseMarkdown(text) {
     var styles = []
@@ -308,7 +349,7 @@
     return matches[0]
   }
 
-  function prepareOutputToBrowser(data, instance) {
+  function prepareOutputToBrowser(data, method, instance) {
     var parsedMarkdown
     var parsedText
     var styles
@@ -333,13 +374,14 @@
 
     if (instance.prefix) {
       if (isColorSupported()) {
-        parsedText = '%c' + instance.prefix + '%c ' + parsedText
+        var formattedPrefix = formatPrefix(instance.prefix, method)
+        parsedText = '%c' + formattedPrefix + '%c ' + parsedText
         styles.unshift(
           'color:' + instance.prefixColor + '; font-weight:bold;',
           'color:inherit;'
         )
       } else {
-        parsedText = '[' + instance.prefix + '] ' + parsedText
+        parsedText = formatPrefix(instance.prefix, method) + parsedText
       }
     }
 
@@ -350,7 +392,19 @@
     }
   }
 
-  function prepareOutputToNode(data, instance) {
+  function formatPrefix(prefix, method) {
+    prefix = isColorSupported() ? prefix : '[' + prefix + '] '
+
+    var space = maxPrefixLength
+
+    if (!isColorSupported()) {
+      space += 3
+    }
+
+    return (method !== 'log' && isNode() ? '' : '  ') + pad(prefix, space)
+  }
+
+  function prepareOutputToNode(data, method, instance) {
     var parsedText = ''
     var notText
 
@@ -359,11 +413,11 @@
         parsedText =
           '\u001b[' + instance.prefixColor[0] + 'm' +
           '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-          instance.prefix +
+          formatPrefix(instance.prefix, method) +
           '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
           '\u001b[' + instance.prefixColor[1] + 'm '
       } else {
-        parsedText = '[' + instance.prefix + '] '
+        parsedText = formatPrefix(instance.prefix, method)
       }
     }
 
