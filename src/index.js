@@ -4,6 +4,7 @@
   'use strict'
 
   var instances = []
+  var maxPrefixLength = 0
   var lastUsedColorIndex = 0
   // Solarized accent colors http://ethanschoonover.com/solarized
   var colors = [
@@ -72,6 +73,7 @@
     this.prefix = prefix
 
     //
+    maxPrefixLength = Math.max(maxPrefixLength, this.prefix.length)
     instances.push(this)
 
     if (isBrowser()) {
@@ -146,7 +148,7 @@
 
       if (isBrowser()) {
         text = sanitizeStringToBrowser(text)
-        preparedOutput = prepareOutputToBrowser(text, this)
+        preparedOutput = prepareOutputToBrowser(text, method, this)
 
         // IE9 workaround
         // http://stackoverflow.com/questions/5538972/
@@ -161,7 +163,7 @@
         )
       } else if (isNode()) {
         text = sanitizeStringToNode(text)
-        preparedOutput = prepareOutputToNode(text, this)
+        preparedOutput = prepareOutputToNode(text, method, this)
 
         if (method === 'warn') {
           preparedOutput.parsedText =
@@ -205,6 +207,14 @@
 
   // Private
   // -------
+
+  function pad(str, len) {
+    while (str.length < len) {
+      str += ' '
+    }
+
+    return str
+  }
 
   function parseMarkdown(text) {
     var styles = []
@@ -308,7 +318,7 @@
     return matches[0]
   }
 
-  function prepareOutputToBrowser(data, instance) {
+  function prepareOutputToBrowser(data, method, instance) {
     var parsedMarkdown
     var parsedText
     var styles
@@ -333,13 +343,15 @@
 
     if (instance.prefix) {
       if (isColorSupported()) {
-        parsedText = '%c' + instance.prefix + '%c ' + parsedText
+        //parsedText = '%c' + instance.prefix + '%c ' + parsedText
+        parsedText = '%c' + formatPrefix(instance.prefix, method) + '%c ' + parsedText
         styles.unshift(
           'color:' + instance.prefixColor + '; font-weight:bold;',
           'color:inherit;'
         )
       } else {
-        parsedText = '[' + instance.prefix + '] ' + parsedText
+        // parsedText = '[' + instance.prefix + '] ' + parsedText
+        parsedText = formatPrefix(instance.prefix, method) + parsedText
       }
     }
 
@@ -350,7 +362,23 @@
     }
   }
 
-  function prepareOutputToNode(data, instance) {
+  function getPrefixLength(prefix, usingIcon) {
+    var space = maxPrefixLength + 2 - (usingIcon ? 2 : 0)
+
+    return space;
+  }
+
+  function formatPrefix(prefix, method, usingIcon) {
+    prefix = isColorSupported() ? prefix : '[' + prefix + '] '
+
+    var space = maxPrefixLength
+
+    if (!isColorSupported()) space += 3
+
+    return (method !== 'log' && isNode() ? '' : '  ') + pad(prefix, space)
+  }
+
+  function prepareOutputToNode(data, method, instance) {
     var parsedText = ''
     var notText
 
@@ -359,11 +387,11 @@
         parsedText =
           '\u001b[' + instance.prefixColor[0] + 'm' +
           '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-          instance.prefix +
+          formatPrefix(instance.prefix, method) +
           '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
           '\u001b[' + instance.prefixColor[1] + 'm '
       } else {
-        parsedText = '[' + instance.prefix + '] '
+        parsedText = formatPrefix(instance.prefix, method)
       }
     }
 
@@ -471,6 +499,7 @@
    * Code took from https://github.com/visionmedia/debug/blob/master/browser.js
    */
   function isColorSupported() {
+    return false;
     if (isBrowser()) {
       // Is webkit? http://stackoverflow.com/a/16459606/376773
       var isWebkit = ('WebkitAppearance' in document.documentElement.style)
