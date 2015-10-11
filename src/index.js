@@ -4,6 +4,7 @@
   'use strict'
 
   var instances = []
+  var timestampsEnabled = false
   var maxPrefixLength = 0
   var lastUsedColorIndex = 0
   // Solarized accent colors http://ethanschoonover.com/solarized
@@ -130,6 +131,10 @@
     })
   }
 
+  Logdown.setTimestampsEnabled = function(enabled) {
+    timestampsEnabled = enabled
+  }
+
   // Public
   // ------
 
@@ -146,7 +151,9 @@
       var text = Array.prototype.slice.call(arguments, 0).join(' ');
       // var text = arguments[0];
 
-      text = '*' + getTimestamp() + '* ' + text
+      if (timestampsEnabled) {
+        text = '*' + getTimestamp() + '* ' + text
+      }
 
       if (isBrowser()) {
         text = sanitizeStringToBrowser(text)
@@ -367,14 +374,13 @@
 
     if (instance.prefix) {
       if (isColorSupported()) {
-        //parsedText = '%c' + instance.prefix + '%c ' + parsedText
-        parsedText = '%c' + formatPrefix(instance.prefix, method) + '%c ' + parsedText
+        var formattedPrefix = formatPrefix(instance.prefix, method)
+        parsedText = '%c' + formattedPrefix + '%c ' + parsedText
         styles.unshift(
           'color:' + instance.prefixColor + '; font-weight:bold;',
           'color:inherit;'
         )
       } else {
-        // parsedText = '[' + instance.prefix + '] ' + parsedText
         parsedText = formatPrefix(instance.prefix, method) + parsedText
       }
     }
@@ -386,18 +392,14 @@
     }
   }
 
-  function getPrefixLength(prefix, usingIcon) {
-    var space = maxPrefixLength + 2 - (usingIcon ? 2 : 0)
-
-    return space;
-  }
-
-  function formatPrefix(prefix, method, usingIcon) {
+  function formatPrefix(prefix, method) {
     prefix = isColorSupported() ? prefix : '[' + prefix + '] '
 
     var space = maxPrefixLength
 
-    if (!isColorSupported()) space += 3
+    if (!isColorSupported()) {
+      space += 3
+    }
 
     return (method !== 'log' && isNode() ? '' : '  ') + pad(prefix, space)
   }
