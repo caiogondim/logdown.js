@@ -1,8 +1,8 @@
 <img src="http://rawgit.com/caiogondim/logdown/master/img/icon.svg">
 
-# Logdown 
+# Logdown
 
-<img src="https://travis-ci.org/caiogondim/logdown.svg?branch=master" alt="Travis CI"> <img src="https://david-dm.org/caiogondim/logdown/dev-status.svg" alt="David DM"> [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/caiogondim/logdown/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+<img src="https://travis-ci.org/caiogondim/logdown.svg?branch=master" alt="Travis CI"> <img src="https://david-dm.org/caiogondim/logdown/dev-status.svg" alt="David DM">
 
 Logdown is a debug utility for the browser and the server with Markdown support.
 It does not have any dependencies and is only 2K gzipped.
