@@ -179,10 +179,13 @@ Latest ✔ | Latest ✔ | 9+ ✔ | Latest ✔ | 8.0+ ✔ |
 ## Contributors
 
 ```
-101 Caio Gondim     97.1%
-1   Bent Cardan     1.0%
-1   Dan Lukinykh    1.0%
-1   Gleb Bahmutov   1.0%
+143  Caio Gondim
+  4  David Godfrey
+  2  Sven Anders Robbestad
+  1  Dan Lukinykh
+  1  Bent Cardan
+  1  Gleb Bahmutov
+  1  netmml
 ```
 
 ## Donating
