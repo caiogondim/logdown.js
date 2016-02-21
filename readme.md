@@ -166,9 +166,9 @@ Latest ✔ | Latest ✔ | 9+ ✔ | Latest ✔ | 8.0+ ✔ |
 
 ### Server
 
-<a href="https://nodejs.org"><img height=48 src="https://raw.githubusercontent.com/caiogondim/javascript-server-side-logos/master/node.js/standard/454x128.png"></a> | <a href="https://iojs.org"><img height=48 src="https://raw.githubusercontent.com/caiogondim/javascript-environments-logos/master/iojs/standard/224x256.png" alt="io.js logo"></a> |
---- | --- |
-0.10+ ✔ | 1.0+ ✔ |
+<a href="https://nodejs.org"><img height=48 src="https://raw.githubusercontent.com/caiogondim/javascript-server-side-logos/master/node.js/standard/454x128.png"></a> |
+--- |
+0.10+ ✔ |
 
 
 ## Credits
