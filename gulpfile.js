@@ -11,10 +11,6 @@ var header = require('gulp-header')
 var ghPages = require('gulp-gh-pages')
 var rename = require('gulp-rename')
 var karma = require('karma').server
-var bump = require('gulp-bump')
-var runSequence = require('run-sequence')
-var tagVersion = require('gulp-tag-version')
-var git = require('gulp-git')
 
 // Test
 // ----
@@ -91,43 +87,4 @@ gulp.task('build', function() {
 gulp.task('deploy:example', ['build'], function() {
   return gulp.src('./example/**')
     .pipe(ghPages())
-})
-
-// Release
-// -------
-
-gulp.task('tag-version', function() {
-  gulp.src(['./package.json'])
-    .pipe(git.commit('Version bump'))
-    .pipe(tagVersion())
-})
-
-gulp.task('bump:major', function() {
-  return gulp.src(['package.json', 'bower.json'])
-    .pipe(bump({type: 'major'}))
-    .pipe(gulp.dest('./'))
-})
-
-gulp.task('bump:minor', function() {
-  return gulp.src(['package.json', 'bower.json'])
-    .pipe(bump({type: 'minor'}))
-    .pipe(gulp.dest('./'))
-})
-
-gulp.task('bump:patch', function() {
-  return gulp.src(['package.json', 'bower.json'])
-    .pipe(bump({type: 'patch'}))
-    .pipe(gulp.dest('./'))
-})
-
-gulp.task('release:major', function(callback) {
-  runSequence('bump:major', 'build', 'tag-version', callback)
-})
-
-gulp.task('release:minor', function(callback) {
-  runSequence('bump:minor', 'build', 'tag-version', callback)
-})
-
-gulp.task('release:patch', function(callback) {
-  runSequence('bump:patch', 'build', 'tag-version', callback)
 })
