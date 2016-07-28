@@ -7,7 +7,7 @@
 Logdown is a debug utility for the browser and the server with Markdown support.
 It does not have any dependencies and is only 2K gzipped.
 
-You can see it in action in the [example page](//caiogondim.github.io/logdown)
+You can see it in action in the [example page](//caiogondim.github.io/logdown.js)
 or in the preview below.
 
 
