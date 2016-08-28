@@ -1,15 +1,12 @@
-/* global describe, afterEach, beforeEach, console, it, require, window,
-   Logdown, chai, sinon, xit */
-/* jshint -W038 */
-/* jshint unused:false */
+/* global describe, beforeEach, console, it, require, window, Logdown, chai, sinon */
 
-;(function() {
-  'use strict';
+;(function () {
+  'use strict'
 
   sinon.assert.expose(chai.assert, {prefix: ''})
   var assert = chai.assert
 
-  function createInstances() {
+  function createInstances () {
     return [
       new Logdown({prefix: 'foo'}),
       new Logdown({prefix: 'bar'}),
@@ -18,20 +15,20 @@
     ]
   }
 
-  describe('Logdown.disable', function() {
+  describe('Logdown.disable', function () {
     var sandbox
 
-    beforeEach(function() {
+    beforeEach(function () {
       sandbox = sinon.sandbox.create()
 
       sandbox.stub(window.console, 'log')
     })
 
-    it('`(\'*\')` should disable all instances', function() {
+    it('`(\'*\')` should disable all instances', function () {
       Logdown.enable('*')
       Logdown.disable('*')
       var instances = createInstances()
-      instances.forEach(function(instance) {
+      instances.forEach(function (instance) {
         instance.log('Lorem')
       })
 
@@ -41,32 +38,32 @@
     })
 
     it('`(\'foo\')` should disable only instances with “foo” prefix',
-       function() {
-      try {
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var quz = new Logdown({prefix: 'quz'})
-        var baz = new Logdown({prefix: 'baz'})
+       function () {
+         try {
+           var foo = new Logdown({prefix: 'foo'})
+           var bar = new Logdown({prefix: 'bar'})
+           var quz = new Logdown({prefix: 'quz'})
+           var baz = new Logdown({prefix: 'baz'})
 
-        Logdown.enable('*')
-        Logdown.disable('foo')
+           Logdown.enable('*')
+           Logdown.disable('foo')
 
-        foo.log('lorem')
-        assert.notCalled(console.log)
-        bar.log('lorem')
-        quz.log('lorem')
-        baz.log('lorem')
-        assert.calledThrice(console.log)
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
+           foo.log('lorem')
+           assert.notCalled(console.log)
+           bar.log('lorem')
+           quz.log('lorem')
+           baz.log('lorem')
+           assert.calledThrice(console.log)
+         } catch (error) {
+           sandbox.restore()
+           throw error
+         }
 
-      sandbox.restore()
-    })
+         sandbox.restore()
+       })
 
     it('`(\'*foo\')` should disable only instances with names ending' +
-       'with “foo”', function() {
+       'with “foo”', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -91,7 +88,7 @@
     })
 
     it('`(\'foo*\')` should disable only instances with names beginning ' +
-       'with “foo”', function() {
+       'with “foo”', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -115,12 +112,12 @@
       sandbox.restore()
     })
 
-    it('`(\'*\')` should disable all instances', function() {
+    it('`(\'*\')` should disable all instances', function () {
       try {
         Logdown.enable('*')
         Logdown.disable('*')
         var instances = createInstances()
-        instances.forEach(function(instance) {
+        instances.forEach(function (instance) {
           instance.log('Lorem')
         })
 
@@ -134,7 +131,7 @@
     })
 
     it('`(\'foo\')` should disable only instances with ' +
-       '“foo” prefix', function() {
+       '“foo” prefix', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -159,7 +156,7 @@
     })
 
     it('`(\'*\', \'-*foo\')` should disable all but instances with names ' +
-       'ending with “foo”', function() {
+       'ending with “foo”', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -183,7 +180,7 @@
     })
 
     it('`(\'*\', \'-foo*\')` should disable all but instances with names ' +
-       'beginning with “foo”', function() {
+       'beginning with “foo”', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -206,11 +203,11 @@
       sandbox.restore()
     })
 
-    it('`(\'-*\')` should not disable any instances', function() {
+    it('`(\'-*\')` should not disable any instances', function () {
       try {
         Logdown.disable('-*')
         var instances = createInstances()
-        instances.forEach(function(instance) {
+        instances.forEach(function (instance) {
           instance.log('Lorem')
         })
         assert.callCount(console.log, 4)
@@ -223,30 +220,30 @@
     })
 
     it('`(\'*\', \'-foo\')` should disable all but instances with “foo” prefix',
-       function() {
-      try {
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var quz = new Logdown({prefix: 'quz'})
-        var baz = new Logdown({prefix: 'baz'})
+       function () {
+         try {
+           var foo = new Logdown({prefix: 'foo'})
+           var bar = new Logdown({prefix: 'bar'})
+           var quz = new Logdown({prefix: 'quz'})
+           var baz = new Logdown({prefix: 'baz'})
 
-        Logdown.disable('*', '-foo')
+           Logdown.disable('*', '-foo')
 
-        bar.log('lorem')
-        quz.log('lorem')
-        baz.log('lorem')
-        assert.notCalled(console.log)
-        foo.log('lorem')
-        assert.calledOnce(console.log)
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
+           bar.log('lorem')
+           quz.log('lorem')
+           baz.log('lorem')
+           assert.notCalled(console.log)
+           foo.log('lorem')
+           assert.calledOnce(console.log)
+         } catch (error) {
+           sandbox.restore()
+           throw error
+         }
 
-      sandbox.restore()
-    })
+         sandbox.restore()
+       })
 
-    it('should accept N arguments', function() {
+    it('should accept N arguments', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})

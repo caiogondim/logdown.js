@@ -7,7 +7,9 @@
     "example": "example"
   },
   "scripts": {
-    "test": "gulp test",
+    "test": "npm run test:lint && gulp test",
+    "test:lint": "standard './src/**/*.js' './test/**/*.js'",
+    "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
     "build": "gulp build",
     "deploy:example": "gulp deploy:example",
     "test:travisci": "gulp test:travisci",
@@ -38,13 +40,9 @@
     "gulp": "^3.9.1",
     "gulp-gh-pages": "^0.5.4",
     "gulp-header": "^1.8.2",
-    "gulp-jscs": "^3.0.0",
-    "gulp-jshint": "^2.0.0",
     "gulp-mocha": "^2.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.3",
-    "jshint": "^2.9.1",
-    "jshint-stylish": "^2.2.0",
     "karma": "^0.13.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^1.0.0",
@@ -54,7 +52,8 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-sinon": "^1.0.5",
     "mocha": "^2.5.3",
-    "sinon": "^1.17.5"
+    "sinon": "^1.17.5",
+    "standard": "^8.0.0"
   },
   "dependencies": {}
 }

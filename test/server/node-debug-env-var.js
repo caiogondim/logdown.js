@@ -1,5 +1,4 @@
 /* global describe, it, beforeEach, afterEach, xit */
-/* jshint node:true */
 
 'use strict'
 
@@ -10,58 +9,58 @@ var Logdown = require('../../src/')
 sinon.assert.expose(chai.assert, {prefix: ''})
 var assert = chai.assert
 
-describe('NODE_DEBUG and DEBUG environment variables', function() {
+describe('NODE_DEBUG and DEBUG environment variables', function () {
   var sandbox
   // NODE_DEBUG is the official env var supported by Node
   // https://nodejs.org/api/util.html#util_util_debuglog_section
   // DEBUG is for compatibility with the debug lib
   var envVars = ['NODE_DEBUG', 'DEBUG']
 
-  beforeEach(function() {
+  beforeEach(function () {
     sandbox = sinon.sandbox.create()
     sandbox.stub(global.console, 'log')
 
-    envVars.forEach(function(envVar) {
+    envVars.forEach(function (envVar) {
       process.env[envVar] = ''
     })
     Logdown.enable('*')
   })
 
-  afterEach(function() {
+  afterEach(function () {
     sandbox.restore()
   })
 
-  envVars.forEach(function(envVar) {
+  envVars.forEach(function (envVar) {
     it('`' + envVar + '=foo` should enable only instances with “foo” prefix',
-       function() {
-      try {
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var quz = new Logdown({prefix: 'quz'})
-        var baz = new Logdown({prefix: 'baz'})
+       function () {
+         try {
+           var foo = new Logdown({prefix: 'foo'})
+           var bar = new Logdown({prefix: 'bar'})
+           var quz = new Logdown({prefix: 'quz'})
+           var baz = new Logdown({prefix: 'baz'})
 
-        process.env[envVar] = 'foo'
+           process.env[envVar] = 'foo'
 
-        bar.log('lorem')
-        assert.notCalled(console.log)
-        quz.log('lorem')
-        assert.notCalled(console.log)
-        baz.log('lorem')
-        assert.notCalled(console.log)
-        foo.log('lorem')
-        assert.called(console.log)
+           bar.log('lorem')
+           assert.notCalled(console.log)
+           quz.log('lorem')
+           assert.notCalled(console.log)
+           baz.log('lorem')
+           assert.notCalled(console.log)
+           foo.log('lorem')
+           assert.called(console.log)
 
-        sandbox.restore()
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
+           sandbox.restore()
+         } catch (error) {
+           sandbox.restore()
+           throw error
+         }
 
-      sandbox.restore()
-    })
+         sandbox.restore()
+       })
 
     xit('`' + envVar + '=*foo` should enable only instances with names ' +
-       'ending with “foo”', function() {
+       'ending with “foo”', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -87,7 +86,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function() {
     })
 
     xit('`' + envVar + '=foo*` should enable only instances with names ' +
-       'beginning with “foo”', function() {
+       'beginning with “foo”', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -112,7 +111,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function() {
       sandbox.restore()
     })
 
-    it('`' + envVar + '=-*` should disable all instances', function() {
+    it('`' + envVar + '=-*` should disable all instances', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -135,7 +134,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function() {
     })
 
     it('`' + envVar + '=*,-foo` should enable all but only instances ' +
-       'with “foo” prefix', function() {
+       'with “foo” prefix', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -159,7 +158,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function() {
     })
 
     it('`' + envVar + '=*,-*foo` should enable all but instances with names ' +
-       'ending with “foo”', function() {
+       'ending with “foo”', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -183,7 +182,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function() {
     })
 
     it('`' + envVar + '=*,-foo*` should enable all but instances with names ' +
-       'beginning with “foo”', function() {
+       'beginning with “foo”', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -206,7 +205,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function() {
       sandbox.restore()
     })
 
-    it('`' + envVar +   '` should accept N arguments', function() {
+    it('`' + envVar + '` should accept N arguments', function () {
       try {
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
@@ -233,7 +232,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function() {
 
   // If `NODE_DEBUG` and `DEBUG` is declared, we should omit `DEBUG` and only
   // get the values in `NODE_DEBUG`
-  it('`NODE_DEBUG` should have precedence over `DEBUG`', function() {
+  it('`NODE_DEBUG` should have precedence over `DEBUG`', function () {
     try {
       var foo = new Logdown({prefix: 'foo'})
       var bar = new Logdown({prefix: 'bar'})

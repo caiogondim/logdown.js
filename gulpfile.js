@@ -1,11 +1,7 @@
-/* jshint node:true */
-
 'use strict'
 
 var gulp = require('gulp')
 var mocha = require('gulp-mocha')
-var jshint = require('gulp-jshint')
-var jscs = require('gulp-jscs')
 var uglify = require('gulp-uglify')
 var header = require('gulp-header')
 var ghPages = require('gulp-gh-pages')
@@ -21,19 +17,7 @@ var jsFilesToBeStyleChecked = [
   'gulpfile.js'
 ]
 
-gulp.task('jscs', function() {
-  return gulp.src(jsFilesToBeStyleChecked)
-    .pipe(jscs())
-})
-
-gulp.task('jshint', ['jscs'], function() {
-  return gulp.src(jsFilesToBeStyleChecked)
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'))
-})
-
-gulp.task('mocha', ['jshint'], function() {
+gulp.task('mocha', function() {
   return gulp.src(['test/server/*.js', 'test/server.js'])
     .pipe(mocha())
 })

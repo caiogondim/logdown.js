@@ -1,6 +1,6 @@
 /* global console, module, window, document, navigator, process */
 
-;(function() {
+;(function () {
   'use strict'
 
   var instances = []
@@ -50,10 +50,10 @@
       bgCyan: [46, 49],
       bgWhite: [47, 49]
     }
-  };
+  }
   var filterRegExps = []
 
-  function Logdown(opts) {
+  function Logdown (opts) {
     // Enforces new.
     if (!(this instanceof Logdown)) {
       return new Logdown(opts)
@@ -87,8 +87,8 @@
   // Static
   // ------
 
-  Logdown.enable = function() {
-    Array.prototype.forEach.call(arguments, function(str) {
+  Logdown.enable = function () {
+    Array.prototype.forEach.call(arguments, function (str) {
       if (str[0] === '-') {
         Logdown.disable(str.substr(1))
       }
@@ -106,8 +106,8 @@
     })
   }
 
-  Logdown.disable = function() {
-    Array.prototype.forEach.call(arguments, function(str) {
+  Logdown.disable = function () {
+    Array.prototype.forEach.call(arguments, function (str) {
       if (str[0] === '-') {
         Logdown.enable(str.substr(1))
       }
@@ -132,8 +132,8 @@
   // ------
 
   var methods = ['debug', 'log', 'info', 'warn', 'error']
-  methods.forEach(function(method) {
-    Logdown.prototype[method] = function() {
+  methods.forEach(function (method) {
+    Logdown.prototype[method] = function () {
       var preparedOutput
       var args = []
 
@@ -141,7 +141,7 @@
         return
       }
 
-      var text = Array.prototype.slice.call(arguments, 0).join(' ');
+      var text = Array.prototype.slice.call(arguments, 0).join(' ')
       // var text = arguments[0];
 
       if (isBrowser()) {
@@ -155,9 +155,12 @@
           console[method] || console.log,
           console,
           [preparedOutput.parsedText]
-            .concat(preparedOutput.styles,
-                    typeof preparedOutput.notText !== 'undefined' ?
-                    [preparedOutput.notText] : '')
+            .concat(
+              preparedOutput.styles,
+              typeof preparedOutput.notText !== 'undefined'
+                ? [preparedOutput.notText]
+                : ''
+            )
         )
       } else if (isNode()) {
         text = sanitizeStringToNode(text)
@@ -206,7 +209,7 @@
   // Private
   // -------
 
-  function parseMarkdown(text) {
+  function parseMarkdown (text) {
     var styles = []
     var match = getNextMatch(text)
 
@@ -224,29 +227,29 @@
     return {text: text, styles: styles}
   }
 
-  function getNextMatch(text) {
+  function getNextMatch (text) {
     var matches = []
     var rules = []
     if (isBrowser()) {
       rules = [
         {
           regexp: /\*([^\*]+)\*/,
-          replacer: function(match, submatch1) {
+          replacer: function (match, submatch1) {
             return '%c' + submatch1 + '%c'
           },
           style: 'font-weight:bold;'
         },
         {
-          regexp: /\_([^\_]+)\_/,
-          replacer: function(match, submatch1) {
+          regexp: /_([^_]+)_/,
+          replacer: function (match, submatch1) {
             return '%c' + submatch1 + '%c'
           },
           style: 'font-style:italic;'
         },
         {
-          regexp: /\`([^\`]+)\`/,
-          replacer: function(match, submatch1) {
-            return '%c' + submatch1 + '%c';
+          regexp: /`([^`]+)`/,
+          replacer: function (match, submatch1) {
+            return '%c' + submatch1 + '%c'
           },
           style:
             'background:#FDF6E3; ' +
@@ -259,23 +262,23 @@
       rules = [
         {
           regexp: /\*([^\*]+)\*/,
-          replacer: function(match, submatch1) {
+          replacer: function (match, submatch1) {
             return '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
                    submatch1 +
                    '\u001b[' + ansiColors.modifiers.bold[1] + 'm'
           }
         },
         {
-          regexp: /\_([^\_]+)\_/,
-          replacer: function(match, submatch1) {
+          regexp: /_([^_]+)_/,
+          replacer: function (match, submatch1) {
             return '\u001b[' + ansiColors.modifiers.italic[0] + 'm' +
                    submatch1 +
                    '\u001b[' + ansiColors.modifiers.italic[1] + 'm'
           }
         },
         {
-          regexp: /\`([^\`]+)\`/,
-          replacer: function(match, submatch1) {
+          regexp: /`([^`]+)`/,
+          replacer: function (match, submatch1) {
             return '\u001b[' + ansiColors.bgColors.bgYellow[0] + 'm' +
                    '\u001b[' + ansiColors.colors.black[0] + 'm' +
                    ' ' + submatch1 + ' ' +
@@ -287,7 +290,7 @@
     }
 
     //
-    rules.forEach(function(rule) {
+    rules.forEach(function (rule) {
       var match = text.match(rule.regexp)
       if (match) {
         matches.push({
@@ -297,18 +300,18 @@
       }
     })
     if (matches.length === 0) {
-      return null;
+      return null
     }
 
     //
-    matches.sort(function(a, b) {
+    matches.sort(function (a, b) {
       return a.match.index - b.match.index
     })
 
     return matches[0]
   }
 
-  function prepareOutputToBrowser(data, instance) {
+  function prepareOutputToBrowser (data, instance) {
     var parsedMarkdown
     var parsedText
     var styles
@@ -350,7 +353,7 @@
     }
   }
 
-  function prepareOutputToNode(data, instance) {
+  function prepareOutputToNode (data, instance) {
     var parsedText = ''
     var notText
 
@@ -384,7 +387,7 @@
     }
   }
 
-  function isDisabled(instance) {
+  function isDisabled (instance) {
     // Parsing `NODE_DEBUG` and `DEBUG` env var.
     // We verify `NODE_DEBUG` and `DEBUG` env vars on runtime so it is
     // easier to test.
@@ -405,7 +408,7 @@
         Logdown.disable('*')
         process.env[envVar]
           .split(',')
-          .forEach(function(regExp) {
+          .forEach(function (regExp) {
             Logdown.enable(regExp)
           })
       }
@@ -413,7 +416,7 @@
 
     // Now checks if instance is disabled
     var isDisabled_ = false
-    filterRegExps.forEach(function(filter) {
+    filterRegExps.forEach(function (filter) {
       if (filter.type === 'enable' && filter.regExp.test(instance.prefix)) {
         isDisabled_ = false
       } else if (filter.type === 'disable' &&
@@ -425,14 +428,14 @@
     return isDisabled_
   }
 
-  function prepareRegExpForPrefixSearch(str) {
+  function prepareRegExpForPrefixSearch (str) {
     return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
   }
 
-  function isPrefixAlreadyInUse(prefix, instances) {
+  function isPrefixAlreadyInUse (prefix, instances) {
     var isPrefixAlreadyInUse_ = false
 
-    instances.forEach(function(instance) {
+    instances.forEach(function (instance) {
       if (instance.prefix === prefix) {
         isPrefixAlreadyInUse_ = true
         return
@@ -442,10 +445,10 @@
     return isPrefixAlreadyInUse_
   }
 
-  function getInstanceByPrefix(prefix, instances) {
+  function getInstanceByPrefix (prefix, instances) {
     var instance
 
-    instances.forEach(function(instanceCur) {
+    instances.forEach(function (instanceCur) {
       if (instanceCur.prefix === prefix) {
         instance = instanceCur
         return
@@ -455,9 +458,9 @@
     return instance
   }
 
-  function sanitizeStringToBrowser(str) {
+  function sanitizeStringToBrowser (str) {
     if (typeof str === 'string') {
-      return str.replace(/\%c/g, '')
+      return str.replace(/%c/g, '')
     } else {
       return str
     }
@@ -470,7 +473,7 @@
    *
    * Code took from https://github.com/visionmedia/debug/blob/master/browser.js
    */
-  function isColorSupported() {
+  function isColorSupported () {
     if (isBrowser()) {
       // Is webkit? http://stackoverflow.com/a/16459606/376773
       var isWebkit = ('WebkitAppearance' in document.documentElement.style)
@@ -490,47 +493,47 @@
       return (isWebkit || isFirebug || isFirefox31Plus)
     } else if (isNode()) {
       if (process.stdout && !process.stdout.isTTY) {
-        return false;
+        return false
       }
 
       if (process.platform === 'win32') {
-        return true;
+        return true
       }
 
       if ('COLORTERM' in process.env) {
-        return true;
+        return true
       }
 
       if (process.env.TERM === 'dumb') {
-        return false;
+        return false
       }
 
       if (
         /^screen|^xterm|^vt100|color|ansi|cygwin|linux/i.test(process.env.TERM)
       ) {
-        return true;
+        return true
       }
 
       return false
     }
   }
 
-  function isNode() {
+  function isNode () {
     return (
       typeof module !== 'undefined' &&
       typeof module.exports !== 'undefined'
     )
   }
 
-  function isBrowser() {
+  function isBrowser () {
     return (typeof window !== 'undefined')
   }
 
-  function sanitizeStringToNode(str) {
-    return str;
+  function sanitizeStringToNode (str) {
+    return str
   }
 
-  var getNextPrefixColor = (function() {
+  var getNextPrefixColor = (function () {
     var lastUsed = 0
     var nodePrefixColors = [
       [31, 39], // red
@@ -541,7 +544,7 @@
       [36, 39] // cyan
     ]
 
-    return function() {
+    return function () {
       return nodePrefixColors[(lastUsed += 1) % nodePrefixColors.length]
     }
   })()

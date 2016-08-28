@@ -1,6 +1,6 @@
 /* global module */
 
-module.exports = function(config) {
+module.exports = function (config) {
   'use strict'
 
   config.set({
@@ -55,5 +55,5 @@ module.exports = function(config) {
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false
-  });
-};
+  })
+}

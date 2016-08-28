@@ -1,5 +1,4 @@
 /* global describe, it, beforeEach, afterEach, xit */
-/* jshint node:true */
 
 'use strict'
 
@@ -42,11 +41,11 @@ var ansiColors = {
     bgCyan: [46, 49],
     bgWhite: [47, 49]
   }
-};
+}
 
 var methods = ['debug', 'log', 'info', 'warn', 'error']
-methods.forEach(function(method) {
-  describe('Logdown::' + method, function() {
+methods.forEach(function (method) {
+  describe('Logdown::' + method, function () {
     var sandbox
     var symbol = ''
 
@@ -72,8 +71,8 @@ methods.forEach(function(method) {
         '\u001b[' + ansiColors.colors.red[1] + 'm '
     }
 
-    beforeEach(function() {
-      global.console[method] = global.console[method] || global.console.log;
+    beforeEach(function () {
+      global.console[method] = global.console[method] || global.console.log
       sandbox = sinon.sandbox.create()
       sandbox.stub(global.console, method)
 
@@ -81,11 +80,11 @@ methods.forEach(function(method) {
       process.env.NODE_DEBUG = ''
     })
 
-    afterEach(function() {
+    afterEach(function () {
       sandbox.restore()
     })
 
-    it('should output multiple arguments', function() {
+    it('should output multiple arguments', function () {
       try {
         var foo = new Logdown({markdown: true})
 
@@ -103,7 +102,7 @@ methods.forEach(function(method) {
       sandbox.restore()
     })
 
-    it('should parse markdown in multiple arguments', function() {
+    it('should parse markdown in multiple arguments', function () {
       try {
         var foo = new Logdown({markdown: true})
 
@@ -125,7 +124,7 @@ methods.forEach(function(method) {
       sandbox.restore()
     })
 
-    it('should parse markdown if enabled', function() {
+    it('should parse markdown if enabled', function () {
       try {
         var foo = new Logdown({markdown: true})
 
@@ -175,7 +174,7 @@ methods.forEach(function(method) {
       sandbox.restore()
     })
 
-    it('should not parse markdown if disabled', function() {
+    it('should not parse markdown if disabled', function () {
       try {
         var foo = new Logdown({markdown: false})
 
@@ -204,11 +203,11 @@ methods.forEach(function(method) {
       sandbox.restore()
     })
 
-    xit('should sanitize forbidden characters', function() {
+    xit('should sanitize forbidden characters', function () {
       sandbox.restore()
     })
 
-    xit('should print prefix if present', function() {
+    xit('should print prefix if present', function () {
       var foo = new Logdown({prefix: 'foo'})
 
       foo[method]('lorem ipsum')
@@ -231,7 +230,7 @@ methods.forEach(function(method) {
       sandbox.restore()
     })
 
-    it('should sanitize strings', function() {
+    it('should sanitize strings', function () {
       try {
         var foo = new Logdown()
         foo[method]('lorem %cipsum%c sit %cdolor%c amet')
@@ -257,7 +256,7 @@ methods.forEach(function(method) {
     })
 
     // https://github.com/caiogondim/logdown/issues/14
-    xit('should print not-string arguments as is', function() {
+    xit('should print not-string arguments as is', function () {
       try {
         var foo = new Logdown()
         var obj = {foo: 1, bar: 2}
