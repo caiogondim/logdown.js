@@ -1,8 +1,8 @@
-<img src="http://rawgit.com/caiogondim/logdown/master/img/icon.svg">
+<img src="http://rawgit.com/caiogondim/logdown.js/master/img/icon.svg">
 
 # Logdown
 
-<img src="http://travis-ci.org/caiogondim/logdown.js.svg?branch=master" alt="Travis CI"> <img src="http://david-dm.org/caiogondim/logdown/dev-status.svg" alt="David DM"> <img src="http://img.shields.io/npm/dm/logdown.svg" alt="Downloads per month"> [![Slack Status](http://logdown-slack.herokuapp.com/badge.svg)](https://logdown-slack.herokuapp.com/)
+<img src="http://travis-ci.org/caiogondim/logdown.js.svg?branch=master" alt="Travis CI"> <img src="http://david-dm.org/caiogondim/logdown.js/dev-status.svg" alt="David DM"> <img src="http://img.shields.io/npm/dm/logdown.svg" alt="Downloads per month"> [![Slack Status](http://logdown-slack.herokuapp.com/badge.svg)](https://logdown-slack.herokuapp.com/)
 
 Logdown is a debug utility for the browser and the server with Markdown support.
 It does not have any dependencies and is only 2K gzipped.
@@ -14,10 +14,10 @@ or in the preview below.
 ## Preview
 
 ### Browser
-<img src="http://rawgit.com/caiogondim/logdown/master/img/browser-preview.gif">
+<img src="http://rawgit.com/caiogondim/logdown.js/master/img/browser-preview.gif">
 
 ### Server
-<img src="http://rawgit.com/caiogondim/logdown/master/img/node-preview.gif">
+<img src="http://rawgit.com/caiogondim/logdown.js/master/img/node-preview.gif">
 
 
 ## Using
@@ -38,7 +38,7 @@ bower install logdown
 
 You can also use the lib in the browser in the same way as in the server if you
 use [Browserify](http://browserify.org/). Or you can just download it
-[here](https://github.com/caiogondim/logdown/archive/master.zip) and put the
+[here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the
 `dist/index.js` file in your public folder.
 
 ```js
