@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="980px" height="400px" viewBox="0 0 980 400" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <!-- Generator: Sketch 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
     <title>Slice 1</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="github-banner" transform="translate(-16.000000, -21.000000)">
             <g id="Oval-1-+-noun_6571_cc" transform="translate(378.000000, 93.000000)">
-                <circle id="Oval-1" stroke="#2B303A" cx="128" cy="128" r="128"></circle>
                 <g id="noun_6571_cc" transform="translate(70.500000, 48.000000)">
                     <rect id="Rectangle-path" fill="#2B303A" x="10.0269555" y="0.130522862" width="104.75649" height="156.892128"></rect>
                     <rect id="Rectangle-path" fill="#2B303A" x="0.2165546" y="0.130522862" width="7.35834362" height="156.892128"></rect>
@@ -18,6 +17,7 @@
                     </g>
                 </g>
             </g>
+            <polygon id="Polygon" stroke="#2B303A" points="506.299363 74 633.598726 147.496321 633.598726 294.488964 506.299363 367.985286 379 294.488964 379 147.496321"></polygon>
         </g>
     </g>
 </svg>
