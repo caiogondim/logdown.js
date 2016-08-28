@@ -54,7 +54,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-sinon": "^1.0.5",
     "mocha": "^2.5.3",
-    "sinon": "^1.17.4"
+    "sinon": "^1.17.5"
   },
   "dependencies": {}
 }
