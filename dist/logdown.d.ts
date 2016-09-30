@@ -1,5 +1,5 @@
 declare class Logdown {
-  constructor(options: Object);
+  constructor(options?: Object);
   public debug(...args: string[]): void;
   public error(...args: string[]): void;
   public info(...args: string[]): void;
