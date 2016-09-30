@@ -3,6 +3,7 @@
   "version": "1.2.11",
   "description": "Debug utility with markdown support that runs on browser and server",
   "main": "dist/index.js",
+  "types": "dist/logdown.d.ts",
   "directories": {
     "example": "example"
   },
