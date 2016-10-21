@@ -146,6 +146,27 @@
         sandbox.restore()
       })
 
+      it('adds padding (if specified) to short logger names', function () {
+        try {
+          var minLength = 8;
+
+          var abc = new Logdown({prefix: 'abc'})
+          var demo = new Logdown({prefix: 'demo', minLength: minLength})
+          var longDemo = new Logdown({prefix: 'longDemo', minLength: minLength})
+          var longerDemo = new Logdown({prefix: 'longerDemo', minLength: minLength})
+
+          assert(abc.prefix.length === 3);
+          assert(demo.prefix.length === 8);
+          assert(longDemo.prefix.length === 8);
+          assert(longerDemo.prefix.length === 10);
+        } catch (error) {
+          sandbox.restore()
+          throw error
+        }
+
+        sandbox.restore()
+      })
+
       // https://github.com/caiogondim/logdown/issues/14
       xit('should print not-string arguments as is', function () {
         try {

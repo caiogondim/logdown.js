@@ -61,6 +61,12 @@
 
     opts = opts || {}
 
+    var minLength = opts.minLength
+    if (minLength && opts.prefix) {
+      var padding = new Array(Math.max(minLength - opts.prefix.length + 1, 0)).join(' ')
+      opts.prefix = opts.prefix + padding;
+    }
+
     var prefix = opts.prefix === undefined ? '' : opts.prefix
     prefix = sanitizeStringToBrowser(prefix)
     if (prefix && isPrefixAlreadyInUse(prefix, instances)) {
