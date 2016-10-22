@@ -1,12 +1,12 @@
 declare class Logdown {
   constructor(options?: Object);
-  public debug(...args: string[]): void;
-  public error(...args: string[]): void;
-  public info(...args: string[]): void;
-  public log(...args: string[]): void;
-  public warn(...args: string[]): void;
+  public debug(...args: any[]): void;
+  public error(...args: any[]): void;
+  public info(...args: any[]): void;
+  public log(...args: any[]): void;
+  public warn(...args: any[]): void;
   public static disable(...args: string[]): void;
   public static enable(...args: string[]): void;
 }
 
-export = Logdown;
+export default Logdown;
