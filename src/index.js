@@ -213,13 +213,13 @@
 
   function alignPrefixes() {
     var longest = instances.sort(function (a, b) {
-      return b.prefix.length - a.prefix.length;
+      return b.prefix.length - a.prefix.length
     })[0]
 
     instances.forEach(function (instance) {
       if(instance.alignOuput) {
         var padding = new Array(Math.max(longest.prefix.length - instance.prefix.length + 1, 0)).join(' ')
-        instance.prefix = instance.prefix + padding;
+        instance.prefix = instance.prefix + padding
       }
     })
   }

@@ -153,10 +153,10 @@
           var longDemo = new Logdown({prefix: 'longDemo', alignOuput: true})
           var longerDemo = new Logdown({prefix: 'longerDemo', alignOuput: true})
 
-          assert(abc.prefix.length === 3);
-          assert(demo.prefix.length === 10);
-          assert(longDemo.prefix.length === 10);
-          assert(longerDemo.prefix.length === 10);
+          assert(abc.prefix.length === 3)
+          assert(demo.prefix.length === 10)
+          assert(longDemo.prefix.length === 10)
+          assert(longerDemo.prefix.length === 10)
         } catch (error) {
           sandbox.restore()
           throw error
