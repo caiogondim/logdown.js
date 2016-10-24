@@ -148,16 +148,14 @@
 
       it('adds padding (if specified) to short logger names', function () {
         try {
-          var minLength = 8;
-
           var abc = new Logdown({prefix: 'abc'})
-          var demo = new Logdown({prefix: 'demo', minLength: minLength})
-          var longDemo = new Logdown({prefix: 'longDemo', minLength: minLength})
-          var longerDemo = new Logdown({prefix: 'longerDemo', minLength: minLength})
+          var demo = new Logdown({prefix: 'demo', alignOuput: true})
+          var longDemo = new Logdown({prefix: 'longDemo', alignOuput: true})
+          var longerDemo = new Logdown({prefix: 'longerDemo', alignOuput: true})
 
           assert(abc.prefix.length === 3);
-          assert(demo.prefix.length === 8);
-          assert(longDemo.prefix.length === 8);
+          assert(demo.prefix.length === 10);
+          assert(longDemo.prefix.length === 10);
           assert(longerDemo.prefix.length === 10);
         } catch (error) {
           sandbox.restore()

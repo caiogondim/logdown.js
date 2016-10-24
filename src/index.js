@@ -61,12 +61,6 @@
 
     opts = opts || {}
 
-    var minLength = opts.minLength
-    if (minLength && opts.prefix) {
-      var padding = new Array(Math.max(minLength - opts.prefix.length + 1, 0)).join(' ')
-      opts.prefix = opts.prefix + padding;
-    }
-
     var prefix = opts.prefix === undefined ? '' : opts.prefix
     prefix = sanitizeStringToBrowser(prefix)
     if (prefix && isPrefixAlreadyInUse(prefix, instances)) {
@@ -74,11 +68,22 @@
     }
 
     //
+    this.alignOuput = opts.alignOuput === true ? true : false
     this.markdown = opts.markdown === undefined ? true : opts.markdown
     this.prefix = prefix
 
     //
     instances.push(this)
+    var longest = instances.sort(function (a, b) {
+      return b.prefix.length - a.prefix.length;
+    })[0]
+
+    instances.forEach(function (instance) {
+      if(instance.alignOuput) {
+        var padding = new Array(Math.max(longest.prefix.length - instance.prefix.length + 1, 0)).join(' ')
+        instance.prefix = instance.prefix + padding;
+      }
+    })
 
     if (isBrowser()) {
       this.prefixColor = colors[lastUsedColorIndex % colors.length]
