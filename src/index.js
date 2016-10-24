@@ -74,16 +74,7 @@
 
     //
     instances.push(this)
-    var longest = instances.sort(function (a, b) {
-      return b.prefix.length - a.prefix.length;
-    })[0]
-
-    instances.forEach(function (instance) {
-      if(instance.alignOuput) {
-        var padding = new Array(Math.max(longest.prefix.length - instance.prefix.length + 1, 0)).join(' ')
-        instance.prefix = instance.prefix + padding;
-      }
-    })
+    alignPrefixes()
 
     if (isBrowser()) {
       this.prefixColor = colors[lastUsedColorIndex % colors.length]
@@ -219,6 +210,19 @@
 
   // Private
   // -------
+
+  function alignPrefixes() {
+    var longest = instances.sort(function (a, b) {
+      return b.prefix.length - a.prefix.length;
+    })[0]
+
+    instances.forEach(function (instance) {
+      if(instance.alignOuput) {
+        var padding = new Array(Math.max(longest.prefix.length - instance.prefix.length + 1, 0)).join(' ')
+        instance.prefix = instance.prefix + padding;
+      }
+    })
+  }
 
   function parseMarkdown (text) {
     var styles = []
