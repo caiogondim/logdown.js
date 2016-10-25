@@ -11,6 +11,7 @@
     "test": "npm run test:lint && gulp test",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",
     "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
+    "dev": "gulp dev",
     "build": "gulp build",
     "deploy:example": "gulp deploy:example",
     "test:travisci": "gulp test:travisci",
