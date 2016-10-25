@@ -1,12 +1,13 @@
 'use strict'
 
-var gulp = require('gulp')
-var mocha = require('gulp-mocha')
-var uglify = require('gulp-uglify')
-var header = require('gulp-header')
+var browserSync = require('browser-sync').create()
 var ghPages = require('gulp-gh-pages')
-var rename = require('gulp-rename')
+var gulp = require('gulp')
+var header = require('gulp-header')
 var karma = require('karma').server
+var mocha = require('gulp-mocha')
+var rename = require('gulp-rename')
+var uglify = require('gulp-uglify')
 
 // Test
 // ----
@@ -63,6 +64,20 @@ gulp.task('build', function() {
       basename: 'logdown'
     }))
     .pipe(gulp.dest('./example/lib'))
+})
+
+// Development
+// -----------
+
+gulp.task('dev', ['build'], function() {
+  gulp.watch('example/**/*.*').on('change', browserSync.reload);
+  gulp.watch('src/**/*.*', ['build'])
+
+  browserSync.init({
+    port: 3636,
+    server: {baseDir: './'},
+    startPath: '/example'
+  })
 })
 
 // Deploy

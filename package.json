@@ -11,6 +11,7 @@
     "test": "npm run test:lint && gulp test",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",
     "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
+    "start": "gulp dev",
     "build": "gulp build",
     "deploy:example": "gulp deploy:example",
     "test:travisci": "gulp test:travisci",
@@ -37,6 +38,7 @@
   },
   "homepage": "https://github.com/caiogondim/logdown",
   "devDependencies": {
+    "browser-sync": "^2.17.5",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-gh-pages": "^0.5.4",
@@ -55,6 +57,5 @@
     "mocha": "^2.5.3",
     "sinon": "^1.17.5",
     "standard": "^8.0.0"
-  },
-  "dependencies": {}
+  }
 }
