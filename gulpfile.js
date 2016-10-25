@@ -67,9 +67,9 @@ gulp.task('build', function() {
 })
 
 // Development
-// ------
+// -----------
 
-gulp.task('default', ['build'], function() {
+gulp.task('dev', ['build'], function() {
   gulp.watch('example/**/*.*').on('change', browserSync.reload);
   gulp.watch('src/**/*.*', ['build'])
 
