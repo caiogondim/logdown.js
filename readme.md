@@ -24,42 +24,61 @@ or in the preview below.
 
 The simplest use of the library in both platforms could be done as follows:
 
-If on the server, install it through npm:
+### Node.js
+
+If on the server, install it through [npm](https://www.npmjs.com/):
 
 ```bash
 npm install --save logdown
 ```
 
-In the browser you can install it through [bower](http://bower.io).
+```js
+var Logdown = require('logdown')
+var logger = new Logdown({prefix: 'foo'})
+```
+
+### Browser
+
+In the browser you can install it through [Bower](http://bower.io).
 
 ```bash
 bower install logdown
 ```
 
-You can also use the lib in the browser in the same way as in the server if you
-use [Browserify](http://browserify.org/). Or you can just download it
-[here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the
-`dist/index.js` file in your public folder.
-
 ```js
-// In the browser
 var logger = new Logdown({prefix: 'foo'})
 ```
 
-And then use it.
+### SystemJS
+
+Using the dynamic module loader [SystemJS](https://github.com/systemjs/systemjs), Logdown can be loaded as a CommonJS module.
 
 ```js
-// In the server-side or client-side with Browserify
-var Logdown = require('logdown')
-var logger = new Logdown({prefix: 'foo'})
+SystemJS.config({
+  map: {
+    'logdown': 'bower_components/logdown/dist/index.js'
+  },
+  packages: {
+    'logdown': {format: 'cjs'}
+  }
+});
 ```
 
-It is highly recommended to use a prefix for your instance, this way you get
-a nice prefixed message on console and it is possible to silence instances
-based on the prefix name, as we will see after.
+```js
+System.import('logdown').then(function(Logdown) {
+  var logger = new Logdown({prefix: 'foo'}
+});
+```
 
-After creating your object, you can use the regular `log`, `warn`, `info` and
-`error` methods as we have on `console`, but now with Markdown support.
+### Other
+
+You can also use the lib in the browser in the same way as in the server if you use [Browserify](http://browserify.org/). Or you can just download it [here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the `dist/index.js` file in your public folder.
+
+### Usage
+
+It is highly recommended to use a prefix for your instance, this way you get a nice prefixed message on console and it is possible to silence instances based on the prefix name, as we will see after.
+
+After creating your object, you can use the regular `log`, `warn`, `info` and `error` methods as we have on `console`, but now with Markdown support.
 
 ```js
 logger.log('lorem *ipsum*')
@@ -196,9 +215,7 @@ Logdown.disable('*foo*', '-foobar')
 
 ## Donating
 
-If you found this library useful and are willing to donate, transfer some
-bitcoins to `1BqqKiZA8Tq43CdukdBEwCdDD42jxuX9UY` or through the
-[URL](https://www.coinbase.com/caiogondim) https://www.coinbase.com/caiogondim
+If you found this library useful and are willing to donate, transfer some bitcoins to `1BqqKiZA8Tq43CdukdBEwCdDD42jxuX9UY` or through the [URL](https://www.coinbase.com/caiogondim) https://www.coinbase.com/caiogondim
 
 Or via [PayPal.me](https://www.paypal.me/caiogondim) https://www.paypal.me/caiogondim.
 
