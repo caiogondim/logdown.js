@@ -72,7 +72,10 @@ System.import('logdown').then(function(Logdown) {
 
 ### Other
 
-You can also use the lib in the browser in the same way as in the server if you use [Browserify](http://browserify.org/). Or you can just download it [here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the `dist/index.js` file in your public folder.
+You can also use the lib in the browser in the same way as in the server if you
+use [Browserify](http://browserify.org/). Or you can just download it
+[here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the
+`dist/index.js` file in your public folder.
 
 ### Usage
 
@@ -215,7 +218,9 @@ Logdown.disable('*foo*', '-foobar')
 
 ## Donating
 
-If you found this library useful and are willing to donate, transfer some bitcoins to `1BqqKiZA8Tq43CdukdBEwCdDD42jxuX9UY` or through the [URL](https://www.coinbase.com/caiogondim) https://www.coinbase.com/caiogondim
+If you found this library useful and are willing to donate, transfer some
+bitcoins to `1BqqKiZA8Tq43CdukdBEwCdDD42jxuX9UY` or through the
+[URL](https://www.coinbase.com/caiogondim) https://www.coinbase.com/caiogondim
 
 Or via [PayPal.me](https://www.paypal.me/caiogondim) https://www.paypal.me/caiogondim.
 
