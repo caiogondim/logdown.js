@@ -68,7 +68,7 @@
     }
 
     //
-    this.alignOuput = Boolean(opts.alignOuput) === true ? true : false
+    this.alignOuput = Boolean(opts.alignOuput) ? true : false
     this.markdown = opts.markdown === undefined ? true : opts.markdown
     this.prefix = prefix
 
