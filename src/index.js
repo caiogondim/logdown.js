@@ -68,13 +68,13 @@
     }
 
     //
-    this.alignOuput = opts.alignOuput === true ? true : false
+    this.alignOuput = Boolean(opts.alignOuput) === true ? true : false
     this.markdown = opts.markdown === undefined ? true : opts.markdown
     this.prefix = prefix
 
     //
     instances.push(this)
-    alignPrefixes()
+    alignPrefixes(instances)
 
     if (isBrowser()) {
       this.prefixColor = colors[lastUsedColorIndex % colors.length]
@@ -211,7 +211,7 @@
   // Private
   // -------
 
-  function alignPrefixes() {
+  function alignPrefixes(instances) {
     var longest = instances.sort(function (a, b) {
       return b.prefix.length - a.prefix.length
     })[0]
