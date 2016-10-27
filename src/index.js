@@ -68,11 +68,13 @@
     }
 
     //
+    this.alignOuput = Boolean(opts.alignOuput) ? true : false
     this.markdown = opts.markdown === undefined ? true : opts.markdown
     this.prefix = prefix
 
     //
     instances.push(this)
+    alignPrefixes(instances)
 
     if (isBrowser()) {
       this.prefixColor = colors[lastUsedColorIndex % colors.length]
@@ -208,6 +210,19 @@
 
   // Private
   // -------
+
+  function alignPrefixes(instances) {
+    var longest = instances.sort(function (a, b) {
+      return b.prefix.length - a.prefix.length
+    })[0]
+
+    instances.forEach(function (instance) {
+      if(instance.alignOuput) {
+        var padding = new Array(Math.max(longest.prefix.length - instance.prefix.length + 1, 0)).join(' ')
+        instance.prefix = instance.prefix + padding
+      }
+    })
+  }
 
   function parseMarkdown (text) {
     var styles = []

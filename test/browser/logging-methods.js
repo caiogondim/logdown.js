@@ -146,6 +146,24 @@
         sandbox.restore()
       })
 
+      it('can add whitespace to align logger output', function () {
+        try {
+          var abc = new Logdown({prefix: 'abc'})
+          var demo = new Logdown({prefix: 'demo', alignOuput: true})
+          var longDemo = new Logdown({prefix: 'longDemo', alignOuput: true})
+          var longerDemo = new Logdown({prefix: 'longerDemo', alignOuput: true})
+
+          assert.equal(abc.prefix.length, 3, 'Skipping \'alignOuput\' will not add whitespace characters')
+          assert.equal(demo.prefix.length, 10, 'Padding will be added to make short names as long as the longest')
+          assert.equal(longDemo.prefix.length, 10, 'Padding will be added to make long names as long as the longest')
+          assert.equal(longerDemo.prefix.length, 10, 'The longest name will set the width for every other logger name')
+        } catch (error) {
+          sandbox.restore()
+          throw error
+        }
+        sandbox.restore()
+      })
+
       // https://github.com/caiogondim/logdown/issues/14
       xit('should print not-string arguments as is', function () {
         try {
