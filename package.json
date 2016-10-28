@@ -57,5 +57,6 @@
     "mocha": "^2.5.3",
     "sinon": "^1.17.5",
     "standard": "^8.0.0"
-  }
+  },
+  "dependencies": {}
 }
