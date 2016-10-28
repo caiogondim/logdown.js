@@ -68,7 +68,7 @@
     }
 
     //
-    this.alignOuput = Boolean(opts.alignOuput) ? true : false
+    this.alignOuput = Boolean(opts.alignOuput)
     this.markdown = opts.markdown === undefined ? true : opts.markdown
     this.prefix = prefix
 
@@ -211,13 +211,13 @@
   // Private
   // -------
 
-  function alignPrefixes(instances) {
+  function alignPrefixes (instances) {
     var longest = instances.sort(function (a, b) {
       return b.prefix.length - a.prefix.length
     })[0]
 
     instances.forEach(function (instance) {
-      if(instance.alignOuput) {
+      if (instance.alignOuput) {
         var padding = new Array(Math.max(longest.prefix.length - instance.prefix.length + 1, 0)).join(' ')
         instance.prefix = instance.prefix + padding
       }
