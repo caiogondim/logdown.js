@@ -52,10 +52,10 @@
     "karma-cli": "1.0.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-mocha": "^1.0.0",
-    "karma-safari-launcher": "^1.0.0",
     "karma-sinon": "^1.0.5",
     "mocha": "^2.5.3",
     "sinon": "^1.17.5",
     "standard": "^8.0.0"
-  }
+  },
+  "dependencies": {}
 }
