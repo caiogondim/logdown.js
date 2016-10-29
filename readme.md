@@ -149,6 +149,13 @@ logger.log('lorem _ipsum_')
 logger.log('lorem `ipsum`')
 ```
 
+#### `opts.alignOutput`
+
+Type: 'Boolean'
+
+Default: `false`
+
+If setted to `true`, the name of the logger instance will have the same length as the longest name of any other Logdown instance.
 
 ## Enabling/disabling instances
 
