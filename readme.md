@@ -1,8 +1,10 @@
 <img src="http://rawgit.com/caiogondim/logdown.js/master/img/icon.svg">
 
-# logdown.js
+<h1 align="center">logdown.js</h1>
 
+<div align="center">
 <img src="http://travis-ci.org/caiogondim/logdown.js.svg?branch=master" alt="Travis CI"> <img src="http://img.badgesize.io/caiogondim/logdown.js/master/dist/index.js?compression=gzip" alt="lib size"> <img src="https://david-dm.org/caiogondim/logdown.js/status.svg" alt="dependencies status"> <img src="http://img.shields.io/npm/dm/logdown.svg" alt="Downloads per month"> [![Slack Status](http://logdown-slack.herokuapp.com/badge.svg)](https://logdown-slack.herokuapp.com/)
+</div>
 
 Logdown is a debug utility for the browser and the server with Markdown support.
 It does not have any dependencies and is only 2K gzipped.
