@@ -43,7 +43,7 @@ var logger = new Logdown({prefix: 'foo'})
 
 ### Browser
 
-In the browser you can install it through [Bower](http://bower.io).
+In the browser you can install it through [Bower](http://bower.io):
 
 ```bash
 bower install logdown
@@ -55,7 +55,7 @@ var logger = new Logdown({prefix: 'foo'})
 
 ### SystemJS
 
-Using the dynamic module loader [SystemJS](https://github.com/systemjs/systemjs), Logdown can be loaded as a CommonJS module.
+Using the dynamic module loader [SystemJS](https://github.com/systemjs/systemjs), Logdown can be loaded as a CommonJS module:
 
 ```js
 SystemJS.config({
@@ -72,6 +72,13 @@ SystemJS.config({
 System.import('logdown').then(function(Logdown) {
   var logger = new Logdown({prefix: 'foo'}
 });
+```
+
+### TypeScript
+
+```ts
+import Logdown = require("logdown");
+let logger: Logdown = new Logdown({prefix: 'foo'};
 ```
 
 ### Other
