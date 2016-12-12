@@ -1,6 +1,9 @@
 declare module 'logdown' {
   class Logdown {
     constructor(options?: Object);
+    markdown: boolean;
+    prefix: string;
+    prefixColor: string;
     public debug(...args: any[]): void;
     public error(...args: any[]): void;
     public info(...args: any[]): void;
