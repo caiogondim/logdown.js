@@ -2,12 +2,14 @@ os:
   - linux
 language: node_js
 node_js:
-  - "4.1"
-  - "4.0"
-  - "0.12"
-  - "0.11"
-  - "0.10"
-script: "npm run test:travisci"
+  - "6.9"
+  - "4.6"
+cache:
+  directories:
+    - bower_components
+    - node_modules
+script:
+  - "npm run test:travisci"
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
