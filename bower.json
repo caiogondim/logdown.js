@@ -5,7 +5,7 @@
     "Caio Gondim <me@caiogondim.com>"
   ],
   "description": "Debug utility with markdown support that runs on browser and server",
-  "main": "dist/index.js",
+  "main": "dist/logdown.js",
   "moduleType": [
     "globals",
     "node"

@@ -60,7 +60,7 @@ Using the dynamic module loader [SystemJS](https://github.com/systemjs/systemjs)
 ```js
 SystemJS.config({
   map: {
-    'logdown': 'bower_components/logdown/dist/index.js'
+    'logdown': 'bower_components/logdown/dist/logdown.js'
   },
   packages: {
     'logdown': {format: 'cjs'}
@@ -86,7 +86,7 @@ let logger: Logdown = new Logdown({prefix: 'foo'};
 You can also use the lib in the browser in the same way as in the server if you
 use [Browserify](http://browserify.org/). Or you can just download it
 [here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the
-`dist/index.js` file in your public folder.
+`dist/logdown.js` file in your public folder.
 
 ### Usage
 
