@@ -203,13 +203,15 @@ Logdown.disable('*foo*', '-foobar')
 ## Contributors
 
 ```
-143  Caio Gondim
-  4  David Godfrey
-  2  Sven Anders Robbestad
-  1  Dan Lukinykh
-  1  Bent Cardan
-  1  Gleb Bahmutov
-  1  netmml
+203	Caio Gondim
+ 30	Benny Neugebauer
+  5	David Godfrey
+  2	Sven Anders Robbestad
+  1	Dan Lukinykh
+  1	Bent Cardan
+  1	Gleb Bahmutov
+  1	Panayiotis Lipiridis
+  1	netmml
 ```
 
 ## Donating
