@@ -341,7 +341,6 @@
       if (instance.markdown && isColorSupported()) {
         parsedMarkdown = parseMarkdown(args[0])
         preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text
-        preparedOutput[0] = parsedMarkdown.text
         preparedOutput = preparedOutput.concat(parsedMarkdown.styles)
       } else {
         preparedOutput[0] = preparedOutput[0] + args[0]
@@ -353,7 +352,7 @@
     if (args.length > 1) {
       preparedOutput = preparedOutput.concat(args.splice(1))
     }
-    // console.log(preparedOutput)
+
     return preparedOutput
   }
 
