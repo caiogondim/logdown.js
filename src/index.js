@@ -136,19 +136,16 @@
   var methods = ['debug', 'log', 'info', 'warn', 'error']
   methods.forEach(function (method) {
     Logdown.prototype[method] = function () {
-      var preparedOutput
-      var args = []
-
       if (isDisabled(this)) {
         return
       }
 
-      var text = Array.prototype.slice.call(arguments, 0).join(' ')
-      // var text = arguments[0];
+      var preparedOutput
+      var parsedArgs = []
+      var args = Array.prototype.slice.call(arguments, 0)
 
       if (isBrowser()) {
-        text = sanitizeStringToBrowser(text)
-        preparedOutput = prepareOutputToBrowser(text, this)
+        preparedOutput = prepareOutputToBrowser(args, this)
 
         // IE9 workaround
         // http://stackoverflow.com/questions/5538972/
@@ -156,15 +153,10 @@
         Function.prototype.apply.call(
           console[method] || console.log,
           console,
-          [preparedOutput.parsedText]
-            .concat(
-              preparedOutput.styles,
-              typeof preparedOutput.notText !== 'undefined'
-                ? [preparedOutput.notText]
-                : ''
-            )
+          preparedOutput
         )
       } else if (isNode()) {
+        var text = Array.prototype.slice.call(arguments, 0).join(' ')
         text = sanitizeStringToNode(text)
         preparedOutput = prepareOutputToNode(text, this)
 
@@ -195,14 +187,14 @@
         }
 
         //
-        args.push(preparedOutput.parsedText)
+        parsedArgs.push(preparedOutput.parsedText)
         if (preparedOutput.notText) {
-          args.push(preparedOutput.notText)
+          parsedArgs.push(preparedOutput.notText)
         }
 
         (console[method] || console.log).apply(
           console,
-          args
+          parsedArgs
         )
       }
     }
@@ -233,7 +225,7 @@
 
       if (isBrowser()) {
         styles.push(match.rule.style)
-        styles.push('color:inherit;')
+        styles.push('') // Empty string resets style.
       }
 
       match = getNextMatch(text)
@@ -326,46 +318,43 @@
     return matches[0]
   }
 
-  function prepareOutputToBrowser (data, instance) {
+  function prepareOutputToBrowser (args, instance) {
+    var preparedOutput = []
     var parsedMarkdown
-    var parsedText
-    var styles
-    //
-    var notText
-
-    if (typeof data === 'string') {
-      if (instance.markdown &&
-          isColorSupported()) {
-        parsedMarkdown = parseMarkdown(data)
-        parsedText = parsedMarkdown.text
-        styles = parsedMarkdown.styles
-      } else {
-        parsedText = data
-        styles = []
-      }
-    } else {
-      parsedText = parsedText || ''
-      styles = styles || []
-      notText = data
-    }
 
     if (instance.prefix) {
       if (isColorSupported()) {
-        parsedText = '%c' + instance.prefix + '%c ' + parsedText
-        styles.unshift(
+        preparedOutput.push('%c' + instance.prefix + '%c ')
+        preparedOutput.push(
           'color:' + instance.prefixColor + '; font-weight:bold;',
-          'color:inherit;'
+          '' // Empty string resets style.
         )
       } else {
-        parsedText = '[' + instance.prefix + '] ' + parsedText
+        preparedOutput.push('[' + instance.prefix + '] ')
       }
+    } else {
+      preparedOutput.push('')
     }
 
-    return {
-      parsedText: parsedText,
-      styles: styles,
-      notText: notText
+    // Only first argument on `console` can have style.
+    if (typeof args[0] === 'string') {
+      if (instance.markdown && isColorSupported()) {
+        parsedMarkdown = parseMarkdown(args[0])
+        preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text
+        preparedOutput[0] = parsedMarkdown.text
+        preparedOutput = preparedOutput.concat(parsedMarkdown.styles)
+      } else {
+        preparedOutput[0] = preparedOutput[0] + args[0]
+      }
+    } else {
+      preparedOutput[0] = args[0]
     }
+
+    if (args.length > 1) {
+      preparedOutput = preparedOutput.concat(args.splice(1))
+    }
+    // console.log(preparedOutput)
+    return preparedOutput
   }
 
   function prepareOutputToNode (data, instance) {
