@@ -7,7 +7,8 @@
   sinon.assert.expose(chai.assert, {prefix: ''})
   var assert = chai.assert
 
-  var methods = ['debug', 'log', 'info', 'warn', 'error']
+  // var methods = ['debug', 'log', 'info', 'warn', 'error']
+  var methods = ['debug']
   methods.forEach(function (method) {
     describe('Logdown::' + method, function () {
       var sandbox
@@ -32,7 +33,7 @@
             console[method],
             'lorem %cipsum%c',
             'font-weight:bold;',
-            'color:inherit;'
+            ''
           )
 
           foo[method]('lorem _ipsum_')
@@ -40,7 +41,7 @@
             console[method],
             'lorem %cipsum%c',
             'font-style:italic;',
-            'color:inherit;'
+            ''
           )
 
           foo[method]('lorem `ipsum`')
@@ -49,7 +50,7 @@
             'lorem %cipsum%c',
             'background:#FDF6E3; color:#586E75; padding:1px 5px; ' +
               'border-radius:4px;',
-            'color:inherit;'
+            ''
           )
 
           foo[method]('lorem `ipsum` *dolor* sit _amet_')
@@ -58,11 +59,11 @@
             'lorem %cipsum%c %cdolor%c sit %camet%c',
             'background:#FDF6E3; color:#586E75; padding:1px 5px; ' +
               'border-radius:4px;',
-            'color:inherit;',
+            '',
             'font-weight:bold;',
-            'color:inherit;',
+            '',
             'font-style:italic;',
-            'color:inherit;'
+            ''
           )
         } catch (error) {
           sandbox.restore()
@@ -120,28 +121,6 @@
         //   sandbox.restore()
         //   throw error
         // }
-
-        sandbox.restore()
-      })
-
-      it('should sanitize strings', function () {
-        try {
-          var foo = new Logdown()
-          foo[method]('lorem %cipsum%c sit %cdolor%c amet')
-          assert.calledWith(console[method], 'lorem ipsum sit dolor amet')
-
-          // var bar = new Logdown({prefix: 'bar'})
-          // bar.log('lorem %cipsum% sit %cdolor% amet')
-          // assert.calledWith(
-          //   console[method],
-          //   '%c' + bar.prefix + '%clorem ipsum sit dolor amet',
-          //   'color:' + bar.prefixColor + '; font-weight:bold;',
-          //   ''
-          // )
-        } catch (error) {
-          sandbox.restore()
-          throw error
-        }
 
         sandbox.restore()
       })
