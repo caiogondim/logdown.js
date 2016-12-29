@@ -68,7 +68,7 @@
     }
 
     //
-    this.alignOuput = Boolean(opts.alignOuput)
+    this.alignOutput = Boolean(opts.alignOutput)
     this.markdown = opts.markdown === undefined ? true : opts.markdown
     this.prefix = prefix
 
@@ -217,7 +217,7 @@
     })[0]
 
     instances.forEach(function (instance) {
-      if (instance.alignOuput) {
+      if (instance.alignOutput) {
         var padding = new Array(Math.max(longest.prefix.length - instance.prefix.length + 1, 0)).join(' ')
         instance.prefix = instance.prefix + padding
       }
