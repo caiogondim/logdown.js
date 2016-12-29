@@ -149,14 +149,29 @@
       it('can add whitespace to align logger output', function () {
         try {
           var abc = new Logdown({prefix: 'abc'})
-          var demo = new Logdown({prefix: 'demo', alignOuput: true})
-          var longDemo = new Logdown({prefix: 'longDemo', alignOuput: true})
-          var longerDemo = new Logdown({prefix: 'longerDemo', alignOuput: true})
+          var text = new Logdown({prefix: 'text', alignOutput: 'yes'})
+          var demo = new Logdown({prefix: 'demo', alignOutput: true})
+          var longDemo = new Logdown({prefix: 'longDemo', alignOutput: true})
+          var demoFalse = new Logdown({prefix: 'demoFalse', alignOutput: false})
+          var longerDemo = new Logdown({prefix: 'longerDemo', alignOutput: true})
 
-          assert.equal(abc.prefix.length, 3, 'Skipping \'alignOuput\' will not add whitespace characters')
+          assert.equal(abc.prefix.length, 3, 'Skipping \'alignOutput\' will not add whitespace characters')
+          assert.equal(abc.alignOutput, false)
+
+          assert.equal(text.prefix.length, 10, 'Inputs will be converted into Boolean values')
+          assert.equal(text.alignOutput, true)
+
           assert.equal(demo.prefix.length, 10, 'Padding will be added to make short names as long as the longest')
+          assert.equal(demo.alignOutput, true)
+
           assert.equal(longDemo.prefix.length, 10, 'Padding will be added to make long names as long as the longest')
+          assert.equal(longDemo.alignOutput, true)
+
+          assert.equal(demoFalse.prefix.length, 9, 'Padding will be skipped if set to \'false\'')
+          assert.equal(demoFalse.alignOutput, false)
+
           assert.equal(longerDemo.prefix.length, 10, 'The longest name will set the width for every other logger name')
+          assert.equal(longerDemo.alignOutput, true)
         } catch (error) {
           sandbox.restore()
           throw error
