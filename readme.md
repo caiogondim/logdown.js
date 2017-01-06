@@ -112,9 +112,18 @@ logger.warn('consectetur', '`adipiscing` elit')
 
 ### Options
 
-The constructor accepts one object for configuration on instantiation time. The following options can be used for configuration.
+The constructor accepts one object for configuration on instantiation time.
 
-#### prefix
+**Example**
+
+```js
+var options = {alignOutput: true, prefix: 'foo'}
+var logger = new Logdown(options)
+```
+
+The following options can be used for configuration.
+
+#### `prefix`
 
 - Type: 'String'
 - Default: `''`
