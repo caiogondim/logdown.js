@@ -24,11 +24,9 @@ or in the preview below.
 <img src="http://rawgit.com/caiogondim/logdown.js/master/img/node-preview.gif">
 
 
-## Using
+## Installation
 
-The simplest use of the library in both platforms could be done as follows:
-
-### Node.js
+### npm
 
 If on the server, install it through [npm](https://www.npmjs.com/):
 
@@ -41,7 +39,7 @@ var Logdown = require('logdown')
 var logger = new Logdown({prefix: 'foo'})
 ```
 
-### Browser
+### Bower
 
 In the browser you can install it through [Bower](http://bower.io):
 
@@ -52,6 +50,12 @@ bower install logdown
 ```js
 var logger = new Logdown({prefix: 'foo'})
 ```
+
+### Other
+
+You can also use the lib in the browser in the same way as in the server if you use [Browserify](http://browserify.org/). Or you can just download it [here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the `dist/index.js` file in your public folder.
+
+## Import
 
 ### SystemJS
 
@@ -78,17 +82,15 @@ System.import('logdown').then(function(Logdown) {
 
 ```ts
 import Logdown = require("logdown");
+```
+
+```ts
 let logger: Logdown = new Logdown({prefix: 'foo'};
 ```
 
-### Other
+## Usage
 
-You can also use the lib in the browser in the same way as in the server if you
-use [Browserify](http://browserify.org/). Or you can just download it
-[here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the
-`dist/index.js` file in your public folder.
-
-### Usage
+### Logging
 
 It is highly recommended to use a prefix for your instance, this way you get a nice prefixed message on console and it is possible to silence instances based on the prefix name, as we will see after.
 
@@ -108,15 +110,14 @@ logger.info('dolor _sit_', 'amet')
 logger.warn('consectetur', '`adipiscing` elit')
 ```
 
-### New objects
+### Options
 
-The constructor accepts one object for configuration on instantiation time.
+The constructor accepts one object for configuration on instantiation time. The following options can be used for configuration.
 
-#### `opts.prefix`
+#### prefix
 
-Type: 'String'
-
-Default: `''`
+- Type: 'String'
+- Default: `''`
 
 ```js
 var logger = new Logdown({prefix: 'foo'})
@@ -134,11 +135,10 @@ var fooQuzLogger = new Logdown({prefix: 'foo:quz'})
 fooQuzLogger.log('Lorem Ipsum')
 ```
 
-#### `opts.markdown`
+#### `markdown`
 
-Type: 'Boolean'
-
-Default: `true`
+- Type: 'Boolean'
+- Default: `true`
 
 If setted to `false`, markdown will not be parsed.
 
@@ -160,11 +160,10 @@ logger.log('lorem _ipsum_')
 logger.log('lorem `ipsum`')
 ```
 
-#### `opts.alignOutput`
+#### `alignOutput`
 
-Type: 'Boolean'
-
-Default: `false`
+- Type: 'Boolean'
+- Default: `false`
 
 If setted to `true`, the name of the logger instance will have the same length as the longest name of any other Logdown instance.
 
