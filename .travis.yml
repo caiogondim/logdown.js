@@ -2,8 +2,9 @@ os:
   - linux
 language: node_js
 node_js:
-  - "6.9"
-  - "4.6"
+  - 4
+  - 5
+  - 6
 cache:
   directories:
     - bower_components
