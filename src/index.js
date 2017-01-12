@@ -141,7 +141,6 @@
       }
 
       var preparedOutput
-      var parsedArgs = []
       var args = Array.prototype.slice.call(arguments, 0)
 
       if (isBrowser()) {
@@ -156,45 +155,11 @@
           preparedOutput
         )
       } else if (isNode()) {
-        var text = Array.prototype.slice.call(arguments, 0).join(' ')
-        text = sanitizeStringToNode(text)
-        preparedOutput = prepareOutputToNode(text, this)
+        preparedOutput = prepareOutputToNode(args, method, this)
 
-        if (method === 'warn') {
-          preparedOutput.parsedText =
-            '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
-            '⚠' +
-            '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
-            preparedOutput.parsedText
-        } else if (method === 'error') {
-          preparedOutput.parsedText =
-            '\u001b[' + ansiColors.colors.red[0] + 'm' +
-            '✖' +
-            '\u001b[' + ansiColors.colors.red[1] + 'm ' +
-            preparedOutput.parsedText
-        } else if (method === 'info') {
-          preparedOutput.parsedText =
-            '\u001b[' + ansiColors.colors.blue[0] + 'm' +
-            'ℹ' +
-            '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
-            preparedOutput.parsedText
-        } else if (method === 'debug') {
-          preparedOutput.parsedText =
-            '\u001b[' + ansiColors.colors.gray[0] + 'm' +
-            '🐛' +
-            '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
-            preparedOutput.parsedText
-        }
-
-        //
-        parsedArgs.push(preparedOutput.parsedText)
-        if (preparedOutput.notText) {
-          parsedArgs.push(preparedOutput.notText)
-        }
-
-        (console[method] || console.log).apply(
+        ;(console[method] || console.log).apply(
           console,
-          parsedArgs
+          preparedOutput
         )
       }
     }
@@ -356,38 +321,61 @@
     return preparedOutput
   }
 
-  function prepareOutputToNode (data, instance) {
-    var parsedText = ''
-    var notText
+  function prepareOutputToNode (args, method, instance) {
+    var preparedOutput = []
 
     if (instance.prefix) {
       if (isColorSupported()) {
-        parsedText =
+        preparedOutput[0] =
           '\u001b[' + instance.prefixColor[0] + 'm' +
           '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
           instance.prefix +
           '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-          '\u001b[' + instance.prefixColor[1] + 'm '
+          '\u001b[' + instance.prefixColor[1] + 'm'
       } else {
-        parsedText = '[' + instance.prefix + '] '
+        preparedOutput[0] = '[' + instance.prefix + ']'
       }
     }
 
-    if (typeof data === 'string') {
-      if (instance.markdown) {
-        parsedText += parseMarkdown(data).text
-      } else {
-        parsedText += data
-      }
-    } else {
-      notText = data
+    if (method === 'warn') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
+        '⚠' +
+        '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
+        (preparedOutput[0] || '')
+    } else if (method === 'error') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.red[0] + 'm' +
+        '✖' +
+        '\u001b[' + ansiColors.colors.red[1] + 'm ' +
+        (preparedOutput[0] || '')
+    } else if (method === 'info') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.blue[0] + 'm' +
+        'ℹ' +
+        '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
+        (preparedOutput[0] || '')
+    } else if (method === 'debug') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.gray[0] + 'm' +
+        '🐛' +
+        '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
+        (preparedOutput[0] || '')
     }
 
-    return {
-      parsedText: parsedText,
-      styles: [],
-      notText: notText
-    }
+    args.forEach(function (arg) {
+      if (typeof arg === 'string') {
+        if (instance.markdown) {
+          preparedOutput.push(parseMarkdown(arg).text)
+        } else {
+          preparedOutput.push(arg)
+        }
+      } else {
+        preparedOutput = preparedOutput.push(arg)
+      }
+    })
+
+    return preparedOutput
   }
 
   function isDisabled (instance) {
@@ -530,10 +518,6 @@
 
   function isBrowser () {
     return (typeof window !== 'undefined')
-  }
-
-  function sanitizeStringToNode (str) {
-    return str
   }
 
   var getNextPrefixColor = (function () {
