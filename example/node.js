@@ -1,14 +1,17 @@
 'use strict'
 
-var Logdown = require('../')
+var Logdown = require('../src')
 
 var demo = new Logdown({prefix: 'demo'})
+
+demo.log('one', '*foo*', 'bar')
 
 var gap = 2000
 var i = 1
 var timeout
 
 demo.log('Initializing demo')
+demo.debug('asdasd')
 
 timeout = i * gap
 i += 1

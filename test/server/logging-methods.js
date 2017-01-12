@@ -89,10 +89,21 @@ methods.forEach(function (method) {
         var foo = new Logdown({markdown: true})
 
         foo[method]('one', 'two', 'three')
+
+        var args = [
+          symbol,
+          'one',
+          'two',
+          'three'
+        ]
+
+        if (method === 'log') {
+          args.shift()
+        }
+
         assert.calledWith(
           console[method],
-          symbol +
-          'one two three'
+          ...args
         )
       } catch (error) {
         sandbox.restore()
@@ -106,15 +117,23 @@ methods.forEach(function (method) {
       try {
         var foo = new Logdown({markdown: true})
 
+        var args = [
+          symbol,
+          'one',
+          '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
+          'two' +
+          '\u001b[' + ansiColors.modifiers.bold[1] + 'm',
+          'three'
+        ]
+
+        if (method === 'log') {
+          args.shift()
+        }
+
         foo[method]('one', '*two*', 'three')
         assert.calledWith(
           console[method],
-          symbol +
-          'one ' +
-          '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-          'two' +
-          '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-          ' three'
+          ...args
         )
       } catch (error) {
         sandbox.restore()
@@ -126,46 +145,63 @@ methods.forEach(function (method) {
 
     it('should parse markdown if enabled', function () {
       try {
-        var foo = new Logdown({markdown: true})
+        const foo = new Logdown({markdown: true})
 
-        foo[method]('lorem *ipsum*')
-        assert.calledWith(
-          console[method],
-          symbol +
+        const args1 = [
+          symbol,
           'lorem ' +
           '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
           'ipsum' +
           '\u001b[' + ansiColors.modifiers.bold[1] + 'm'
-        )
+        ]
 
-        foo[method]('lorem _ipsum_')
+        if (method === 'log') {
+          args1.shift()
+        }
+
+        foo[method]('lorem *ipsum*')
         assert.calledWith(
           console[method],
-          symbol +
+          ...args1
+        )
+
+        const args2 = [
+          symbol,
           'lorem ' +
           '\u001b[' + ansiColors.modifiers.italic[0] + 'm' +
           'ipsum' +
           '\u001b[' + ansiColors.modifiers.italic[1] + 'm'
-        )
+        ]
 
-        foo[method]('lorem `ipsum`')
+        if (method === 'log') {
+          args2.shift()
+        }
+
+        foo[method]('lorem _ipsum_')
         assert.calledWith(
           console[method],
-          symbol +
+          ...args2
+        )
+
+        const args3 = [
+          symbol,
           'lorem ' +
           '\u001b[' + ansiColors.bgColors.bgYellow[0] + 'm' +
           '\u001b[' + ansiColors.colors.black[0] + 'm' +
           ' ' + 'ipsum' + ' ' +
           '\u001b[' + ansiColors.colors.black[1] + 'm' +
           '\u001b[' + ansiColors.bgColors.bgYellow[1] + 'm'
-        )
+        ]
 
-        // foo[method]('lorem `ipsum` *dolor* sit _amet_')
-        // assert.calledWith(
-        //   console[method],
-        //   'lorem ' +
-        //   'ipsum%c %cdolor%c sit %camet%c'
-        // )
+        if (method === 'log') {
+          args3.shift()
+        }
+
+        foo[method]('lorem `ipsum`')
+        assert.calledWith(
+          console[method],
+          ...args3
+        )
       } catch (error) {
         sandbox.restore()
         throw error
@@ -176,25 +212,39 @@ methods.forEach(function (method) {
 
     it('should not parse markdown if disabled', function () {
       try {
-        var foo = new Logdown({markdown: false})
+        const foo = new Logdown({markdown: false})
+
+        const args1 = [
+          symbol,
+          'lorem *ipsum*'
+        ]
+
+        if (method === 'log') {
+          args1.shift()
+        }
 
         foo[method]('lorem *ipsum*')
         assert.calledWith(
           console[method],
-          symbol + 'lorem *ipsum*'
+          ...args1
         )
+
+        //
+
+        const args2 = [
+          symbol,
+          'lorem _ipsum_ dolor'
+        ]
+
+        if (method === 'log') {
+          args2.shift()
+        }
 
         foo[method]('lorem _ipsum_ dolor')
         assert.calledWith(
           console[method],
-          symbol + 'lorem _ipsum_ dolor'
+          ...args2
         )
-
-        // foo[method]('lorem `ipsum` dolor')
-        // assert.calledWith(
-        //   console[method],
-        //   symbol + 'lorem `ipsum` dolor'
-        // )
       } catch (error) {
         sandbox.restore()
         throw error
@@ -214,39 +264,14 @@ methods.forEach(function (method) {
       try {
         assert.calledWith(
           console[method],
-          symbol +
+          symbol,
           '\u001b[' + foo.prefixColor[0] + 'm' +
           '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
           foo.prefix +
           '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-          '\u001b[' + foo.prefixColor[1] + 'm ' +
+          '\u001b[' + foo.prefixColor[1] + 'm ',
           'lorem ipsum'
         )
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
-
-      sandbox.restore()
-    })
-
-    it('should sanitize strings', function () {
-      try {
-        var foo = new Logdown()
-        foo[method]('lorem %cipsum%c sit %cdolor%c amet')
-        assert.calledWith(
-          console[method],
-          symbol + 'lorem %cipsum%c sit %cdolor%c amet'
-        )
-
-        // var bar = new Logdown({prefix: 'bar'})
-        // bar.log('lorem %cipsum% sit %cdolor% amet')
-        // assert.calledWith(
-        //   console[method],
-        //   '%c' + bar.prefix + '%clorem ipsum sit dolor amet',
-        //   'color:' + bar.prefixColor + '; font-weight:bold;',
-        //   ''
-        // )
       } catch (error) {
         sandbox.restore()
         throw error
