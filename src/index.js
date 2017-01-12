@@ -371,7 +371,7 @@
           preparedOutput.push(arg)
         }
       } else {
-        preparedOutput = preparedOutput.push(arg)
+        preparedOutput.push(arg)
       }
     })
 
