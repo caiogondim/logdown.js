@@ -7,8 +7,7 @@
   sinon.assert.expose(chai.assert, {prefix: ''})
   var assert = chai.assert
 
-  // var methods = ['debug', 'log', 'info', 'warn', 'error']
-  var methods = ['debug']
+  var methods = ['debug', 'log', 'info', 'warn', 'error']
   methods.forEach(function (method) {
     describe('Logdown::' + method, function () {
       var sandbox
