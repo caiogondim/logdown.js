@@ -98,13 +98,21 @@ methods.forEach(function (method) {
         ]
 
         if (method === 'log') {
-          args.shift()
+          assert.calledWith(
+            console[method],
+            args[1],
+            args[2],
+            args[3]
+          )
+        } else {
+          assert.calledWith(
+            console[method],
+            args[0],
+            args[1],
+            args[2],
+            args[3]
+          )
         }
-
-        assert.calledWith(
-          console[method],
-          ...args
-        )
       } catch (error) {
         sandbox.restore()
         throw error
@@ -126,15 +134,20 @@ methods.forEach(function (method) {
           'three'
         ]
 
-        if (method === 'log') {
-          args.shift()
-        }
-
         foo[method]('one', '*two*', 'three')
-        assert.calledWith(
-          console[method],
-          ...args
-        )
+
+        if (method === 'log') {
+          assert.calledWith(
+            console[method],
+            args[1]
+          )
+        } else {
+          assert.calledWith(
+            console[method],
+            args[0],
+            args[1]
+          )
+        }
       } catch (error) {
         sandbox.restore()
         throw error
@@ -155,15 +168,20 @@ methods.forEach(function (method) {
           '\u001b[' + ansiColors.modifiers.bold[1] + 'm'
         ]
 
-        if (method === 'log') {
-          args1.shift()
-        }
-
         foo[method]('lorem *ipsum*')
-        assert.calledWith(
-          console[method],
-          ...args1
-        )
+
+        if (method === 'log') {
+          assert.calledWith(
+            console[method],
+            args1[1]
+          )
+        } else {
+          assert.calledWith(
+            console[method],
+            args1[0],
+            args1[1]
+          )
+        }
 
         const args2 = [
           symbol,
@@ -173,15 +191,20 @@ methods.forEach(function (method) {
           '\u001b[' + ansiColors.modifiers.italic[1] + 'm'
         ]
 
-        if (method === 'log') {
-          args2.shift()
-        }
-
         foo[method]('lorem _ipsum_')
-        assert.calledWith(
-          console[method],
-          ...args2
-        )
+
+        if (method === 'log') {
+          assert.calledWith(
+            console[method],
+            args2[1]
+          )
+        } else {
+          assert.calledWith(
+            console[method],
+            args2[0],
+            args2[1]
+          )
+        }
 
         const args3 = [
           symbol,
@@ -193,15 +216,20 @@ methods.forEach(function (method) {
           '\u001b[' + ansiColors.bgColors.bgYellow[1] + 'm'
         ]
 
-        if (method === 'log') {
-          args3.shift()
-        }
-
         foo[method]('lorem `ipsum`')
-        assert.calledWith(
-          console[method],
-          ...args3
-        )
+
+        if (method === 'log') {
+          assert.calledWith(
+            console[method],
+            args3[1]
+          )
+        } else {
+          assert.calledWith(
+            console[method],
+            args3[0],
+            args3[1]
+          )
+        }
       } catch (error) {
         sandbox.restore()
         throw error
@@ -219,15 +247,20 @@ methods.forEach(function (method) {
           'lorem *ipsum*'
         ]
 
-        if (method === 'log') {
-          args1.shift()
-        }
-
         foo[method]('lorem *ipsum*')
-        assert.calledWith(
-          console[method],
-          ...args1
-        )
+
+        if (method === 'log') {
+          assert.calledWith(
+            console[method],
+            args1[1]
+          )
+        } else {
+          assert.calledWith(
+            console[method],
+            args1[0],
+            args1[1]
+          )
+        }
 
         //
 
@@ -236,15 +269,20 @@ methods.forEach(function (method) {
           'lorem _ipsum_ dolor'
         ]
 
-        if (method === 'log') {
-          args2.shift()
-        }
-
         foo[method]('lorem _ipsum_ dolor')
-        assert.calledWith(
-          console[method],
-          ...args2
-        )
+
+        if (method === 'log') {
+          assert.calledWith(
+            console[method],
+            args2[1]
+          )
+        } else {
+          assert.calledWith(
+            console[method],
+            args2[0],
+            args2[1]
+          )
+        }
       } catch (error) {
         sandbox.restore()
         throw error
