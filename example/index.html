@@ -110,15 +110,15 @@
       setTimeout(function() {
         var log4 = new Logdown({prefix: 'grault'})
         log4.log('Molestie nominati _recteque_ no eam, qui *ei* putant delicatissi')
-        log4.log('Cum at delenit *apeirian* forensibus.')
+        log4.log('Cum at delenit *apeirian* forensibus')
       }, timeout)
 
       timeout = i * gap
       i += 1
       setTimeout(function() {
         var log6 = new Logdown({prefix: 'waldo'})
-        log6.log('Molestie nominati _recteque_ no eam, qui *ei* putant delicatissi')
-        log6.log('Cum at delenit *apeirian* forensibus.')
+        log6.log('Molestie nominati _recteque_ no eam, qui *ei* putant delicatissi', {foo: 1, bar: 2})
+        log6.log('Cum at delenit *apeirian* forensibus', [1, 2, 3, 4, 5])
       }, timeout)
 
       timeout = i * gap
