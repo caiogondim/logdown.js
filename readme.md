@@ -53,7 +53,7 @@ var logger = new Logdown({prefix: 'foo'})
 
 ### Other
 
-You can also use the lib in the browser in the same way as in the server if you use [Browserify](http://browserify.org/). Or you can just download it [here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the `dist/index.js` file in your public folder.
+You can also use the lib in the browser in the same way as in the server if you use [Browserify](http://browserify.org/). Or you can just download it [here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the `dist/logdown.js` file in your public folder. Another way of retrieving Logdown is [via jsDelivr](http://www.jsdelivr.com/projects/logdown.js), a public Open Source CDN.
 
 ## Import
 
