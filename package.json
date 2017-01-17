@@ -1,14 +1,15 @@
 {
   "name": "logdown",
-  "version": "1.4.5",
+  "version": "1.5.0",
   "description": "Debug utility with markdown support that runs on browser and server",
-  "main": "dist/index.js",
+  "main": "dist/logdown.js",
   "types": "dist/logdown.d.ts",
   "directories": {
     "example": "example"
   },
   "scripts": {
-    "test": "npm run test:lint && gulp test",
+    "test": "npm run build && npm run test:lint && gulp test",
+    "test:server": "gulp mocha",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",
     "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
     "start": "gulp dev",

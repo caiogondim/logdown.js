@@ -136,19 +136,15 @@
   var methods = ['debug', 'log', 'info', 'warn', 'error']
   methods.forEach(function (method) {
     Logdown.prototype[method] = function () {
-      var preparedOutput
-      var args = []
-
       if (isDisabled(this)) {
         return
       }
 
-      var text = Array.prototype.slice.call(arguments, 0).join(' ')
-      // var text = arguments[0];
+      var preparedOutput
+      var args = Array.prototype.slice.call(arguments, 0)
 
       if (isBrowser()) {
-        text = sanitizeStringToBrowser(text)
-        preparedOutput = prepareOutputToBrowser(text, this)
+        preparedOutput = prepareOutputToBrowser(args, this)
 
         // IE9 workaround
         // http://stackoverflow.com/questions/5538972/
@@ -156,53 +152,14 @@
         Function.prototype.apply.call(
           console[method] || console.log,
           console,
-          [preparedOutput.parsedText]
-            .concat(
-              preparedOutput.styles,
-              typeof preparedOutput.notText !== 'undefined'
-                ? [preparedOutput.notText]
-                : ''
-            )
+          preparedOutput
         )
       } else if (isNode()) {
-        text = sanitizeStringToNode(text)
-        preparedOutput = prepareOutputToNode(text, this)
+        preparedOutput = prepareOutputToNode(args, method, this)
 
-        if (method === 'warn') {
-          preparedOutput.parsedText =
-            '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
-            '⚠' +
-            '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
-            preparedOutput.parsedText
-        } else if (method === 'error') {
-          preparedOutput.parsedText =
-            '\u001b[' + ansiColors.colors.red[0] + 'm' +
-            '✖' +
-            '\u001b[' + ansiColors.colors.red[1] + 'm ' +
-            preparedOutput.parsedText
-        } else if (method === 'info') {
-          preparedOutput.parsedText =
-            '\u001b[' + ansiColors.colors.blue[0] + 'm' +
-            'ℹ' +
-            '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
-            preparedOutput.parsedText
-        } else if (method === 'debug') {
-          preparedOutput.parsedText =
-            '\u001b[' + ansiColors.colors.gray[0] + 'm' +
-            '🐛' +
-            '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
-            preparedOutput.parsedText
-        }
-
-        //
-        args.push(preparedOutput.parsedText)
-        if (preparedOutput.notText) {
-          args.push(preparedOutput.notText)
-        }
-
-        (console[method] || console.log).apply(
+        ;(console[method] || console.log).apply(
           console,
-          args
+          preparedOutput
         )
       }
     }
@@ -233,7 +190,7 @@
 
       if (isBrowser()) {
         styles.push(match.rule.style)
-        styles.push('color:inherit;')
+        styles.push('') // Empty string resets style.
       }
 
       match = getNextMatch(text)
@@ -326,80 +283,99 @@
     return matches[0]
   }
 
-  function prepareOutputToBrowser (data, instance) {
+  function prepareOutputToBrowser (args, instance) {
+    var preparedOutput = []
     var parsedMarkdown
-    var parsedText
-    var styles
-    //
-    var notText
-
-    if (typeof data === 'string') {
-      if (instance.markdown &&
-          isColorSupported()) {
-        parsedMarkdown = parseMarkdown(data)
-        parsedText = parsedMarkdown.text
-        styles = parsedMarkdown.styles
-      } else {
-        parsedText = data
-        styles = []
-      }
-    } else {
-      parsedText = parsedText || ''
-      styles = styles || []
-      notText = data
-    }
 
     if (instance.prefix) {
       if (isColorSupported()) {
-        parsedText = '%c' + instance.prefix + '%c ' + parsedText
-        styles.unshift(
+        preparedOutput.push('%c' + instance.prefix + '%c ')
+        preparedOutput.push(
           'color:' + instance.prefixColor + '; font-weight:bold;',
-          'color:inherit;'
+          '' // Empty string resets style.
         )
       } else {
-        parsedText = '[' + instance.prefix + '] ' + parsedText
+        preparedOutput.push('[' + instance.prefix + '] ')
       }
+    } else {
+      preparedOutput.push('')
     }
 
-    return {
-      parsedText: parsedText,
-      styles: styles,
-      notText: notText
+    // Only first argument on `console` can have style.
+    if (typeof args[0] === 'string') {
+      if (instance.markdown && isColorSupported()) {
+        parsedMarkdown = parseMarkdown(args[0])
+        preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text
+        preparedOutput = preparedOutput.concat(parsedMarkdown.styles)
+      } else {
+        preparedOutput[0] = preparedOutput[0] + args[0]
+      }
+    } else {
+      preparedOutput[0] = args[0]
     }
+
+    if (args.length > 1) {
+      preparedOutput = preparedOutput.concat(args.splice(1))
+    }
+
+    return preparedOutput
   }
 
-  function prepareOutputToNode (data, instance) {
-    var parsedText = ''
-    var notText
+  function prepareOutputToNode (args, method, instance) {
+    var preparedOutput = []
 
     if (instance.prefix) {
       if (isColorSupported()) {
-        parsedText =
+        preparedOutput[0] =
           '\u001b[' + instance.prefixColor[0] + 'm' +
           '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
           instance.prefix +
           '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-          '\u001b[' + instance.prefixColor[1] + 'm '
+          '\u001b[' + instance.prefixColor[1] + 'm'
       } else {
-        parsedText = '[' + instance.prefix + '] '
+        preparedOutput[0] = '[' + instance.prefix + ']'
       }
     }
 
-    if (typeof data === 'string') {
-      if (instance.markdown) {
-        parsedText += parseMarkdown(data).text
-      } else {
-        parsedText += data
-      }
-    } else {
-      notText = data
+    if (method === 'warn') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
+        '⚠' +
+        '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
+        (preparedOutput[0] || '')
+    } else if (method === 'error') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.red[0] + 'm' +
+        '✖' +
+        '\u001b[' + ansiColors.colors.red[1] + 'm ' +
+        (preparedOutput[0] || '')
+    } else if (method === 'info') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.blue[0] + 'm' +
+        'ℹ' +
+        '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
+        (preparedOutput[0] || '')
+    } else if (method === 'debug') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.gray[0] + 'm' +
+        '🐛' +
+        '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
+        (preparedOutput[0] || '')
     }
 
-    return {
-      parsedText: parsedText,
-      styles: [],
-      notText: notText
-    }
+    args.forEach(function (arg) {
+      if (typeof arg === 'string') {
+        if (instance.markdown) {
+          preparedOutput.push(parseMarkdown(arg).text)
+        } else {
+          preparedOutput.push(arg)
+        }
+      } else {
+        preparedOutput.push(arg)
+      }
+    })
+
+    return preparedOutput
   }
 
   function isDisabled (instance) {
@@ -542,10 +518,6 @@
 
   function isBrowser () {
     return (typeof window !== 'undefined')
-  }
-
-  function sanitizeStringToNode (str) {
-    return str
   }
 
   var getNextPrefixColor = (function () {
