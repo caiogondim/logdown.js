@@ -56,7 +56,7 @@ gulp.task('build', function() {
     ' */',
     ''].join('\n');
 
-  gulp.src('src/index.js')
+  gulp.src('src/logdown.js')
     .pipe(uglify())
     .pipe(header(banner, {pkg: pkg}))
     .pipe(gulp.dest('dist'))

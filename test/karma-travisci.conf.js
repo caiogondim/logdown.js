@@ -14,7 +14,7 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../src/index.js',
+      '../src/logdown.js',
       'browser.js',
       'browser/*.js'
     ],
