@@ -57,13 +57,13 @@ gulp.task('build', function() {
     ''].join('\n');
 
   gulp.src('src/logdown.js')
-    .pipe(uglify())
     .pipe(header(banner, {pkg: pkg}))
     .pipe(gulp.dest('dist'))
-    .pipe(rename({
-      basename: 'logdown'
-    }))
+    .pipe(uglify())
+    .pipe(header(banner, {pkg: pkg}))
     .pipe(gulp.dest('./example/lib'))
+    .pipe(rename({extname: '.min.js'}))
+    .pipe(gulp.dest('dist'))
 })
 
 // Development
