@@ -1,9 +1,553 @@
 /**
  * logdown - Debug utility with markdown support that runs on browser and server
  *
- * @version v2.0.2
+ * @version v2.0.3
  * @link https://github.com/caiogondim/logdown
  * @author Caio Gondim <me@caiogondim.com> (http://caiogondim.com)
  * @license MIT
  */
-!function(){"use strict";function e(o){if(!(this instanceof e))return new e(o);o=o||{};var n=void 0===o.prefix?"":o.prefix;return n=p(n),n&&s(n,g)?u(n,g):(this.alignOutput=Boolean(o.alignOutput),this.markdown=void 0===o.markdown||o.markdown,this.prefix=n,g.push(this),r(g),d()?(this.prefixColor=x[h%x.length],h+=1):f()&&(this.prefixColor=v()),this)}function r(e){var r=e.sort(function(e,r){return r.prefix.length-e.prefix.length})[0];e.forEach(function(e){if(e.alignOutput){var o=new Array(Math.max(r.prefix.length-e.prefix.length+1,0)).join(" ");e.prefix=e.prefix+o}})}function o(e){for(var r=[],o=n(e);o;)e=e.replace(o.rule.regexp,o.rule.replacer),d()&&(r.push(o.rule.style),r.push("")),o=n(e);return{text:e,styles:r}}function n(e){var r=[],o=[];return d()?o=[{regexp:/\*([^\*]+)\*/,replacer:function(e,r){return"%c"+r+"%c"},style:"font-weight:bold;"},{regexp:/_([^_]+)_/,replacer:function(e,r){return"%c"+r+"%c"},style:"font-style:italic;"},{regexp:/`([^`]+)`/,replacer:function(e,r){return"%c"+r+"%c"},style:"background:#FDF6E3; color:#586E75; padding:1px 5px; border-radius:4px;"}]:f()&&(o=[{regexp:/\*([^\*]+)\*/,replacer:function(e,r){return"["+m.modifiers.bold[0]+"m"+r+"["+m.modifiers.bold[1]+"m"}},{regexp:/_([^_]+)_/,replacer:function(e,r){return"["+m.modifiers.italic[0]+"m"+r+"["+m.modifiers.italic[1]+"m"}},{regexp:/`([^`]+)`/,replacer:function(e,r){return"["+m.bgColors.bgYellow[0]+"m["+m.colors.black[0]+"m "+r+" ["+m.colors.black[1]+"m["+m.bgColors.bgYellow[1]+"m"}}]),o.forEach(function(o){var n=e.match(o.regexp);n&&r.push({rule:o,match:n})}),0===r.length?null:(r.sort(function(e,r){return e.match.index-r.match.index}),r[0])}function t(e,r){var n,t=[];return r.prefix?a()?(t.push("%c"+r.prefix+"%c "),t.push("color:"+r.prefixColor+"; font-weight:bold;","")):t.push("["+r.prefix+"] "):t.push(""),"string"==typeof e[0]?r.markdown&&a()?(n=o(e[0]),t[0]=t[0]+n.text,t=t.concat(n.styles)):t[0]=t[0]+e[0]:t[0]=e[0],e.length>1&&(t=t.concat(e.splice(1))),t}function i(e,r,n){var t=[];return n.prefix&&(a()?t[0]="["+n.prefixColor[0]+"m["+m.modifiers.bold[0]+"m"+n.prefix+"["+m.modifiers.bold[1]+"m["+n.prefixColor[1]+"m":t[0]="["+n.prefix+"]"),"warn"===r?t[0]="["+m.colors.yellow[0]+"m⚠["+m.colors.yellow[1]+"m "+(t[0]||""):"error"===r?t[0]="["+m.colors.red[0]+"m✖["+m.colors.red[1]+"m "+(t[0]||""):"info"===r?t[0]="["+m.colors.blue[0]+"mℹ["+m.colors.blue[1]+"m "+(t[0]||""):"debug"===r&&(t[0]="["+m.colors.gray[0]+"m🐛["+m.colors.gray[1]+"m "+(t[0]||"")),e.forEach(function(e){"string"==typeof e&&n.markdown?t.push(o(e).text):t.push(e)}),t}function c(r){var o=null;"undefined"!=typeof process&&void 0!==process.env&&0===b.length&&(void 0!==process.env.NODE_DEBUG&&""!==process.env.NODE_DEBUG?o="NODE_DEBUG":void 0!==process.env.DEBUG&&""!==process.env.DEBUG&&(o="DEBUG"),o&&(e.disable("*"),process.env[o].split(",").forEach(function(r){e.enable(r)})));var n=!1;return b.forEach(function(e){"enable"===e.type&&e.regExp.test(r.prefix)?n=!1:"disable"===e.type&&e.regExp.test(r.prefix)&&(n=!0)}),n}function l(e){return new RegExp("^"+e.replace(/\*/g,".*?")+"$")}function s(e,r){var o=!1;return r.forEach(function(r){if(r.prefix===e)return void(o=!0)}),o}function u(e,r){var o;return r.forEach(function(r){if(r.prefix===e)return void(o=r)}),o}function p(e){return"string"==typeof e?e.replace(/%c/g,""):e}function a(){if(d()){var e="WebkitAppearance"in document.documentElement.style,r=window.console&&(console.firebug||console.exception&&console.table),o=navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)&&parseInt(RegExp.$1,10)>=31;return e||r||o}if(f())return!(process.stdout&&!process.stdout.isTTY)&&("win32"===process.platform||("COLORTERM"in process.env||"dumb"!==process.env.TERM&&!!/^screen|^xterm|^vt100|color|ansi|cygwin|linux/i.test(process.env.TERM)))}function f(){return"undefined"!=typeof module&&"undefined"!=typeof module.exports}function d(){return"undefined"!=typeof window}var g=[],h=0,x=["#B58900","#CB4B16","#DC322F","#D33682","#6C71C4","#268BD2","#2AA198","#859900"],m={modifiers:{reset:[0,0],bold:[1,22],dim:[2,22],italic:[3,23],underline:[4,24],inverse:[7,27],hidden:[8,28],strikethrough:[9,29]},colors:{black:[30,39],red:[31,39],green:[32,39],yellow:[33,39],blue:[34,39],magenta:[35,39],cyan:[36,39],white:[37,39],gray:[90,39]},bgColors:{bgBlack:[40,49],bgRed:[41,49],bgGreen:[42,49],bgYellow:[43,49],bgBlue:[44,49],bgMagenta:[45,49],bgCyan:[46,49],bgWhite:[47,49]}},b=[];e.enable=function(){Array.prototype.forEach.call(arguments,function(r){"-"===r[0]&&e.disable(r.substr(1));var o=l(r);"*"===r?b=[]:b.push({type:"enable",regExp:o})})},e.disable=function(){Array.prototype.forEach.call(arguments,function(r){"-"===r[0]&&e.enable(r.substr(1));var o=l(r);"*"===r?b=[{type:"disable",regExp:o}]:b.push({type:"disable",regExp:o})})};var y=["debug","log","info","warn","error"];y.forEach(function(r){e.prototype[r]=function(){if(!c(this)){var e,o=Array.prototype.slice.call(arguments,0);d()?(e=t(o,this),Function.prototype.apply.call(console[r]||console.log,console,e)):f()&&(e=i(o,r,this),(console[r]||console.log).apply(console,e))}}});var v=function(){var e=0,r=[[31,39],[32,39],[33,39],[34,39],[35,39],[36,39]];return function(){return r[(e+=1)%r.length]}}();f()?module.exports=e:d()&&(window.Logdown=e)}();
+/* global console, module, window, document, navigator, process */
+
+;(function () {
+  'use strict'
+
+  var instances = []
+  var lastUsedColorIndex = 0
+  // Solarized accent colors http://ethanschoonover.com/solarized
+  var colors = [
+    '#B58900',
+    '#CB4B16',
+    '#DC322F',
+    '#D33682',
+    '#6C71C4',
+    '#268BD2',
+    '#2AA198',
+    '#859900'
+  ]
+  // Taken from ansi-styles npm module
+  // https://github.com/sindresorhus/ansi-styles/blob/master/index.js
+  var ansiColors = {
+    modifiers: {
+      reset: [0, 0],
+      bold: [1, 22], // 21 isn't widely supported and 22 does the same thing
+      dim: [2, 22],
+      italic: [3, 23],
+      underline: [4, 24],
+      inverse: [7, 27],
+      hidden: [8, 28],
+      strikethrough: [9, 29]
+    },
+    colors: {
+      black: [30, 39],
+      red: [31, 39],
+      green: [32, 39],
+      yellow: [33, 39],
+      blue: [34, 39],
+      magenta: [35, 39],
+      cyan: [36, 39],
+      white: [37, 39],
+      gray: [90, 39]
+    },
+    bgColors: {
+      bgBlack: [40, 49],
+      bgRed: [41, 49],
+      bgGreen: [42, 49],
+      bgYellow: [43, 49],
+      bgBlue: [44, 49],
+      bgMagenta: [45, 49],
+      bgCyan: [46, 49],
+      bgWhite: [47, 49]
+    }
+  }
+  var filterRegExps = []
+
+  function Logdown (opts) {
+    // Enforces new.
+    if (!(this instanceof Logdown)) {
+      return new Logdown(opts)
+    }
+
+    opts = opts || {}
+
+    var prefix = opts.prefix === undefined ? '' : opts.prefix
+    prefix = sanitizeStringToBrowser(prefix)
+    if (prefix && isPrefixAlreadyInUse(prefix, instances)) {
+      return getInstanceByPrefix(prefix, instances)
+    }
+
+    //
+    this.alignOutput = Boolean(opts.alignOutput)
+    this.markdown = opts.markdown === undefined ? true : opts.markdown
+    this.prefix = prefix
+
+    //
+    instances.push(this)
+    alignPrefixes(instances)
+
+    if (isBrowser()) {
+      this.prefixColor = colors[lastUsedColorIndex % colors.length]
+      lastUsedColorIndex += 1
+    } else if (isNode()) {
+      this.prefixColor = getNextPrefixColor()
+    }
+
+    return this
+  }
+
+  // Static
+  // ------
+
+  Logdown.enable = function () {
+    Array.prototype.forEach.call(arguments, function (str) {
+      if (str[0] === '-') {
+        Logdown.disable(str.substr(1))
+      }
+
+      var regExp = prepareRegExpForPrefixSearch(str)
+
+      if (str === '*') {
+        filterRegExps = []
+      } else {
+        filterRegExps.push({
+          type: 'enable',
+          regExp: regExp
+        })
+      }
+    })
+  }
+
+  Logdown.disable = function () {
+    Array.prototype.forEach.call(arguments, function (str) {
+      if (str[0] === '-') {
+        Logdown.enable(str.substr(1))
+      }
+
+      var regExp = prepareRegExpForPrefixSearch(str)
+
+      if (str === '*') {
+        filterRegExps = [{
+          type: 'disable',
+          regExp: regExp
+        }]
+      } else {
+        filterRegExps.push({
+          type: 'disable',
+          regExp: regExp
+        })
+      }
+    })
+  }
+
+  // Public
+  // ------
+
+  var methods = ['debug', 'log', 'info', 'warn', 'error']
+  methods.forEach(function (method) {
+    Logdown.prototype[method] = function () {
+      if (isDisabled(this)) {
+        return
+      }
+
+      var preparedOutput
+      var args = Array.prototype.slice.call(arguments, 0)
+
+      if (isBrowser()) {
+        preparedOutput = prepareOutputToBrowser(args, this)
+
+        // IE9 workaround
+        // http://stackoverflow.com/questions/5538972/
+        //  console-log-apply-not-working-in-ie9
+        Function.prototype.apply.call(
+          console[method] || console.log,
+          console,
+          preparedOutput
+        )
+      } else if (isNode()) {
+        preparedOutput = prepareOutputToNode(args, method, this)
+
+        ;(console[method] || console.log).apply(
+          console,
+          preparedOutput
+        )
+      }
+    }
+  })
+
+  // Private
+  // -------
+
+  function alignPrefixes (instances) {
+    var longest = instances.sort(function (a, b) {
+      return b.prefix.length - a.prefix.length
+    })[0]
+
+    instances.forEach(function (instance) {
+      if (instance.alignOutput) {
+        var padding = new Array(Math.max(longest.prefix.length - instance.prefix.length + 1, 0)).join(' ')
+        instance.prefix = instance.prefix + padding
+      }
+    })
+  }
+
+  function parseMarkdown (text) {
+    var styles = []
+    var match = getNextMatch(text)
+
+    while (match) {
+      text = text.replace(match.rule.regexp, match.rule.replacer)
+
+      if (isBrowser()) {
+        styles.push(match.rule.style)
+        styles.push('') // Empty string resets style.
+      }
+
+      match = getNextMatch(text)
+    }
+
+    return {text: text, styles: styles}
+  }
+
+  function getNextMatch (text) {
+    var matches = []
+    var rules = []
+    if (isBrowser()) {
+      rules = [
+        {
+          regexp: /\*([^\*]+)\*/,
+          replacer: function (match, submatch1) {
+            return '%c' + submatch1 + '%c'
+          },
+          style: 'font-weight:bold;'
+        },
+        {
+          regexp: /_([^_]+)_/,
+          replacer: function (match, submatch1) {
+            return '%c' + submatch1 + '%c'
+          },
+          style: 'font-style:italic;'
+        },
+        {
+          regexp: /`([^`]+)`/,
+          replacer: function (match, submatch1) {
+            return '%c' + submatch1 + '%c'
+          },
+          style:
+            'background:#FDF6E3; ' +
+            'color:#586E75; ' +
+            'padding:1px 5px; ' +
+            'border-radius:4px;'
+        }
+      ]
+    } else if (isNode()) {
+      rules = [
+        {
+          regexp: /\*([^\*]+)\*/,
+          replacer: function (match, submatch1) {
+            return '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
+                   submatch1 +
+                   '\u001b[' + ansiColors.modifiers.bold[1] + 'm'
+          }
+        },
+        {
+          regexp: /_([^_]+)_/,
+          replacer: function (match, submatch1) {
+            return '\u001b[' + ansiColors.modifiers.italic[0] + 'm' +
+                   submatch1 +
+                   '\u001b[' + ansiColors.modifiers.italic[1] + 'm'
+          }
+        },
+        {
+          regexp: /`([^`]+)`/,
+          replacer: function (match, submatch1) {
+            return '\u001b[' + ansiColors.bgColors.bgYellow[0] + 'm' +
+                   '\u001b[' + ansiColors.colors.black[0] + 'm' +
+                   ' ' + submatch1 + ' ' +
+                   '\u001b[' + ansiColors.colors.black[1] + 'm' +
+                   '\u001b[' + ansiColors.bgColors.bgYellow[1] + 'm'
+          }
+        }
+      ]
+    }
+
+    //
+    rules.forEach(function (rule) {
+      var match = text.match(rule.regexp)
+      if (match) {
+        matches.push({
+          rule: rule,
+          match: match
+        })
+      }
+    })
+    if (matches.length === 0) {
+      return null
+    }
+
+    //
+    matches.sort(function (a, b) {
+      return a.match.index - b.match.index
+    })
+
+    return matches[0]
+  }
+
+  function prepareOutputToBrowser (args, instance) {
+    var preparedOutput = []
+    var parsedMarkdown
+
+    if (instance.prefix) {
+      if (isColorSupported()) {
+        preparedOutput.push('%c' + instance.prefix + '%c ')
+        preparedOutput.push(
+          'color:' + instance.prefixColor + '; font-weight:bold;',
+          '' // Empty string resets style.
+        )
+      } else {
+        preparedOutput.push('[' + instance.prefix + '] ')
+      }
+    } else {
+      preparedOutput.push('')
+    }
+
+    // Only first argument on `console` can have style.
+    if (typeof args[0] === 'string') {
+      if (instance.markdown && isColorSupported()) {
+        parsedMarkdown = parseMarkdown(args[0])
+        preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text
+        preparedOutput = preparedOutput.concat(parsedMarkdown.styles)
+      } else {
+        preparedOutput[0] = preparedOutput[0] + args[0]
+      }
+    } else {
+      preparedOutput[0] = args[0]
+    }
+
+    if (args.length > 1) {
+      preparedOutput = preparedOutput.concat(args.splice(1))
+    }
+
+    return preparedOutput
+  }
+
+  function prepareOutputToNode (args, method, instance) {
+    var preparedOutput = []
+
+    if (instance.prefix) {
+      if (isColorSupported()) {
+        preparedOutput[0] =
+          '\u001b[' + instance.prefixColor[0] + 'm' +
+          '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
+          instance.prefix +
+          '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
+          '\u001b[' + instance.prefixColor[1] + 'm'
+      } else {
+        preparedOutput[0] = '[' + instance.prefix + ']'
+      }
+    }
+
+    if (method === 'warn') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
+        '⚠' +
+        '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
+        (preparedOutput[0] || '')
+    } else if (method === 'error') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.red[0] + 'm' +
+        '✖' +
+        '\u001b[' + ansiColors.colors.red[1] + 'm ' +
+        (preparedOutput[0] || '')
+    } else if (method === 'info') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.blue[0] + 'm' +
+        'ℹ' +
+        '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
+        (preparedOutput[0] || '')
+    } else if (method === 'debug') {
+      preparedOutput[0] =
+        '\u001b[' + ansiColors.colors.gray[0] + 'm' +
+        '🐛' +
+        '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
+        (preparedOutput[0] || '')
+    }
+
+    args.forEach(function (arg) {
+      if (typeof arg === 'string') {
+        if (instance.markdown) {
+          preparedOutput.push(parseMarkdown(arg).text)
+        } else {
+          preparedOutput.push(arg)
+        }
+      } else {
+        preparedOutput.push(arg)
+      }
+    })
+
+    return preparedOutput
+  }
+
+  function isDisabled (instance) {
+    // Parsing `NODE_DEBUG` and `DEBUG` env var.
+    // We verify `NODE_DEBUG` and `DEBUG` env vars on runtime so it is
+    // easier to test.
+    var envVar = null
+    if (typeof process !== 'undefined' &&
+        process.env !== undefined &&
+        filterRegExps.length === 0) {
+      // `NODE_DEBUG` has precedence over `DEBUG`
+      if (process.env.NODE_DEBUG !== undefined &&
+          process.env.NODE_DEBUG !== '') {
+        envVar = 'NODE_DEBUG'
+      } else if (process.env.DEBUG !== undefined &&
+                 process.env.DEBUG !== '') {
+        envVar = 'DEBUG'
+      }
+
+      if (envVar) {
+        Logdown.disable('*')
+        process.env[envVar]
+          .split(',')
+          .forEach(function (regExp) {
+            Logdown.enable(regExp)
+          })
+      }
+    }
+
+    // Now checks if instance is disabled
+    var isDisabled_ = false
+    filterRegExps.forEach(function (filter) {
+      if (filter.type === 'enable' && filter.regExp.test(instance.prefix)) {
+        isDisabled_ = false
+      } else if (filter.type === 'disable' &&
+                 filter.regExp.test(instance.prefix)) {
+        isDisabled_ = true
+      }
+    })
+
+    return isDisabled_
+  }
+
+  function prepareRegExpForPrefixSearch (str) {
+    return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
+  }
+
+  function isPrefixAlreadyInUse (prefix, instances) {
+    var isPrefixAlreadyInUse_ = false
+
+    instances.forEach(function (instance) {
+      if (instance.prefix === prefix) {
+        isPrefixAlreadyInUse_ = true
+        return
+      }
+    })
+
+    return isPrefixAlreadyInUse_
+  }
+
+  function getInstanceByPrefix (prefix, instances) {
+    var instance
+
+    instances.forEach(function (instanceCur) {
+      if (instanceCur.prefix === prefix) {
+        instance = instanceCur
+        return
+      }
+    })
+
+    return instance
+  }
+
+  function sanitizeStringToBrowser (str) {
+    if (typeof str === 'string') {
+      return str.replace(/%c/g, '')
+    } else {
+      return str
+    }
+  }
+
+  /**
+   * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+   * and the Firebug extension (any Firefox version) are known
+   * to support "%c" CSS customizations.
+   *
+   * Code took from https://github.com/visionmedia/debug/blob/master/browser.js
+   */
+  function isColorSupported () {
+    if (isBrowser()) {
+      // Is webkit? http://stackoverflow.com/a/16459606/376773
+      var isWebkit = ('WebkitAppearance' in document.documentElement.style)
+      // Is firebug? http://stackoverflow.com/a/398120/376773
+      var isFirebug = (
+        window.console &&
+        (console.firebug || (console.exception && console.table))
+      )
+      // Is firefox >= v31?
+      // https://developer.mozilla.org/en-US/docs/Tools/
+      //  Web_Console#Styling_messages
+      var isFirefox31Plus = (
+        navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) &&
+        parseInt(RegExp.$1, 10) >= 31
+      )
+
+      return (isWebkit || isFirebug || isFirefox31Plus)
+    } else if (isNode()) {
+      if (process.stdout && !process.stdout.isTTY) {
+        return false
+      }
+
+      if (process.platform === 'win32') {
+        return true
+      }
+
+      if ('COLORTERM' in process.env) {
+        return true
+      }
+
+      if (process.env.TERM === 'dumb') {
+        return false
+      }
+
+      if (
+        /^screen|^xterm|^vt100|color|ansi|cygwin|linux/i.test(process.env.TERM)
+      ) {
+        return true
+      }
+
+      return false
+    }
+  }
+
+  function isNode () {
+    return (
+      typeof module !== 'undefined' &&
+      typeof module.exports !== 'undefined'
+    )
+  }
+
+  function isBrowser () {
+    return (typeof window !== 'undefined')
+  }
+
+  var getNextPrefixColor = (function () {
+    var lastUsed = 0
+    var nodePrefixColors = [
+      [31, 39], // red
+      [32, 39], // green
+      [33, 39], // yellow
+      [34, 39], // blue
+      [35, 39], // magenta
+      [36, 39] // cyan
+    ]
+
+    return function () {
+      return nodePrefixColors[(lastUsed += 1) % nodePrefixColors.length]
+    }
+  })()
+
+  // Export module
+  if (isNode()) {
+    module.exports = Logdown
+  } else if (isBrowser()) {
+    window.Logdown = Logdown
+  }
+}())
