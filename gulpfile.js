@@ -7,6 +7,7 @@ var header = require('gulp-header')
 var karma = require('karma').server
 var mocha = require('gulp-mocha')
 var rename = require('gulp-rename')
+var sourcemaps = require('gulp-sourcemaps')
 var uglify = require('gulp-uglify')
 
 // Test
@@ -57,13 +58,15 @@ gulp.task('build', function() {
     ''].join('\n');
 
   gulp.src('src/logdown.js')
-    .pipe(uglify())
     .pipe(header(banner, {pkg: pkg}))
     .pipe(gulp.dest('dist'))
-    .pipe(rename({
-      basename: 'logdown'
-    }))
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(header(banner, {pkg: pkg}))
     .pipe(gulp.dest('./example/lib'))
+    .pipe(rename({extname: '.min.js'}))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('dist'))
 })
 
 // Development
