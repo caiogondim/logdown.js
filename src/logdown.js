@@ -144,7 +144,7 @@
       var args = Array.prototype.slice.call(arguments, 0)
 
       if (isBrowser()) {
-        preparedOutput = prepareOutputToBrowser(args, this)
+        preparedOutput = prepareOutputToBrowser(args, this, method)
 
         // IE9 workaround
         // http://stackoverflow.com/questions/5538972/
@@ -283,7 +283,7 @@
     return matches[0]
   }
 
-  function prepareOutputToBrowser (args, instance) {
+  function prepareOutputToBrowser (args, instance, method) {
     var preparedOutput = []
     var parsedMarkdown
 
@@ -304,6 +304,9 @@
     // Only first argument on `console` can have style.
     if (typeof args[0] === 'string') {
       if (instance.markdown && isColorSupported()) {
+        if (method === 'log' && instance.alignOutput) {
+            args[0] = '  ' + args[0]
+        }
         parsedMarkdown = parseMarkdown(args[0])
         preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text
         preparedOutput = preparedOutput.concat(parsedMarkdown.styles)
