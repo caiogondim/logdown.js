@@ -304,7 +304,7 @@
     // Only first argument on `console` can have style.
     if (typeof args[0] === 'string') {
       if (instance.markdown && isColorSupported()) {
-        if (method === 'log' && instance.alignOutput) {
+        if (instance.alignOutput && (method !== 'error' && method !== 'warn')) {
             args[0] = '  ' + args[0]
         }
         parsedMarkdown = parseMarkdown(args[0])
