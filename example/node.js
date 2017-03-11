@@ -1,8 +1,9 @@
 'use strict'
 
-var Logdown = require('../src')
+var Logdown = require('../src/logdown')
 
-var demo = new Logdown({prefix: 'demo'})
+// var demo = new Logdown({prefix: 'demo'})
+var demo = Logdown('demo')
 
 demo.log('one', '*foo*', 'bar')
 

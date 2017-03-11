@@ -8,10 +8,10 @@
 
   function createInstances () {
     return [
-      new Logdown({prefix: 'foo'}),
-      new Logdown({prefix: 'bar'}),
-      new Logdown({prefix: 'quz'}),
-      new Logdown({prefix: 'baz'})
+      new Logdown('foo'),
+      new Logdown('bar'),
+      new Logdown('quz'),
+      new Logdown('baz')
     ]
   }
 
@@ -51,10 +51,10 @@
       '`(\'foo\')` should enable only instances with “foo” prefix',
       function () {
         try {
-          var foo = new Logdown({prefix: 'foo'})
-          var bar = new Logdown({prefix: 'bar'})
-          var quz = new Logdown({prefix: 'quz'})
-          var baz = new Logdown({prefix: 'baz'})
+          var foo = new Logdown('foo')
+          var bar = new Logdown('bar')
+          var quz = new Logdown('quz')
+          var baz = new Logdown('baz')
 
           Logdown.disable('*')
           Logdown.enable('foo')
@@ -80,10 +80,10 @@
     it('`(\'*foo\')` should enable only instances with names ending with “foo”',
        function () {
          try {
-           var foo = new Logdown({prefix: 'foo'})
-           var bar = new Logdown({prefix: 'bar'})
-           var foobar = new Logdown({prefix: 'foobar'})
-           var barfoo = new Logdown({prefix: 'barfoo'})
+           var foo = new Logdown('foo')
+           var bar = new Logdown('bar')
+           var foobar = new Logdown('foobar')
+           var barfoo = new Logdown('barfoo')
 
            Logdown.disable('*')
            Logdown.enable('*foo')
@@ -107,10 +107,10 @@
     it('`(\'foo*\')` should enable only instances with names ' +
        'beginning with “foo”', function () {
       try {
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = new Logdown('foo')
+        var bar = new Logdown('bar')
+        var foobar = new Logdown('foobar')
+        var barfoo = new Logdown('barfoo')
 
         Logdown.disable('*')
         Logdown.enable('foo*')
@@ -133,10 +133,10 @@
 
     it('`(\'-*\')` should disable all instances', function () {
       try {
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = new Logdown('foo')
+        var bar = new Logdown('bar')
+        var foobar = new Logdown('foobar')
+        var barfoo = new Logdown('barfoo')
 
         Logdown.enable('-*')
 
@@ -156,10 +156,10 @@
     it('`(\'*\', \'-foo\')` should enable all but only instances ' +
        'with “foo” prefix', function () {
       try {
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var quz = new Logdown({prefix: 'quz'})
-        var baz = new Logdown({prefix: 'baz'})
+        var foo = new Logdown('foo')
+        var bar = new Logdown('bar')
+        var quz = new Logdown('quz')
+        var baz = new Logdown('baz')
 
         Logdown.enable('*', '-foo')
 
@@ -180,10 +180,10 @@
     it('`(\'*\', \'-*foo\')` should enable all but instances with names ' +
        'ending with “foo”', function () {
       try {
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = new Logdown('foo')
+        var bar = new Logdown('bar')
+        var foobar = new Logdown('foobar')
+        var barfoo = new Logdown('barfoo')
 
         Logdown.enable('*', '-*foo')
 
@@ -204,10 +204,10 @@
     it('`(\'*\', \'-foo*\')` should enable all but instances with names ' +
        'beginning with “foo”', function () {
       try {
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = new Logdown('foo')
+        var bar = new Logdown('bar')
+        var foobar = new Logdown('foobar')
+        var barfoo = new Logdown('barfoo')
 
         Logdown.enable('*', '-foo*')
 
@@ -227,10 +227,10 @@
 
     it('should accept N arguments', function () {
       try {
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = new Logdown('foo')
+        var bar = new Logdown('bar')
+        var foobar = new Logdown('foobar')
+        var barfoo = new Logdown('barfoo')
 
         Logdown.disable('*')
         Logdown.enable('foo', 'barfoo')

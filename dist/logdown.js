@@ -11,7 +11,6 @@
 ;(function () {
   'use strict'
 
-  var instances = []
   var lastUsedColorIndex = 0
   // Solarized accent colors http://ethanschoonover.com/solarized
   var colors = [
@@ -61,41 +60,28 @@
   }
   var filterRegExps = []
 
-  function Logdown (opts) {
-    // Enforces new.
+  function Logdown (prefix, opts) {
     if (!(this instanceof Logdown)) {
-      return new Logdown(opts)
+      return new Logdown(prefix, opts)
     }
 
-    opts = opts || {}
+    this.opts = normalizeOpts(prefix, opts)
 
-    var prefix = opts.prefix === undefined ? '' : opts.prefix
-    prefix = sanitizeStringToBrowser(prefix)
-    if (prefix && isPrefixAlreadyInUse(prefix, instances)) {
-      return getInstanceByPrefix(prefix, instances)
+    if (isPrefixAlreadyInUse(this.opts.prefix, Logdown._instances)) {
+      return getInstanceByPrefix(this.opts.prefix, Logdown._instances)
     }
 
-    //
-    this.alignOutput = Boolean(opts.alignOutput)
-    this.markdown = opts.markdown === undefined ? true : opts.markdown
-    this.prefix = prefix
-
-    //
-    instances.push(this)
-    alignPrefixes(instances)
-
-    if (isBrowser()) {
-      this.prefixColor = colors[lastUsedColorIndex % colors.length]
-      lastUsedColorIndex += 1
-    } else if (isNode()) {
-      this.prefixColor = getNextPrefixColor()
-    }
+    Logdown._instances.push(this)
+    alignPrefixes(Logdown._instances)
 
     return this
   }
 
+  //
   // Static
-  // ------
+  //
+
+  Logdown._instances = []
 
   Logdown.enable = function () {
     Array.prototype.forEach.call(arguments, function (str) {
@@ -138,8 +124,9 @@
     })
   }
 
+  //
   // Public
-  // ------
+  //
 
   var methods = ['debug', 'log', 'info', 'warn', 'error']
   methods.forEach(function (method) {
@@ -164,7 +151,6 @@
         )
       } else if (isNode()) {
         preparedOutput = prepareOutputToNode(args, method, this)
-
         ;(console[method] || console.log).apply(
           console,
           preparedOutput
@@ -173,18 +159,45 @@
     }
   })
 
+  //
   // Private
-  // -------
+  //
+
+  function normalizeOpts (prefix, opts) {
+    if (typeof prefix === 'object') opts = prefix
+    opts = opts || {}
+
+    if (typeof prefix !== 'string') prefix = opts.prefix || ''
+    prefix = sanitizeStringToBrowser(prefix)
+
+    var alignOutput = Boolean(opts.alignOutput)
+    var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
+
+    var prefixColor
+    if (isBrowser()) {
+      prefixColor = colors[lastUsedColorIndex % colors.length]
+      lastUsedColorIndex += 1
+    } else if (isNode()) {
+      prefixColor = getNextPrefixColor()
+    }
+
+    return {
+      prefix: prefix,
+      alignOutput: alignOutput,
+      markdown: markdown,
+      prefixColor: prefixColor
+    }
+  }
 
   function alignPrefixes (instances) {
     var longest = instances.sort(function (a, b) {
-      return b.prefix.length - a.prefix.length
+      return b.opts.prefix.length - a.opts.prefix.length
     })[0]
 
     instances.forEach(function (instance) {
-      if (instance.alignOutput) {
-        var padding = new Array(Math.max(longest.prefix.length - instance.prefix.length + 1, 0)).join(' ')
-        instance.prefix = instance.prefix + padding
+      if (instance.opts.alignOutput) {
+        var padding = new Array(Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0)).join(' ')
+        instance.opts.prefix = instance.opts.prefix + padding
       }
     })
   }
@@ -295,11 +308,11 @@
     var preparedOutput = []
     var parsedMarkdown
 
-    if (instance.prefix) {
+    if (instance.opts.prefix) {
       if (isColorSupported()) {
-        preparedOutput.push('%c' + instance.prefix + '%c ')
+        preparedOutput.push('%c' + instance.opts.prefix + '%c ')
         preparedOutput.push(
-          'color:' + instance.prefixColor + '; font-weight:bold;',
+          'color:' + instance.opts.prefixColor + '; font-weight:bold;',
           '' // Empty string resets style.
         )
       } else {
@@ -311,7 +324,7 @@
 
     // Only first argument on `console` can have style.
     if (typeof args[0] === 'string') {
-      if (instance.markdown && isColorSupported()) {
+      if (instance.opts.markdown && isColorSupported()) {
         parsedMarkdown = parseMarkdown(args[0])
         preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text
         preparedOutput = preparedOutput.concat(parsedMarkdown.styles)
@@ -332,16 +345,16 @@
   function prepareOutputToNode (args, method, instance) {
     var preparedOutput = []
 
-    if (instance.prefix) {
+    if (instance.opts.prefix) {
       if (isColorSupported()) {
         preparedOutput[0] =
-          '\u001b[' + instance.prefixColor[0] + 'm' +
+          '\u001b[' + instance.opts.prefixColor[0] + 'm' +
           '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-          instance.prefix +
+          instance.opts.prefix +
           '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-          '\u001b[' + instance.prefixColor[1] + 'm'
+          '\u001b[' + instance.opts.prefixColor[1] + 'm'
       } else {
-        preparedOutput[0] = '[' + instance.prefix + ']'
+        preparedOutput[0] = '[' + instance.opts.prefix + ']'
       }
     }
 
@@ -373,7 +386,7 @@
 
     args.forEach(function (arg) {
       if (typeof arg === 'string') {
-        if (instance.markdown) {
+        if (instance.opts.markdown) {
           preparedOutput.push(parseMarkdown(arg).text)
         } else {
           preparedOutput.push(arg)
@@ -416,10 +429,10 @@
     // Now checks if instance is disabled
     var isDisabled_ = false
     filterRegExps.forEach(function (filter) {
-      if (filter.type === 'enable' && filter.regExp.test(instance.prefix)) {
+      if (filter.type === 'enable' && filter.regExp.test(instance.opts.prefix)) {
         isDisabled_ = false
       } else if (filter.type === 'disable' &&
-                 filter.regExp.test(instance.prefix)) {
+                 filter.regExp.test(instance.opts.prefix)) {
         isDisabled_ = true
       }
     })
@@ -435,12 +448,11 @@
     var isPrefixAlreadyInUse_ = false
 
     instances.forEach(function (instance) {
-      if (instance.prefix === prefix) {
+      if (instance.opts.prefix === prefix) {
         isPrefixAlreadyInUse_ = true
         return
       }
     })
-
     return isPrefixAlreadyInUse_
   }
 
@@ -448,7 +460,7 @@
     var instance
 
     instances.forEach(function (instanceCur) {
-      if (instanceCur.prefix === prefix) {
+      if (instanceCur.opts.prefix === prefix) {
         instance = instanceCur
         return
       }
@@ -540,7 +552,8 @@
     ]
 
     return function () {
-      return nodePrefixColors[(lastUsed += 1) % nodePrefixColors.length]
+      lastUsed += 1
+      return nodePrefixColors[lastUsed % nodePrefixColors.length]
     }
   })()
 

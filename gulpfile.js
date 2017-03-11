@@ -24,7 +24,7 @@ gulp.task('mocha', function() {
     .pipe(mocha())
 })
 
-gulp.task('karma', ['mocha'], function(done) {
+gulp.task('karma', function(done) {
   karma.start({
     configFile: __dirname + '/test/karma.conf.js',
     singleRun: true

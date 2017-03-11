@@ -35,8 +35,14 @@ npm install --save logdown
 ```
 
 ```js
-var Logdown = require('logdown')
-var logger = new Logdown({prefix: 'foo'})
+const Logdown = require('logdown')
+const logger = logdown('foo')
+```
+
+Or as a more idiomatic way:
+
+```js
+const logger = require('logdown')('foo')
 ```
 
 ### Bower
@@ -48,7 +54,7 @@ bower install logdown
 ```
 
 ```js
-var logger = new Logdown({prefix: 'foo'})
+const logger = require('logdown')('foo')
 ```
 
 ### Other
@@ -74,18 +80,18 @@ SystemJS.config({
 
 ```js
 System.import('logdown').then(function(Logdown) {
-  var logger = new Logdown({prefix: 'foo'}
+  const logger = logdown('foo')
 });
 ```
 
 ### TypeScript
 
 ```ts
-import Logdown = require("logdown");
+import Logdown = require('logdown');
 ```
 
 ```ts
-let logger: Logdown = new Logdown({prefix: 'foo'};
+const logger: Logdown = new Logdown('foo');
 ```
 
 ## Usage
@@ -117,8 +123,8 @@ The constructor accepts one object for configuration on instantiation time.
 **Example**
 
 ```js
-var options = {alignOutput: true, prefix: 'foo'}
-var logger = new Logdown(options)
+const options = {alignOutput: true, prefix: 'foo'}
+const logger = new Logdown(options)
 ```
 
 The following options can be used for configuration.
@@ -129,18 +135,24 @@ The following options can be used for configuration.
 - Default: `''`
 
 ```js
-var logger = new Logdown({prefix: 'foo'})
+const logger = logdown({ prefix: 'foo' })
 logger.log('Lorem ipsum') // Will use console.log with a prefix
+```
+
+The above code is the same as:
+```js
+const logger = logdown('foo')
+logger.log('Lorem ipsum')
 ```
 
 You should use the name of your module.
 You can, also, use `:` to separate modules inside one big module.
 
 ```js
-var fooBarLogger = new Logdown({prefix: 'foo:bar'})
+var fooBarLogger = Logdown('foo:bar')
 fooBarLogger.log('Lorem ipsum')
 
-var fooQuzLogger = new Logdown({prefix: 'foo:quz'})
+var fooQuzLogger = Logdown('foo:quz')
 fooQuzLogger.log('Lorem Ipsum')
 ```
 
@@ -152,7 +164,7 @@ fooQuzLogger.log('Lorem Ipsum')
 If setted to `false`, markdown will not be parsed.
 
 ```js
-var logger = new Logdown({markdown: false})
+var logger = Logdown({markdown: false})
 logger.log('Lorem *ipsum*') // Will not parse the markdown
 ```
 

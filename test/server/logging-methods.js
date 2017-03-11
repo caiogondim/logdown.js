@@ -4,7 +4,7 @@
 
 var chai = require('chai')
 var sinon = require('sinon')
-var Logdown = require('../../src/logdown')
+var logdown = require('../../src/logdown')
 
 sinon.assert.expose(chai.assert, {prefix: ''})
 var assert = chai.assert
@@ -45,7 +45,7 @@ var ansiColors = {
 
 var methods = ['debug', 'log', 'info', 'warn', 'error']
 methods.forEach(function (method) {
-  describe('Logdown::' + method, function () {
+  describe('logdown::' + method, function () {
     var sandbox
     var symbol = ''
 
@@ -76,7 +76,7 @@ methods.forEach(function (method) {
       sandbox = sinon.sandbox.create()
       sandbox.stub(global.console, method)
 
-      Logdown.enable('*')
+      logdown.enable('*')
       process.env.NODE_DEBUG = ''
     })
 
@@ -86,7 +86,7 @@ methods.forEach(function (method) {
 
     it('should output multiple arguments', function () {
       try {
-        var foo = new Logdown({markdown: true})
+        var foo = logdown({markdown: true})
 
         foo[method]('one', 'two', 'three')
 
@@ -123,7 +123,7 @@ methods.forEach(function (method) {
 
     it('should parse markdown in multiple arguments', function () {
       try {
-        var foo = new Logdown({markdown: true})
+        var foo = logdown({markdown: true})
 
         var args = [
           symbol,
@@ -158,7 +158,8 @@ methods.forEach(function (method) {
 
     it('should parse markdown if enabled', function () {
       try {
-        const foo = new Logdown({markdown: true})
+        logdown._instances = []
+        const foo = logdown({ markdown: true })
 
         const args1 = [
           symbol,
@@ -240,7 +241,8 @@ methods.forEach(function (method) {
 
     it('should not parse markdown if disabled', function () {
       try {
-        const foo = new Logdown({markdown: false})
+        logdown._instances = []
+        const foo = logdown({ markdown: false })
 
         const args1 = [
           symbol,
@@ -296,7 +298,7 @@ methods.forEach(function (method) {
     })
 
     xit('should print prefix if present', function () {
-      var foo = new Logdown({prefix: 'foo'})
+      var foo = logdown('foo')
 
       foo[method]('lorem ipsum')
       try {
@@ -320,30 +322,30 @@ methods.forEach(function (method) {
 
     it('can add whitespace to align logger output', function () {
       try {
-        var abc = new Logdown({prefix: 'abc'})
-        var text = new Logdown({prefix: 'text', alignOutput: 'yes'})
-        var demo = new Logdown({prefix: 'demo', alignOutput: true})
-        var longDemo = new Logdown({prefix: 'longDemo', alignOutput: true})
-        var demoFalse = new Logdown({prefix: 'demoFalse', alignOutput: false})
-        var longerDemo = new Logdown({prefix: 'longerDemo', alignOutput: true})
+        var abc = logdown('abc')
+        var text = logdown('text', { alignOutput: 'yes' })
+        var demo = logdown('demo', { alignOutput: true })
+        var longDemo = logdown('longDemo', { alignOutput: true })
+        var demoFalse = logdown('demoFalse', { alignOutput: false })
+        var longerDemo = logdown('longerDemo', { alignOutput: true })
 
-        assert.equal(abc.prefix.length, 3, 'Skipping \'alignOutput\' will not add whitespace characters')
-        assert.equal(abc.alignOutput, false)
+        assert.equal(abc.opts.prefix.length, 3, 'Skipping \'alignOutput\' will not add whitespace characters')
+        assert.equal(abc.opts.alignOutput, false)
 
-        assert.equal(text.prefix.length, 10, 'Inputs will be converted into Boolean values')
-        assert.equal(text.alignOutput, true)
+        assert.equal(text.opts.prefix.length, 10, 'Inputs will be converted into Boolean values')
+        assert.equal(text.opts.alignOutput, true)
 
-        assert.equal(demo.prefix.length, 10, 'Padding will be added to make short names as long as the longest')
-        assert.equal(demo.alignOutput, true)
+        assert.equal(demo.opts.prefix.length, 10, 'Padding will be added to make short names as long as the longest')
+        assert.equal(demo.opts.alignOutput, true)
 
-        assert.equal(longDemo.prefix.length, 10, 'Padding will be added to make long names as long as the longest')
-        assert.equal(longDemo.alignOutput, true)
+        assert.equal(longDemo.opts.prefix.length, 10, 'Padding will be added to make long names as long as the longest')
+        assert.equal(longDemo.opts.alignOutput, true)
 
-        assert.equal(demoFalse.prefix.length, 9, 'Padding will be skipped if set to \'false\'')
-        assert.equal(demoFalse.alignOutput, false)
+        assert.equal(demoFalse.opts.prefix.length, 9, 'Padding will be skipped if set to \'false\'')
+        assert.equal(demoFalse.opts.alignOutput, false)
 
-        assert.equal(longerDemo.prefix.length, 10, 'The longest name will set the width for every other logger name')
-        assert.equal(longerDemo.alignOutput, true)
+        assert.equal(longerDemo.opts.prefix.length, 10, 'The longest name will set the width for every other logger name')
+        assert.equal(longerDemo.opts.alignOutput, true)
       } catch (error) {
         sandbox.restore()
         throw error
@@ -354,7 +356,7 @@ methods.forEach(function (method) {
     // https://github.com/caiogondim/logdown/issues/14
     xit('should print not-string arguments as is', function () {
       try {
-        var foo = new Logdown()
+        var foo = logdown()
         var obj = {foo: 1, bar: 2}
         foo[method](obj)
         assert.calledWith(
