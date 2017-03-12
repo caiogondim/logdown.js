@@ -41,34 +41,6 @@ gulp.task('karma-travisci', ['mocha'], function(done) {
 gulp.task('test', ['mocha', 'karma'])
 gulp.task('test:travisci', ['karma-travisci'])
 
-// Build
-// -----
-
-gulp.task('build', function() {
-  var pkg = require('./package.json')
-  var banner = [
-    '/**',
-    ' * <%= pkg.name %> - <%= pkg.description %>',
-    ' *',
-    ' * @version v<%= pkg.version %>',
-    ' * @link <%= pkg.homepage %>',
-    ' * @author <%= pkg.author %>',
-    ' * @license <%= pkg.license %>',
-    ' */',
-    ''].join('\n');
-
-  gulp.src('src/logdown.js')
-    .pipe(header(banner, {pkg: pkg}))
-    .pipe(gulp.dest('dist'))
-    .pipe(sourcemaps.init())
-    .pipe(uglify())
-    .pipe(header(banner, {pkg: pkg}))
-    .pipe(gulp.dest('./example/lib'))
-    .pipe(rename({extname: '.min.js'}))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('dist'))
-})
-
 // Development
 // -----------
 

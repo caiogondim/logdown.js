@@ -1,252 +1,248 @@
-/* global describe, afterEach, beforeEach, console, it, require, window, Logdown, chai, sinon */
+/* global describe, afterEach, beforeEach, console, it, require, window, logdown, chai, sinon */
 
-;(function () {
-  'use strict'
+sinon.assert.expose(chai.assert, {prefix: ''})
+var assert = chai.assert
 
-  sinon.assert.expose(chai.assert, {prefix: ''})
-  var assert = chai.assert
+function createInstances () {
+  return [
+    logdown('foo'),
+    logdown('bar'),
+    logdown('quz'),
+    logdown('baz')
+  ]
+}
 
-  function createInstances () {
-    return [
-      new Logdown('foo'),
-      new Logdown('bar'),
-      new Logdown('quz'),
-      new Logdown('baz')
-    ]
-  }
+describe('logdown.enable', function () {
+  var sandbox
 
-  describe('Logdown.enable', function () {
-    var sandbox
+  beforeEach(function () {
+    sandbox = sinon.sandbox.create()
 
-    beforeEach(function () {
-      sandbox = sinon.sandbox.create()
+    sandbox.stub(window.console, 'log')
+  })
 
-      sandbox.stub(window.console, 'log')
-    })
+  afterEach(function () {
+    sandbox.restore()
+  })
 
-    afterEach(function () {
-      sandbox.restore()
-    })
-
-    it('`(\'*\')` should enable all instances', function () {
-      try {
-        Logdown.disable('*')
-        Logdown.enable('*')
-        var instances = createInstances()
-        instances.forEach(function (instance) {
-          instance.log('Lorem')
-        })
-
-        assert.called(console.log)
-        sandbox.restore()
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
-
-      sandbox.restore()
-    })
-
-    it(
-      '`(\'foo\')` should enable only instances with “foo” prefix',
-      function () {
-        try {
-          var foo = new Logdown('foo')
-          var bar = new Logdown('bar')
-          var quz = new Logdown('quz')
-          var baz = new Logdown('baz')
-
-          Logdown.disable('*')
-          Logdown.enable('foo')
-
-          bar.log('lorem')
-          assert.notCalled(console.log)
-          quz.log('lorem')
-          assert.notCalled(console.log)
-          baz.log('lorem')
-          assert.notCalled(console.log)
-          foo.log('lorem')
-          assert.called(console.log)
-
-          sandbox.restore()
-        } catch (error) {
-          sandbox.restore()
-          throw error
-        }
-
-        sandbox.restore()
+  it('`(\'*\')` should enable all instances', function () {
+    try {
+      logdown.disable('*')
+      logdown.enable('*')
+      var instances = createInstances()
+      instances.forEach(function (instance) {
+        instance.log('Lorem')
       })
 
-    it('`(\'*foo\')` should enable only instances with names ending with “foo”',
-       function () {
-         try {
-           var foo = new Logdown('foo')
-           var bar = new Logdown('bar')
-           var foobar = new Logdown('foobar')
-           var barfoo = new Logdown('barfoo')
+      assert.called(console.log)
+      sandbox.restore()
+    } catch (error) {
+      sandbox.restore()
+      throw error
+    }
 
-           Logdown.disable('*')
-           Logdown.enable('*foo')
+    sandbox.restore()
+  })
 
-           bar.log('lorem')
-           foobar.log('lorem')
-           assert.notCalled(console.log)
-           foo.log('lorem')
-           barfoo.log('lorem')
-           assert.calledTwice(console.log)
+  it(
+    '`(\'foo\')` should enable only instances with “foo” prefix',
+    function () {
+      try {
+        var foo = logdown('foo')
+        var bar = logdown('bar')
+        var quz = logdown('quz')
+        var baz = logdown('baz')
 
-           sandbox.restore()
-         } catch (error) {
-           sandbox.restore()
-           throw error
-         }
+        logdown.disable('*')
+        logdown.enable('foo')
+
+        bar.log('lorem')
+        assert.notCalled(console.log)
+        quz.log('lorem')
+        assert.notCalled(console.log)
+        baz.log('lorem')
+        assert.notCalled(console.log)
+        foo.log('lorem')
+        assert.called(console.log)
+
+        sandbox.restore()
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
+  it('`(\'*foo\')` should enable only instances with names ending with “foo”',
+     function () {
+       try {
+         var foo = logdown('foo')
+         var bar = logdown('bar')
+         var foobar = logdown('foobar')
+         var barfoo = logdown('barfoo')
+
+         logdown.disable('*')
+         logdown.enable('*foo')
+
+         bar.log('lorem')
+         foobar.log('lorem')
+         assert.notCalled(console.log)
+         foo.log('lorem')
+         barfoo.log('lorem')
+         assert.calledTwice(console.log)
 
          sandbox.restore()
-       })
+       } catch (error) {
+         sandbox.restore()
+         throw error
+       }
 
-    it('`(\'foo*\')` should enable only instances with names ' +
-       'beginning with “foo”', function () {
-      try {
-        var foo = new Logdown('foo')
-        var bar = new Logdown('bar')
-        var foobar = new Logdown('foobar')
-        var barfoo = new Logdown('barfoo')
+       sandbox.restore()
+     })
 
-        Logdown.disable('*')
-        Logdown.enable('foo*')
+  it('`(\'foo*\')` should enable only instances with names ' +
+     'beginning with “foo”', function () {
+    try {
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
 
-        bar.log('lorem')
-        barfoo.log('lorem')
-        assert.notCalled(console.log)
-        foobar.log('lorem')
-        foo.log('lorem')
-        assert.calledTwice(console.log)
+      logdown.disable('*')
+      logdown.enable('foo*')
 
-        sandbox.restore()
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
-
-      sandbox.restore()
-    })
-
-    it('`(\'-*\')` should disable all instances', function () {
-      try {
-        var foo = new Logdown('foo')
-        var bar = new Logdown('bar')
-        var foobar = new Logdown('foobar')
-        var barfoo = new Logdown('barfoo')
-
-        Logdown.enable('-*')
-
-        foobar.log('lorem')
-        foo.log('lorem')
-        bar.log('lorem')
-        barfoo.log('lorem')
-        assert.notCalled(console.log)
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
+      bar.log('lorem')
+      barfoo.log('lorem')
+      assert.notCalled(console.log)
+      foobar.log('lorem')
+      foo.log('lorem')
+      assert.calledTwice(console.log)
 
       sandbox.restore()
-    })
-
-    it('`(\'*\', \'-foo\')` should enable all but only instances ' +
-       'with “foo” prefix', function () {
-      try {
-        var foo = new Logdown('foo')
-        var bar = new Logdown('bar')
-        var quz = new Logdown('quz')
-        var baz = new Logdown('baz')
-
-        Logdown.enable('*', '-foo')
-
-        foo.log('lorem')
-        assert.notCalled(console.log)
-        bar.log('lorem')
-        quz.log('lorem')
-        baz.log('lorem')
-        assert.calledThrice(console.log)
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
-
+    } catch (error) {
       sandbox.restore()
-    })
+      throw error
+    }
 
-    it('`(\'*\', \'-*foo\')` should enable all but instances with names ' +
-       'ending with “foo”', function () {
-      try {
-        var foo = new Logdown('foo')
-        var bar = new Logdown('bar')
-        var foobar = new Logdown('foobar')
-        var barfoo = new Logdown('barfoo')
-
-        Logdown.enable('*', '-*foo')
-
-        foo.log('lorem')
-        barfoo.log('lorem')
-        assert.notCalled(console.log)
-        bar.log('lorem')
-        foobar.log('lorem')
-        assert.calledTwice(console.log)
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
-
-      sandbox.restore()
-    })
-
-    it('`(\'*\', \'-foo*\')` should enable all but instances with names ' +
-       'beginning with “foo”', function () {
-      try {
-        var foo = new Logdown('foo')
-        var bar = new Logdown('bar')
-        var foobar = new Logdown('foobar')
-        var barfoo = new Logdown('barfoo')
-
-        Logdown.enable('*', '-foo*')
-
-        foobar.log('lorem')
-        foo.log('lorem')
-        assert.notCalled(console.log)
-        bar.log('lorem')
-        barfoo.log('lorem')
-        assert.calledTwice(console.log)
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
-
-      sandbox.restore()
-    })
-
-    it('should accept N arguments', function () {
-      try {
-        var foo = new Logdown('foo')
-        var bar = new Logdown('bar')
-        var foobar = new Logdown('foobar')
-        var barfoo = new Logdown('barfoo')
-
-        Logdown.disable('*')
-        Logdown.enable('foo', 'barfoo')
-
-        bar.log('lorem')
-        foobar.log('lorem')
-        assert.notCalled(console.log)
-        foo.log('lorem')
-        barfoo.log('lorem')
-        assert.calledTwice(console.log)
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
-
-      sandbox.restore()
-    })
+    sandbox.restore()
   })
-}())
+
+  it('`(\'-*\')` should disable all instances', function () {
+    try {
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
+
+      logdown.enable('-*')
+
+      foobar.log('lorem')
+      foo.log('lorem')
+      bar.log('lorem')
+      barfoo.log('lorem')
+      assert.notCalled(console.log)
+    } catch (error) {
+      sandbox.restore()
+      throw error
+    }
+
+    sandbox.restore()
+  })
+
+  it('`(\'*\', \'-foo\')` should enable all but only instances ' +
+     'with “foo” prefix', function () {
+    try {
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var quz = logdown('quz')
+      var baz = logdown('baz')
+
+      logdown.enable('*', '-foo')
+
+      foo.log('lorem')
+      assert.notCalled(console.log)
+      bar.log('lorem')
+      quz.log('lorem')
+      baz.log('lorem')
+      assert.calledThrice(console.log)
+    } catch (error) {
+      sandbox.restore()
+      throw error
+    }
+
+    sandbox.restore()
+  })
+
+  it('`(\'*\', \'-*foo\')` should enable all but instances with names ' +
+     'ending with “foo”', function () {
+    try {
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
+
+      logdown.enable('*', '-*foo')
+
+      foo.log('lorem')
+      barfoo.log('lorem')
+      assert.notCalled(console.log)
+      bar.log('lorem')
+      foobar.log('lorem')
+      assert.calledTwice(console.log)
+    } catch (error) {
+      sandbox.restore()
+      throw error
+    }
+
+    sandbox.restore()
+  })
+
+  it('`(\'*\', \'-foo*\')` should enable all but instances with names ' +
+     'beginning with “foo”', function () {
+    try {
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
+
+      logdown.enable('*', '-foo*')
+
+      foobar.log('lorem')
+      foo.log('lorem')
+      assert.notCalled(console.log)
+      bar.log('lorem')
+      barfoo.log('lorem')
+      assert.calledTwice(console.log)
+    } catch (error) {
+      sandbox.restore()
+      throw error
+    }
+
+    sandbox.restore()
+  })
+
+  it('should accept N arguments', function () {
+    try {
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
+
+      logdown.disable('*')
+      logdown.enable('foo', 'barfoo')
+
+      bar.log('lorem')
+      foobar.log('lorem')
+      assert.notCalled(console.log)
+      foo.log('lorem')
+      barfoo.log('lorem')
+      assert.calledTwice(console.log)
+    } catch (error) {
+      sandbox.restore()
+      throw error
+    }
+
+    sandbox.restore()
+  })
+})

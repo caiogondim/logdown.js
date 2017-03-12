@@ -1,10 +1,8 @@
 /* global describe, it, beforeEach, afterEach, xit */
 
-'use strict'
-
 var chai = require('chai')
 var sinon = require('sinon')
-var Logdown = require('../../src/logdown')
+var logdown = require('../../src/logdown')
 
 sinon.assert.expose(chai.assert, {prefix: ''})
 var assert = chai.assert
@@ -23,8 +21,8 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
     envVars.forEach(function (envVar) {
       process.env[envVar] = ''
     })
-    Logdown.enable('*')
-    Logdown._instances = []
+    logdown.enable('*')
+    logdown._instances = []
   })
 
   afterEach(function () {
@@ -36,10 +34,10 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       try {
         process.env[envVar] = 'foo'
 
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var quz = new Logdown({prefix: 'quz'})
-        var baz = new Logdown({prefix: 'baz'})
+        var foo = logdown('foo')
+        var bar = logdown('bar')
+        var quz = logdown('quz')
+        var baz = logdown('baz')
 
         bar.log('lorem')
         assert.notCalled(console.log)
@@ -63,10 +61,10 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       try {
         process.env[envVar] = '*foo'
 
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = logdown('foo')
+        var bar = logdown('bar')
+        var foobar = logdown('foobar')
+        var barfoo = logdown('barfoo')
 
         bar.log('lorem')
         foobar.log('lorem')
@@ -88,10 +86,10 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       try {
         process.env[envVar] = 'foo*'
 
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = logdown('foo')
+        var bar = logdown('bar')
+        var foobar = logdown('foobar')
+        var barfoo = logdown('barfoo')
 
         bar.log('lorem')
         barfoo.log('lorem')
@@ -113,10 +111,10 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       try {
         process.env[envVar] = '-*'
 
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = logdown('foo')
+        var bar = logdown('bar')
+        var foobar = logdown('foobar')
+        var barfoo = logdown('barfoo')
 
         foobar.log('lorem')
         foo.log('lorem')
@@ -135,10 +133,10 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       try {
         process.env[envVar] = '*,-foo'
 
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var quz = new Logdown({prefix: 'quz'})
-        var baz = new Logdown({prefix: 'baz'})
+        var foo = logdown('foo')
+        var bar = logdown('bar')
+        var quz = logdown('quz')
+        var baz = logdown('baz')
 
         foo.log('lorem')
         assert.notCalled(console.log)
@@ -158,10 +156,10 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       try {
         process.env[envVar] = '*,-*foo'
 
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = logdown('foo')
+        var bar = logdown('bar')
+        var foobar = logdown('foobar')
+        var barfoo = logdown('barfoo')
 
         foo.log('lorem')
         barfoo.log('lorem')
@@ -181,10 +179,10 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       try {
         process.env[envVar] = '*,-foo*'
 
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = logdown('foo')
+        var bar = logdown('bar')
+        var foobar = logdown('foobar')
+        var barfoo = logdown('barfoo')
 
         foobar.log('lorem')
         foo.log('lorem')
@@ -202,13 +200,13 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
 
     it('`' + envVar + '` should accept N arguments', function () {
       try {
-        Logdown.enable('*')
+        logdown.enable('*')
         process.env[envVar] = 'foo,barfoo'
 
-        var foo = new Logdown({prefix: 'foo'})
-        var bar = new Logdown({prefix: 'bar'})
-        var foobar = new Logdown({prefix: 'foobar'})
-        var barfoo = new Logdown({prefix: 'barfoo'})
+        var foo = logdown('foo')
+        var bar = logdown('bar')
+        var foobar = logdown('foobar')
+        var barfoo = logdown('barfoo')
 
         bar.log('lorem')
         foobar.log('lorem')
@@ -232,10 +230,10 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       process.env.NODE_DEBUG = 'foo,barfoo'
       process.env.DEBUG = 'bar,foobar'
 
-      var foo = new Logdown({prefix: 'foo'})
-      var bar = new Logdown({prefix: 'bar'})
-      var foobar = new Logdown({prefix: 'foobar'})
-      var barfoo = new Logdown({prefix: 'barfoo'})
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
 
       bar.log('lorem')
       foobar.log('lorem')

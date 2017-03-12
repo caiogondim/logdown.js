@@ -1,8 +1,6 @@
 /* global module */
 
 module.exports = function (config) {
-  'use strict'
-
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -14,7 +12,7 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../src/logdown.js',
+      '../dist/logdown.js',
       'browser/*.js'
     ],
 

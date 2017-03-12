@@ -1,4 +1,4 @@
-/* global describe, afterEach, beforeEach, console, it, require, window, Logdown, chai, sinon, localStorage */
+/* global describe, afterEach, beforeEach, console, it, require, window, logdown, chai, sinon, localStorage */
 
 sinon.assert.expose(chai.assert, {prefix: ''})
 var assert = chai.assert
@@ -10,8 +10,8 @@ describe('localStorage.debug', function () {
     sandbox = sinon.sandbox.create()
     sandbox.stub(window.console, 'log')
 
-    Logdown.enable('*')
-    Logdown._instances = []
+    logdown.enable('*')
+    logdown._instances = []
   })
 
   afterEach(function () {
@@ -23,10 +23,10 @@ describe('localStorage.debug', function () {
     try {
       localStorage.debug = 'foo'
 
-      var foo = Logdown('foo')
-      var bar = Logdown('bar')
-      var quz = Logdown('quz')
-      var baz = Logdown('baz')
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var quz = logdown('quz')
+      var baz = logdown('baz')
 
       bar.log('lorem')
       assert.notCalled(console.log)
@@ -50,10 +50,10 @@ describe('localStorage.debug', function () {
     try {
       localStorage.debug = '*foo'
 
-      var foo = Logdown('foo')
-      var bar = Logdown('bar')
-      var foobar = Logdown('foobar')
-      var barfoo = Logdown('barfoo')
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
 
       bar.log('lorem')
       foobar.log('lorem')
@@ -75,10 +75,10 @@ describe('localStorage.debug', function () {
     try {
       localStorage.debug = 'foo*'
 
-      var foo = Logdown('foo')
-      var bar = Logdown('bar')
-      var foobar = Logdown('foobar')
-      var barfoo = Logdown('barfoo')
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
 
       bar.log('lorem')
       barfoo.log('lorem')
@@ -100,10 +100,10 @@ describe('localStorage.debug', function () {
     try {
       localStorage.debug = '-*'
 
-      var foo = Logdown('foo')
-      var bar = Logdown('bar')
-      var foobar = Logdown('foobar')
-      var barfoo = Logdown('barfoo')
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
 
       foobar.log('lorem')
       foo.log('lorem')
@@ -122,10 +122,10 @@ describe('localStorage.debug', function () {
     try {
       localStorage.debug = '*,-foo'
 
-      var foo = Logdown('foo')
-      var bar = Logdown('bar')
-      var quz = Logdown('quz')
-      var baz = Logdown('baz')
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var quz = logdown('quz')
+      var baz = logdown('baz')
 
       foo.log('lorem')
       assert.notCalled(console.log)
@@ -145,10 +145,10 @@ describe('localStorage.debug', function () {
     try {
       localStorage.debug = '*,-*foo'
 
-      var foo = Logdown('foo')
-      var bar = Logdown('bar')
-      var foobar = Logdown('foobar')
-      var barfoo = Logdown('barfoo')
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
 
       foo.log('lorem')
       barfoo.log('lorem')
@@ -168,10 +168,10 @@ describe('localStorage.debug', function () {
     try {
       localStorage.debug = '*,-foo*'
 
-      var foo = Logdown('foo')
-      var bar = Logdown('bar')
-      var foobar = Logdown('foobar')
-      var barfoo = Logdown('barfoo')
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
 
       foobar.log('lorem')
       foo.log('lorem')
@@ -189,13 +189,13 @@ describe('localStorage.debug', function () {
 
   it('`localStorage.debug` should accept N arguments', function () {
     try {
-      Logdown.enable('*')
+      logdown.enable('*')
       localStorage.debug = 'foo,barfoo'
 
-      var foo = Logdown('foo')
-      var bar = Logdown('bar')
-      var foobar = Logdown('foobar')
-      var barfoo = Logdown('barfoo')
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var foobar = logdown('foobar')
+      var barfoo = logdown('barfoo')
 
       bar.log('lorem')
       foobar.log('lorem')
