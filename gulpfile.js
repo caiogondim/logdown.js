@@ -41,20 +41,6 @@ gulp.task('karma-travisci', ['mocha'], function(done) {
 gulp.task('test', ['mocha', 'karma'])
 gulp.task('test:travisci', ['karma-travisci'])
 
-// Development
-// -----------
-
-gulp.task('dev', ['build'], function() {
-  gulp.watch('example/**/*.*').on('change', browserSync.reload);
-  gulp.watch('src/**/*.*', ['build'])
-
-  browserSync.init({
-    port: 3636,
-    server: {baseDir: './'},
-    startPath: '/example'
-  })
-})
-
 // Deploy
 // ------
 

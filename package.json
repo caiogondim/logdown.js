@@ -13,10 +13,9 @@
     "test:client": "npm run build && gulp karma",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",
     "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
-    "start": "gulp dev",
+    "test:travisci": "gulp test:travisci",
     "build": "browserify src/logdown.js --standalone logdown > dist/logdown.js && cp dist/logdown.js example/lib/logdown.js",
     "deploy:example": "gulp deploy:example",
-    "test:travisci": "gulp test:travisci",
     "preversion": "npm run test",
     "version": "npm run build && git add ."
   },
@@ -40,7 +39,6 @@
   },
   "homepage": "https://github.com/caiogondim/logdown",
   "devDependencies": {
-    "browser-sync": "^2.18.2",
     "browserify": "^14.1.0",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
