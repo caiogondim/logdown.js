@@ -73,6 +73,7 @@
 
     Logdown._instances.push(this)
     alignPrefixes(Logdown._instances)
+    updateEnabledDisabled()
 
     return this
   }
@@ -200,6 +201,32 @@
         instance.opts.prefix = instance.opts.prefix + padding
       }
     })
+  }
+
+  function updateEnabledDisabled () {
+    // Parsing `NODE_DEBUG` and `DEBUG` env var.
+    var envVar = null
+    if (typeof process !== 'undefined' &&
+        process.env !== undefined &&
+        filterRegExps.length === 0) {
+      // `NODE_DEBUG` has precedence over `DEBUG`
+      if (process.env.NODE_DEBUG !== undefined &&
+          process.env.NODE_DEBUG !== '') {
+        envVar = 'NODE_DEBUG'
+      } else if (process.env.DEBUG !== undefined &&
+                 process.env.DEBUG !== '') {
+        envVar = 'DEBUG'
+      }
+
+      if (envVar) {
+        Logdown.disable('*')
+        process.env[envVar]
+          .split(',')
+          .forEach(function (regExp) {
+            Logdown.enable(regExp)
+          })
+      }
+    }
   }
 
   function parseMarkdown (text) {
@@ -400,39 +427,17 @@
   }
 
   function isDisabled (instance) {
-    // Parsing `NODE_DEBUG` and `DEBUG` env var.
-    // We verify `NODE_DEBUG` and `DEBUG` env vars on runtime so it is
-    // easier to test.
-    var envVar = null
-    if (typeof process !== 'undefined' &&
-        process.env !== undefined &&
-        filterRegExps.length === 0) {
-      // `NODE_DEBUG` has precedence over `DEBUG`
-      if (process.env.NODE_DEBUG !== undefined &&
-          process.env.NODE_DEBUG !== '') {
-        envVar = 'NODE_DEBUG'
-      } else if (process.env.DEBUG !== undefined &&
-                 process.env.DEBUG !== '') {
-        envVar = 'DEBUG'
-      }
-
-      if (envVar) {
-        Logdown.disable('*')
-        process.env[envVar]
-          .split(',')
-          .forEach(function (regExp) {
-            Logdown.enable(regExp)
-          })
-      }
-    }
-
-    // Now checks if instance is disabled
     var isDisabled_ = false
     filterRegExps.forEach(function (filter) {
-      if (filter.type === 'enable' && filter.regExp.test(instance.opts.prefix)) {
+      if (
+        filter.type === 'enable' &&
+        filter.regExp.test(instance.opts.prefix)
+      ) {
         isDisabled_ = false
-      } else if (filter.type === 'disable' &&
-                 filter.regExp.test(instance.opts.prefix)) {
+      } else if (
+        filter.type === 'disable' &&
+        filter.regExp.test(instance.opts.prefix)
+      ) {
         isDisabled_ = true
       }
     })

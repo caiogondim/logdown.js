@@ -38,7 +38,7 @@ gulp.task('karma-travisci', ['mocha'], function(done) {
   }, done)
 })
 
-gulp.task('test', ['karma'])
+gulp.task('test', ['mocha', 'karma'])
 gulp.task('test:travisci', ['karma-travisci'])
 
 // Build

@@ -8,7 +8,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "npm run build && npm run test:lint && gulp test",
+    "test": "npm run build && gulp test && npm run test:lint",
     "test:server": "gulp mocha",
     "test:client": "gulp karma",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",

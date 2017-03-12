@@ -24,6 +24,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       process.env[envVar] = ''
     })
     Logdown.enable('*')
+    Logdown._instances = []
   })
 
   afterEach(function () {
@@ -31,43 +32,41 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
   })
 
   envVars.forEach(function (envVar) {
-    it('`' + envVar + '=foo` should enable only instances with “foo” prefix',
-       function () {
-         try {
-           var foo = new Logdown({prefix: 'foo'})
-           var bar = new Logdown({prefix: 'bar'})
-           var quz = new Logdown({prefix: 'quz'})
-           var baz = new Logdown({prefix: 'baz'})
-
-           process.env[envVar] = 'foo'
-
-           bar.log('lorem')
-           assert.notCalled(console.log)
-           quz.log('lorem')
-           assert.notCalled(console.log)
-           baz.log('lorem')
-           assert.notCalled(console.log)
-           foo.log('lorem')
-           assert.called(console.log)
-
-           sandbox.restore()
-         } catch (error) {
-           sandbox.restore()
-           throw error
-         }
-
-         sandbox.restore()
-       })
-
-    xit('`' + envVar + '=*foo` should enable only instances with names ' +
-       'ending with “foo”', function () {
+    it('`' + envVar + '=foo` should enable only instances with “foo” prefix', function () {
       try {
+        process.env[envVar] = 'foo'
+
+        var foo = new Logdown({prefix: 'foo'})
+        var bar = new Logdown({prefix: 'bar'})
+        var quz = new Logdown({prefix: 'quz'})
+        var baz = new Logdown({prefix: 'baz'})
+
+        bar.log('lorem')
+        assert.notCalled(console.log)
+        quz.log('lorem')
+        assert.notCalled(console.log)
+        baz.log('lorem')
+        assert.notCalled(console.log)
+        foo.log('lorem')
+        assert.called(console.log)
+
+        sandbox.restore()
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
+
+      sandbox.restore()
+    })
+
+    xit('`' + envVar + '=*foo` should enable only instances with names ending with “foo”', function () {
+      try {
+        process.env[envVar] = '*foo'
+
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
         var foobar = new Logdown({prefix: 'foobar'})
         var barfoo = new Logdown({prefix: 'barfoo'})
-
-        process.env[envVar] = '*foo'
 
         bar.log('lorem')
         foobar.log('lorem')
@@ -85,15 +84,14 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       sandbox.restore()
     })
 
-    xit('`' + envVar + '=foo*` should enable only instances with names ' +
-       'beginning with “foo”', function () {
+    xit('`' + envVar + '=foo*` should enable only instances with names beginning with “foo”', function () {
       try {
+        process.env[envVar] = 'foo*'
+
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
         var foobar = new Logdown({prefix: 'foobar'})
         var barfoo = new Logdown({prefix: 'barfoo'})
-
-        process.env[envVar] = 'foo*'
 
         bar.log('lorem')
         barfoo.log('lorem')
@@ -113,12 +111,12 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
 
     it('`' + envVar + '=-*` should disable all instances', function () {
       try {
+        process.env[envVar] = '-*'
+
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
         var foobar = new Logdown({prefix: 'foobar'})
         var barfoo = new Logdown({prefix: 'barfoo'})
-
-        process.env[envVar] = '-*'
 
         foobar.log('lorem')
         foo.log('lorem')
@@ -133,15 +131,14 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       sandbox.restore()
     })
 
-    it('`' + envVar + '=*,-foo` should enable all but only instances ' +
-       'with “foo” prefix', function () {
+    it('`' + envVar + '=*,-foo` should enable all but only instances with “foo” prefix', function () {
       try {
+        process.env[envVar] = '*,-foo'
+
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
         var quz = new Logdown({prefix: 'quz'})
         var baz = new Logdown({prefix: 'baz'})
-
-        process.env[envVar] = '*,-foo'
 
         foo.log('lorem')
         assert.notCalled(console.log)
@@ -157,15 +154,14 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       sandbox.restore()
     })
 
-    it('`' + envVar + '=*,-*foo` should enable all but instances with names ' +
-       'ending with “foo”', function () {
+    it('`' + envVar + '=*,-*foo` should enable all but instances with names ending with “foo”', function () {
       try {
+        process.env[envVar] = '*,-*foo'
+
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
         var foobar = new Logdown({prefix: 'foobar'})
         var barfoo = new Logdown({prefix: 'barfoo'})
-
-        process.env[envVar] = '*,-*foo'
 
         foo.log('lorem')
         barfoo.log('lorem')
@@ -181,15 +177,14 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       sandbox.restore()
     })
 
-    it('`' + envVar + '=*,-foo*` should enable all but instances with names ' +
-       'beginning with “foo”', function () {
+    it('`' + envVar + '=*,-foo*` should enable all but instances with names beginning with “foo”', function () {
       try {
+        process.env[envVar] = '*,-foo*'
+
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
         var foobar = new Logdown({prefix: 'foobar'})
         var barfoo = new Logdown({prefix: 'barfoo'})
-
-        process.env[envVar] = '*,-foo*'
 
         foobar.log('lorem')
         foo.log('lorem')
@@ -207,13 +202,13 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
 
     it('`' + envVar + '` should accept N arguments', function () {
       try {
+        Logdown.enable('*')
+        process.env[envVar] = 'foo,barfoo'
+
         var foo = new Logdown({prefix: 'foo'})
         var bar = new Logdown({prefix: 'bar'})
         var foobar = new Logdown({prefix: 'foobar'})
         var barfoo = new Logdown({prefix: 'barfoo'})
-
-        Logdown.enable('*')
-        process.env[envVar] = 'foo,barfoo'
 
         bar.log('lorem')
         foobar.log('lorem')
@@ -234,13 +229,13 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
   // get the values in `NODE_DEBUG`
   it('`NODE_DEBUG` should have precedence over `DEBUG`', function () {
     try {
+      process.env.NODE_DEBUG = 'foo,barfoo'
+      process.env.DEBUG = 'bar,foobar'
+
       var foo = new Logdown({prefix: 'foo'})
       var bar = new Logdown({prefix: 'bar'})
       var foobar = new Logdown({prefix: 'foobar'})
       var barfoo = new Logdown({prefix: 'barfoo'})
-
-      process.env.NODE_DEBUG = 'foo,barfoo'
-      process.env.DEBUG = 'bar,foobar'
 
       bar.log('lorem')
       foobar.log('lorem')
