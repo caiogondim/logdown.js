@@ -1,5 +1,3 @@
-'use strict'
-
 var Logdown = require('../src/logdown')
 
 // var demo = new Logdown({prefix: 'demo'})

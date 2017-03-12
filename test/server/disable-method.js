@@ -1,7 +1,5 @@
 /* global describe, it, beforeEach */
 
-'use strict'
-
 var chai = require('chai')
 var sinon = require('sinon')
 var logdown = require('../../src/logdown')
