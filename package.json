@@ -8,12 +8,12 @@
     "example": "example"
   },
   "scripts": {
-    "test": "npm run build && gulp test && npm run test:lint",
-    "test:server": "gulp mocha",
-    "test:client": "npm run build && gulp karma",
+    "test": "npm run build && npm run test:server && npm run test:client && npm run test:lint",
+    "test:server": "mocha test/server/**/*.js",
+    "test:client": "npm run build && karma start test/karma.conf.js --single-run",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",
     "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
-    "test:travisci": "gulp test:travisci",
+    "test:travisci": "karma start test/karma-travisci.conf.js --single-run",
     "build": "browserify src/logdown.js --standalone logdown > dist/logdown.js && cp dist/logdown.js example/lib/logdown.js",
     "preversion": "npm run test",
     "version": "npm run build && git add ."
@@ -40,12 +40,6 @@
   "devDependencies": {
     "browserify": "^14.1.0",
     "chai": "^3.5.0",
-    "gulp": "^3.9.1",
-    "gulp-header": "^1.8.2",
-    "gulp-mocha": "^2.2.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "^2.4.0",
-    "gulp-uglify": "^1.5.3",
     "karma": "^1.5.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.0.0",
