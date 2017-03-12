@@ -15,7 +15,6 @@
     "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
     "test:travisci": "gulp test:travisci",
     "build": "browserify src/logdown.js --standalone logdown > dist/logdown.js && cp dist/logdown.js example/lib/logdown.js",
-    "deploy:example": "gulp deploy:example",
     "preversion": "npm run test",
     "version": "npm run build && git add ."
   },
@@ -42,7 +41,6 @@
     "browserify": "^14.1.0",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
-    "gulp-gh-pages": "^0.5.4",
     "gulp-header": "^1.8.2",
     "gulp-mocha": "^2.2.0",
     "gulp-rename": "^1.2.2",

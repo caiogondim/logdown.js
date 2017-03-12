@@ -40,11 +40,3 @@ gulp.task('karma-travisci', ['mocha'], function(done) {
 
 gulp.task('test', ['mocha', 'karma'])
 gulp.task('test:travisci', ['karma-travisci'])
-
-// Deploy
-// ------
-
-gulp.task('deploy:example', ['build'], function() {
-  return gulp.src('./example/**')
-    .pipe(ghPages())
-})
