@@ -196,23 +196,42 @@
   }
 
   function updateEnabledDisabled () {
-    // Parsing `NODE_DEBUG` and `DEBUG` env var.
-    var envVar = null
-    if (typeof process !== 'undefined' &&
-        process.env !== undefined &&
-        filterRegExps.length === 0) {
-      // `NODE_DEBUG` has precedence over `DEBUG`
-      if (process.env.NODE_DEBUG !== undefined &&
-          process.env.NODE_DEBUG !== '') {
-        envVar = 'NODE_DEBUG'
-      } else if (process.env.DEBUG !== undefined &&
-                 process.env.DEBUG !== '') {
-        envVar = 'DEBUG'
-      }
+    if (isNode()) {
+      // Parsing `NODE_DEBUG` and `DEBUG` env var.
+      var envVar = null
+      if (
+        typeof process !== 'undefined' &&
+        process.env !== undefined
+      ) {
+        // `NODE_DEBUG` has precedence over `DEBUG`
+        if (
+          process.env.NODE_DEBUG !== undefined &&
+          process.env.NODE_DEBUG !== ''
+        ) {
+          envVar = 'NODE_DEBUG'
+        } else if (
+          process.env.DEBUG !== undefined &&
+          process.env.DEBUG !== ''
+        ) {
+          envVar = 'DEBUG'
+        }
 
-      if (envVar) {
+        if (envVar) {
+          Logdown.disable('*')
+          process.env[envVar]
+            .split(',')
+            .forEach(function (regExp) {
+              Logdown.enable(regExp)
+            })
+        }
+      }
+    } else if (isBrowser()) {
+      if (
+        window.localStorage &&
+        typeof window.localStorage.getItem('debug') === 'string'
+      ) {
         Logdown.disable('*')
-        process.env[envVar]
+        window.localStorage.debug
           .split(',')
           .forEach(function (regExp) {
             Logdown.enable(regExp)

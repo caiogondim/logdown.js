@@ -10,7 +10,7 @@
   "scripts": {
     "test": "npm run build && gulp test && npm run test:lint",
     "test:server": "gulp mocha",
-    "test:client": "gulp karma",
+    "test:client": "npm run build && gulp karma",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",
     "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
     "start": "gulp dev",

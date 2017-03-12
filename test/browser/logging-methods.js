@@ -17,6 +17,7 @@
         sandbox.stub(window.console, method)
 
         Logdown.enable('*')
+        Logdown._instances = []
       })
 
       afterEach(function () {
@@ -25,7 +26,6 @@
 
       it('should parse markdown if enabled', function () {
         try {
-          Logdown._instances = []
           var foo = Logdown({markdown: true})
 
           foo[method]('lorem *ipsum*')
@@ -75,7 +75,6 @@
 
       it('should not parse markdown if disabled', function () {
         try {
-          Logdown._instances = []
           var foo = Logdown({markdown: false})
 
           foo[method]('lorem *ipsum*')
@@ -135,22 +134,46 @@
           var demoFalse = Logdown('demoFalse', {alignOutput: false})
           var longerDemo = Logdown('longerDemo', {alignOutput: true})
 
-          assert.equal(abc.opts.prefix.length, 3, 'Skipping \'alignOutput\' will not add whitespace characters')
+          assert.equal(
+            abc.opts.prefix.length,
+            3,
+            'Skipping \'alignOutput\' will not add whitespace characters'
+          )
           assert.equal(abc.opts.alignOutput, false)
 
-          assert.equal(text.opts.prefix.length, 10, 'Inputs will be converted into Boolean values')
+          assert.equal(
+            text.opts.prefix.length,
+            10,
+            'Inputs will be converted into Boolean values'
+          )
           assert.equal(text.opts.alignOutput, true)
 
-          assert.equal(demo.opts.prefix.length, 10, 'Padding will be added to make short names as long as the longest')
+          assert.equal(
+            demo.opts.prefix.length,
+            10,
+            'Padding will be added to make short names as long as the longest'
+          )
           assert.equal(demo.opts.alignOutput, true)
 
-          assert.equal(longDemo.opts.prefix.length, 10, 'Padding will be added to make long names as long as the longest')
+          assert.equal(
+            longDemo.opts.prefix.length,
+            10,
+            'Padding will be added to make long names as long as the longest'
+          )
           assert.equal(longDemo.opts.alignOutput, true)
 
-          assert.equal(demoFalse.opts.prefix.length, 9, 'Padding will be skipped if set to \'false\'')
+          assert.equal(
+            demoFalse.opts.prefix.length,
+            9,
+            'Padding will be skipped if set to \'false\''
+          )
           assert.equal(demoFalse.opts.alignOutput, false)
 
-          assert.equal(longerDemo.opts.prefix.length, 10, 'The longest name will set the width for every other logger name')
+          assert.equal(
+            longerDemo.opts.prefix.length,
+            10,
+            'The longest name will set the width for every other logger name'
+          )
           assert.equal(longerDemo.opts.alignOutput, true)
         } catch (error) {
           sandbox.restore()
