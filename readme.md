@@ -215,11 +215,6 @@ Logdown.enable('*', '-foo')
 Logdown.disable('*foo*', '-foobar')
 ```
 
-## Credits
-- Moleskine icon by [Monika Ciapala](http://thenounproject.com/merdesign/)
-- Markdown icon by [Dustin Curtis](https://github.com/dcurtis/markdown-mark)
-
-
 ## Contributors
 
 ```
