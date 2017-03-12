@@ -59,7 +59,7 @@
     "karma-sinon": "^1.0.5",
     "mocha": "^2.5.3",
     "sinon": "^1.17.5",
-    "standard": "^8.6.0"
+    "standard": "^9.0.1"
   },
   "dependencies": {}
 }
