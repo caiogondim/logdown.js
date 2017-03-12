@@ -4,16 +4,16 @@
   'use strict'
 
   var lastUsedColorIndex = 0
-  // Solarized accent colors http://ethanschoonover.com/solarized
+  // Tomorrow Night Eighties colors
+  // https://github.com/chriskempson/tomorrow-theme#tomorrow-night-eighties
   var colors = [
-    '#B58900',
-    '#CB4B16',
-    '#DC322F',
-    '#D33682',
-    '#6C71C4',
-    '#268BD2',
-    '#2AA198',
-    '#859900'
+    '#F2777A',
+    '#F99157',
+    '#FFCC66',
+    '#99CC99',
+    '#66CCCC',
+    '#6699CC',
+    '#CC99CC'
   ]
   // Taken from ansi-styles npm module
   // https://github.com/sindresorhus/ansi-styles/blob/master/index.js
