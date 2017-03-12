@@ -647,7 +647,6 @@ function isPrefixAlreadyInUse (prefix, instances) {
   instances.forEach(function (instance) {
     if (instance.opts.prefix === prefix) {
       isPrefixAlreadyInUse_ = true
-      return
     }
   })
   return isPrefixAlreadyInUse_
@@ -659,7 +658,6 @@ function getInstanceByPrefix (prefix, instances) {
   instances.forEach(function (instanceCur) {
     if (instanceCur.opts.prefix === prefix) {
       instance = instanceCur
-      return
     }
   })
 
