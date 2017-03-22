@@ -21,14 +21,6 @@ describe('logdown()', function () {
     assert.notEqual(foo.opts.prefixColor, baz.opts.prefixColor)
   })
 
-  it('should sanitize prefixes name', function () {
-    var log1 = logdown('%cfoo%c')
-    assert.equal(log1.opts.prefix, 'foo')
-
-    var log2 = logdown('%cba%cr')
-    assert.equal(log2.opts.prefix, 'bar')
-  })
-
   // For compatibiltiy with debug
   it('should set prefix if string is passed as only argument', function () {
     var log1 = logdown('foo')

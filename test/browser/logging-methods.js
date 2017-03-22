@@ -45,8 +45,10 @@ methods.forEach(function (method) {
         assert.calledWith(
           console[method],
           'lorem %cipsum%c',
-          'background:#FDF6E3; color:#586E75; padding:1px 5px; ' +
-            'border-radius:4px;',
+          'background-color:rgba(255,204,102, 0.1);' +
+            'color:#FFCC66;' +
+            'padding:2px 5px;' +
+            'border-radius:2px;',
           ''
         )
 
@@ -54,8 +56,10 @@ methods.forEach(function (method) {
         assert.calledWith(
           console[method],
           'lorem %cipsum%c %cdolor%c sit %camet%c',
-          'background:#FDF6E3; color:#586E75; padding:1px 5px; ' +
-            'border-radius:4px;',
+          'background-color:rgba(255,204,102, 0.1);' +
+            'color:#FFCC66;' +
+            'padding:2px 5px;' +
+            'border-radius:2px;',
           '',
           'font-weight:bold;',
           '',
@@ -104,20 +108,20 @@ methods.forEach(function (method) {
     })
 
     it('should print prefix if present', function () {
-      // var foo = logdown({prefix: 'foo'})
+      var foo = logdown('foo')
 
-      // foo[method]('lorem ipsum')
-      // try {
-      //   assert.calledWith(
-      //     console[method],
-      //     '%cfoo%c lorem ipsum',
-      //     'color:' + foo.prefixColor + '; font-weight:bold;',
-      //     ''
-      //   )
-      // } catch (error) {
-      //   sandbox.restore()
-      //   throw error
-      // }
+      foo[method]('lorem ipsum')
+      try {
+        assert.calledWith(
+          console[method],
+          '%cfoo%c lorem ipsum',
+          'color:' + foo.opts.prefixColor + '; font-weight:bold;',
+          ''
+        )
+      } catch (error) {
+        sandbox.restore()
+        throw error
+      }
 
       sandbox.restore()
     })
@@ -193,46 +197,5 @@ methods.forEach(function (method) {
 
       sandbox.restore()
     })
-
-    // it('should not print special characters if the enviroment does not ' +
-    //    'support colors', function() {
-    //   try {
-    //     mockIEEnviroment()
-
-    //     var bar = logdown()
-    //     bar[method]('lorem *ipsum* dolor sit _amet_')
-    //     assert.calledWith(
-    //       console[method],
-    //       'lorem *ipsum* dolor sit _amet_'
-    //     )
-
-    //     var foo = logdown({prefix: 'foo'})
-    //     foo[method]('lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1`')
-    //     assert.calledWith(
-    //       console[method],
-    //       '[foo] lorem *ipsum* dolor sit _amet_ foo bar `var foo = 1`'
-    //     )
-    //   } catch (error) {
-    //     mockWebkitEnviroment()
-    //     sandbox.restore()
-    //     throw error
-    //   }
-
-    //   mockWebkitEnviroment()
-    //   sandbox.restore()
-    // })
-
-    // if (method === 'info' || method === 'warn' || method === 'error') {
-    //   it('should prepend symbols on node.js', function() {
-    //     unmockBrowserEnviroment()
-
-    //     var bar = logdown()
-    //     bar[method]('lorem *ipsum* dolor sit _amet_')
-    //     assert.calledWith(
-    //       console[method],
-    //       'lorem *ipsum* dolor sit _amet_'
-    //     )
-    //   })
-    // }
   })
 })

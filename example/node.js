@@ -1,4 +1,4 @@
-var Logdown = require('../src/logdown')
+var Logdown = require('../src/')
 
 // var demo = new Logdown({prefix: 'demo'})
 var demo = Logdown('demo')

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Logdown.js</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <title>logdown.js</title>
   <style>
     html {
       height: 100%;
@@ -61,8 +60,8 @@
   >
     Fork me on GitHub
   </a>
-  <script src="lib/logdown.js"></script>
-  <script src="lib/devtools-detect.js"></script>
+  <script src="/lib/logdown.js"></script>
+  <script src="/lib/devtools-detect.js"></script>
   <script>
     var demo = logdown('demo')
 
@@ -110,7 +109,7 @@
       setTimeout(function() {
         var log4 = logdown('grault')
         log4.log('Molestie nominati _recteque_ no eam, qui *ei* putant delicatissi')
-        log4.log('Cum at delenit *apeirian* forensibus')
+        log4.log('Cum at `delenit()` *apeirian* forensibus')
       }, timeout)
 
       timeout = i * gap

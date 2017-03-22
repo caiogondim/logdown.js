@@ -1,4 +1,4 @@
-/* global describe, beforeEach, console, it, require, window, logdown, chai, sinon */
+/* global describe, beforeEach, afterEach, console, it, require, window, logdown, chai, sinon */
 
 sinon.assert.expose(chai.assert, {prefix: ''})
 var assert = chai.assert
@@ -19,6 +19,10 @@ describe('logdown.disable', function () {
     sandbox = sinon.sandbox.create()
 
     sandbox.stub(window.console, 'log')
+  })
+
+  afterEach(function () {
+    sandbox.restore()
   })
 
   it('`(\'*\')` should disable all instances', function () {

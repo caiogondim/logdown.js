@@ -181,21 +181,525 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}],2:[function(require,module,exports){
-(function (process){
-/* global console, module, window, document, navigator, process */
+var toArray = require('./util/to-array')
 
-var lastUsedColorIndex = 0
-// Tomorrow Night Eighties colors
-// https://github.com/chriskempson/tomorrow-theme#tomorrow-night-eighties
-var colors = [
-  '#F2777A',
-  '#F99157',
-  '#FFCC66',
-  '#99CC99',
-  '#66CCCC',
-  '#6699CC',
-  '#CC99CC'
+function Logdown (prefix, opts) {
+  if (!(this instanceof Logdown)) {
+    return new Logdown(prefix, opts)
+  }
+
+  this.opts = Logdown._normalizeOpts(prefix, opts)
+
+  if (Logdown._isPrefixAlreadyInUse(this.opts.prefix)) {
+    return Logdown._getInstanceByPrefix(this.opts.prefix)
+  }
+
+  Logdown._instances.push(this)
+  Logdown._alignPrefixes()
+  Logdown._updateEnabledDisabled()
+
+  return this
+}
+
+//
+// Static
+//
+
+Logdown._instances = []
+Logdown._filterRegExps = []
+
+Logdown.enable = function () {
+  toArray(arguments).forEach(function (str) {
+    if (str[0] === '-') {
+      Logdown.disable(str.substr(1))
+    }
+
+    var regExp = Logdown._prepareRegExpForPrefixSearch(str)
+
+    if (str === '*') {
+      Logdown._filterRegExps = []
+    } else {
+      Logdown._filterRegExps.push({
+        type: 'enable',
+        regExp: regExp
+      })
+    }
+  })
+}
+
+Logdown.disable = function () {
+  toArray(arguments).forEach(function (str) {
+    if (str[0] === '-') {
+      Logdown.enable(str.substr(1))
+    }
+
+    var regExp = Logdown._prepareRegExpForPrefixSearch(str)
+
+    if (str === '*') {
+      Logdown._filterRegExps = [{
+        type: 'disable',
+        regExp: regExp
+      }]
+    } else {
+      Logdown._filterRegExps.push({
+        type: 'disable',
+        regExp: regExp
+      })
+    }
+  })
+}
+
+Logdown._prepareRegExpForPrefixSearch = function (str) {
+  return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
+}
+
+Logdown._isPrefixAlreadyInUse = function (prefix) {
+  return Logdown._instances.some(function (instance) {
+    return (instance.opts.prefix === prefix)
+  })
+}
+
+Logdown._getInstanceByPrefix = function (prefix) {
+  var instance
+
+  Logdown._instances.some(function (instanceCur) {
+    if (instanceCur.opts.prefix === prefix) {
+      instance = instanceCur
+      return true
+    }
+  })
+
+  return instance
+}
+
+Logdown._alignPrefixes = function () {
+  var longest = Logdown._instances.sort(function (a, b) {
+    return b.opts.prefix.length - a.opts.prefix.length
+  })[0]
+
+  Logdown._instances
+    .filter(function (instance) { return instance.opts.alignOutput })
+    .forEach(function (instance) {
+      var padding = new Array(Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0)).join(' ')
+      instance.opts.prefix = instance.opts.prefix + padding
+    })
+}
+
+Logdown._normalizeOpts = function (prefix, opts) {
+  if (typeof prefix === 'object') opts = prefix
+  opts = opts || {}
+
+  if (typeof prefix !== 'string') prefix = opts.prefix || ''
+
+  var alignOutput = Boolean(opts.alignOutput)
+  var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
+  var prefixColor = Logdown._getNextPrefixColor()
+
+  return {
+    prefix: prefix,
+    alignOutput: alignOutput,
+    markdown: markdown,
+    prefixColor: prefixColor
+  }
+}
+
+//
+// Instance
+//
+
+var methods = ['debug', 'log', 'info', 'warn', 'error']
+methods.forEach(function (method) {
+  Logdown.prototype[method] = function () {
+    if (this._isDisabled()) {
+      return
+    }
+
+    var preparedOutput
+    var args = toArray(arguments)
+
+    preparedOutput = this._prepareOutput(args, method)
+    ;(console[method] || console.log).apply(
+      console,
+      preparedOutput
+    )
+  }
+}, this)
+
+Logdown.prototype._isDisabled = function () {
+  var isDisabled = false
+  Logdown._filterRegExps.forEach(function (filter) {
+    if (
+      filter.type === 'enable' &&
+      filter.regExp.test(this.opts.prefix)
+    ) {
+      isDisabled = false
+    } else if (
+      filter.type === 'disable' &&
+      filter.regExp.test(this.opts.prefix)
+    ) {
+      isDisabled = true
+    }
+  }, this)
+
+  return isDisabled
+}
+
+module.exports = Logdown
+
+},{"./util/to-array":13}],3:[function(require,module,exports){
+var Logdown = require('./base')
+var markdown = require('./markdown')
+var isColorSupported = require('./util/is-color-supported')
+
+//
+// Static
+//
+
+Logdown._updateEnabledDisabled = function () {
+  if (
+    window.localStorage &&
+    typeof window.localStorage.getItem('debug') === 'string'
+  ) {
+    Logdown.disable('*')
+    window.localStorage
+      .getItem('debug')
+      .split(',')
+      .forEach(function (regExp) {
+        Logdown.enable(regExp)
+      })
+  }
+}
+
+Logdown._getNextPrefixColor = (function () {
+  var lastUsed = 0
+  // Tomorrow Night Eighties colors
+  // https://github.com/chriskempson/tomorrow-theme#tomorrow-night-eighties
+  var colors = [
+    '#F2777A',
+    '#F99157',
+    '#FFCC66',
+    '#99CC99',
+    '#66CCCC',
+    '#6699CC',
+    '#CC99CC'
+  ]
+
+  return function () {
+    lastUsed += 1
+    return colors[lastUsed % colors.length]
+  }
+})()
+
+//
+// Instance
+//
+
+Logdown.prototype._prepareOutput = function (args, instance) {
+  var preparedOutput = []
+  var parsedMarkdown
+
+  if (this.opts.prefix) {
+    if (isColorSupported()) {
+      preparedOutput.push('%c' + this.opts.prefix + '%c ')
+      preparedOutput.push(
+        'color:' + this.opts.prefixColor + '; font-weight:bold;',
+        '' // Empty string resets style.
+      )
+    } else {
+      preparedOutput.push('[' + this.prefix + '] ')
+    }
+  } else {
+    preparedOutput.push('')
+  }
+
+  // Only first argument on `console` can have style.
+  if (typeof args[0] === 'string') {
+    if (this.opts.markdown && isColorSupported()) {
+      parsedMarkdown = markdown.parse(args[0])
+      preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text
+      preparedOutput = preparedOutput.concat(parsedMarkdown.styles)
+    } else {
+      preparedOutput[0] = preparedOutput[0] + args[0]
+    }
+  } else {
+    preparedOutput[0] = args[0]
+  }
+
+  if (args.length > 1) {
+    preparedOutput = preparedOutput.concat(args.splice(1))
+  }
+
+  return preparedOutput
+}
+
+//
+// API
+//
+
+module.exports = Logdown
+
+},{"./base":2,"./markdown":5,"./util/is-color-supported":11}],4:[function(require,module,exports){
+var isBrowser = require('./util/is-browser')
+
+if (isBrowser()) {
+  module.exports = require('./browser')
+} else {
+  module.exports = require('./node')
+}
+
+},{"./browser":3,"./node":8,"./util/is-browser":10}],5:[function(require,module,exports){
+var isBrowser = require('../util/is-browser')
+
+var rules
+if (isBrowser()) {
+  rules = require('./rules/browser')
+} else {
+  rules = require('./rules/node')
+}
+
+function parse (text) {
+  var styles = []
+  var match = getNextMatch(text)
+
+  while (match) {
+    text = text.replace(match.rule.regexp, match.rule.replacer)
+
+    if (isBrowser()) {
+      styles.push(match.rule.style)
+      styles.push('') // Empty string resets style.
+    }
+
+    match = getNextMatch(text)
+  }
+
+  return {
+    text: text,
+    styles: styles
+  }
+}
+
+function getNextMatch (text) {
+  var matches = []
+
+  rules.forEach(function (rule) {
+    var match = text.match(rule.regexp)
+
+    if (match) {
+      matches.push({
+        rule: rule,
+        match: match
+      })
+    }
+  })
+
+  if (matches.length === 0) {
+    return null
+  }
+
+  matches.sort(function (a, b) {
+    return a.match.index - b.match.index
+  })
+
+  return matches[0]
+}
+
+//
+// API
+//
+
+module.exports = {
+  parse: parse
+}
+
+},{"../util/is-browser":10,"./rules/browser":6,"./rules/node":7}],6:[function(require,module,exports){
+module.exports = [
+  {
+    regexp: /\*([^*]+)\*/,
+    replacer: function (match, submatch1) {
+      return '%c' + submatch1 + '%c'
+    },
+    style: 'font-weight:bold;'
+  },
+  {
+    regexp: /_([^_]+)_/,
+    replacer: function (match, submatch1) {
+      return '%c' + submatch1 + '%c'
+    },
+    style: 'font-style:italic;'
+  },
+  {
+    regexp: /`([^`]+)`/,
+    replacer: function (match, submatch1) {
+      return '%c' + submatch1 + '%c'
+    },
+    style:
+      'background-color:rgba(255,204,102, 0.1);' +
+      'color:#FFCC66;' +
+      'padding:2px 5px;' +
+      'border-radius:2px;'
+  }
 ]
+
+},{}],7:[function(require,module,exports){
+var ansiColors = require('../../util/ansi-colors')
+
+module.exports = [
+  {
+    regexp: /\*([^*]+)\*/,
+    replacer: function (match, submatch1) {
+      return (
+        '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
+        submatch1 +
+        '\u001b[' + ansiColors.modifiers.bold[1] + 'm'
+      )
+    }
+  },
+  {
+    regexp: /_([^_]+)_/,
+    replacer: function (match, submatch1) {
+      return (
+        '\u001b[' + ansiColors.modifiers.italic[0] + 'm' +
+        submatch1 +
+        '\u001b[' + ansiColors.modifiers.italic[1] + 'm'
+      )
+    }
+  },
+  {
+    regexp: /`([^`]+)`/,
+    replacer: function (match, submatch1) {
+      return (
+        '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
+        submatch1 +
+        '\u001b[' + ansiColors.colors.yellow[1] + 'm'
+      )
+    }
+  }
+]
+
+},{"../../util/ansi-colors":9}],8:[function(require,module,exports){
+(function (process){
+var Logdown = require('./base')
+var markdown = require('./markdown')
+var ansiColors = require('./util/ansi-colors')
+var isColorSupported = require('./util/is-color-supported')
+
+//
+// Static
+//
+
+Logdown._updateEnabledDisabled = function () {
+  // Parsing `NODE_DEBUG` and `DEBUG` env var.
+  var envVar = null
+  if (
+    typeof process !== 'undefined' &&
+    process.env !== undefined
+  ) {
+    // `NODE_DEBUG` has precedence over `DEBUG`
+    if (
+      process.env.NODE_DEBUG !== undefined &&
+      process.env.NODE_DEBUG !== ''
+    ) {
+      envVar = 'NODE_DEBUG'
+    } else if (
+      process.env.DEBUG !== undefined &&
+      process.env.DEBUG !== ''
+    ) {
+      envVar = 'DEBUG'
+    }
+
+    if (envVar) {
+      Logdown.disable('*')
+      process.env[envVar]
+        .split(',')
+        .forEach(function (regExp) {
+          Logdown.enable(regExp)
+        })
+    }
+  }
+}
+
+Logdown._getNextPrefixColor = (function () {
+  var lastUsed = 0
+  var nodePrefixColors = [
+    [31, 39], // red
+    [32, 39], // green
+    [33, 39], // yellow
+    [34, 39], // blue
+    [35, 39], // magenta
+    [36, 39] // cyan
+  ]
+
+  return function () {
+    lastUsed += 1
+    return nodePrefixColors[lastUsed % nodePrefixColors.length]
+  }
+})()
+
+//
+// Instance
+//
+
+Logdown.prototype._prepareOutput = function (args, method) {
+  var preparedOutput = []
+
+  if (this.opts.prefix) {
+    if (isColorSupported()) {
+      preparedOutput[0] =
+        '\u001b[' + this.opts.prefixColor[0] + 'm' +
+        '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
+        this.opts.prefix +
+        '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
+        '\u001b[' + this.opts.prefixColor[1] + 'm'
+    } else {
+      preparedOutput[0] = '[' + this.opts.prefix + ']'
+    }
+  }
+
+  if (method === 'warn') {
+    preparedOutput[0] =
+      '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
+      '⚠️ ' +
+      '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
+      (preparedOutput[0] || '')
+  } else if (method === 'error') {
+    preparedOutput[0] =
+      '\u001b[' + ansiColors.colors.red[0] + 'm' +
+      '❌ ' +
+      '\u001b[' + ansiColors.colors.red[1] + 'm ' +
+      (preparedOutput[0] || '')
+  } else if (method === 'info') {
+    preparedOutput[0] =
+      '\u001b[' + ansiColors.colors.blue[0] + 'm' +
+      'ℹ️' + ' ' + // When the `i` symbol has a trailling space, it don't render the emoji.
+      '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
+      (preparedOutput[0] || '')
+  } else if (method === 'debug') {
+    preparedOutput[0] =
+      '\u001b[' + ansiColors.colors.gray[0] + 'm' +
+      '🐞 ' +
+      '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
+      (preparedOutput[0] || '')
+  }
+
+  args.forEach(function (arg) {
+    if (typeof arg === 'string') {
+      if (this.opts.markdown) {
+        preparedOutput.push(markdown.parse(arg).text)
+      } else {
+        preparedOutput.push(arg)
+      }
+    } else {
+      preparedOutput.push(arg)
+    }
+  }, this)
+
+  return preparedOutput
+}
+
+module.exports = Logdown
+
+}).call(this,require('_process'))
+},{"./base":2,"./markdown":5,"./util/ansi-colors":9,"./util/is-color-supported":11,"_process":1}],9:[function(require,module,exports){
 // Taken from ansi-styles npm module
 // https://github.com/sindresorhus/ansi-styles/blob/master/index.js
 var ansiColors = {
@@ -231,446 +735,18 @@ var ansiColors = {
     bgWhite: [47, 49]
   }
 }
-var filterRegExps = []
 
-function Logdown (prefix, opts) {
-  if (!(this instanceof Logdown)) {
-    return new Logdown(prefix, opts)
-  }
+module.exports = ansiColors
 
-  this.opts = normalizeOpts(prefix, opts)
-
-  if (isPrefixAlreadyInUse(this.opts.prefix, Logdown._instances)) {
-    return getInstanceByPrefix(this.opts.prefix, Logdown._instances)
-  }
-
-  Logdown._instances.push(this)
-  alignPrefixes(Logdown._instances)
-  updateEnabledDisabled()
-
-  return this
+},{}],10:[function(require,module,exports){
+module.exports = function isBrowser () {
+  return (typeof window !== 'undefined')
 }
 
-//
-// Static
-//
-
-Logdown._instances = []
-
-Logdown.enable = function () {
-  Array.prototype.forEach.call(arguments, function (str) {
-    if (str[0] === '-') {
-      Logdown.disable(str.substr(1))
-    }
-
-    var regExp = prepareRegExpForPrefixSearch(str)
-
-    if (str === '*') {
-      filterRegExps = []
-    } else {
-      filterRegExps.push({
-        type: 'enable',
-        regExp: regExp
-      })
-    }
-  })
-}
-
-Logdown.disable = function () {
-  Array.prototype.forEach.call(arguments, function (str) {
-    if (str[0] === '-') {
-      Logdown.enable(str.substr(1))
-    }
-
-    var regExp = prepareRegExpForPrefixSearch(str)
-
-    if (str === '*') {
-      filterRegExps = [{
-        type: 'disable',
-        regExp: regExp
-      }]
-    } else {
-      filterRegExps.push({
-        type: 'disable',
-        regExp: regExp
-      })
-    }
-  })
-}
-
-//
-// Public
-//
-
-var methods = ['debug', 'log', 'info', 'warn', 'error']
-methods.forEach(function (method) {
-  Logdown.prototype[method] = function () {
-    if (isDisabled(this)) {
-      return
-    }
-
-    var preparedOutput
-    var args = Array.prototype.slice.call(arguments, 0)
-
-    if (isBrowser()) {
-      preparedOutput = prepareOutputToBrowser(args, this)
-
-      // IE9 workaround
-      // http://stackoverflow.com/questions/5538972/
-      //  console-log-apply-not-working-in-ie9
-      Function.prototype.apply.call(
-        console[method] || console.log,
-        console,
-        preparedOutput
-      )
-    } else if (isNode()) {
-      preparedOutput = prepareOutputToNode(args, method, this)
-      ;(console[method] || console.log).apply(
-        console,
-        preparedOutput
-      )
-    }
-  }
-})
-
-//
-// Private
-//
-
-function normalizeOpts (prefix, opts) {
-  if (typeof prefix === 'object') opts = prefix
-  opts = opts || {}
-
-  if (typeof prefix !== 'string') prefix = opts.prefix || ''
-  prefix = sanitizeStringToBrowser(prefix)
-
-  var alignOutput = Boolean(opts.alignOutput)
-  var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
-
-  var prefixColor
-  if (isBrowser()) {
-    prefixColor = colors[lastUsedColorIndex % colors.length]
-    lastUsedColorIndex += 1
-  } else if (isNode()) {
-    prefixColor = getNextPrefixColor()
-  }
-
-  return {
-    prefix: prefix,
-    alignOutput: alignOutput,
-    markdown: markdown,
-    prefixColor: prefixColor
-  }
-}
-
-function alignPrefixes (instances) {
-  var longest = instances.sort(function (a, b) {
-    return b.opts.prefix.length - a.opts.prefix.length
-  })[0]
-
-  instances.forEach(function (instance) {
-    if (instance.opts.alignOutput) {
-      var padding = new Array(Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0)).join(' ')
-      instance.opts.prefix = instance.opts.prefix + padding
-    }
-  })
-}
-
-function updateEnabledDisabled () {
-  if (isBrowser()) {
-    if (
-      window.localStorage &&
-      typeof window.localStorage.getItem('debug') === 'string'
-    ) {
-      Logdown.disable('*')
-      window.localStorage.debug
-        .split(',')
-        .forEach(function (regExp) {
-          Logdown.enable(regExp)
-        })
-    }
-  } else if (isNode()) {
-    // Parsing `NODE_DEBUG` and `DEBUG` env var.
-    var envVar = null
-    if (
-      typeof process !== 'undefined' &&
-      process.env !== undefined
-    ) {
-      // `NODE_DEBUG` has precedence over `DEBUG`
-      if (
-        process.env.NODE_DEBUG !== undefined &&
-        process.env.NODE_DEBUG !== ''
-      ) {
-        envVar = 'NODE_DEBUG'
-      } else if (
-        process.env.DEBUG !== undefined &&
-        process.env.DEBUG !== ''
-      ) {
-        envVar = 'DEBUG'
-      }
-
-      if (envVar) {
-        Logdown.disable('*')
-        process.env[envVar]
-          .split(',')
-          .forEach(function (regExp) {
-            Logdown.enable(regExp)
-          })
-      }
-    }
-  }
-}
-
-function parseMarkdown (text) {
-  var styles = []
-  var match = getNextMatch(text)
-
-  while (match) {
-    text = text.replace(match.rule.regexp, match.rule.replacer)
-
-    if (isBrowser()) {
-      styles.push(match.rule.style)
-      styles.push('') // Empty string resets style.
-    }
-
-    match = getNextMatch(text)
-  }
-
-  return {text: text, styles: styles}
-}
-
-function getNextMatch (text) {
-  var matches = []
-  var rules = []
-  if (isBrowser()) {
-    rules = [
-      {
-        regexp: /\*([^*]+)\*/,
-        replacer: function (match, submatch1) {
-          return '%c' + submatch1 + '%c'
-        },
-        style: 'font-weight:bold;'
-      },
-      {
-        regexp: /_([^_]+)_/,
-        replacer: function (match, submatch1) {
-          return '%c' + submatch1 + '%c'
-        },
-        style: 'font-style:italic;'
-      },
-      {
-        regexp: /`([^`]+)`/,
-        replacer: function (match, submatch1) {
-          return '%c' + submatch1 + '%c'
-        },
-        style:
-          'background:#FDF6E3; ' +
-          'color:#586E75; ' +
-          'padding:1px 5px; ' +
-          'border-radius:4px;'
-      }
-    ]
-  } else if (isNode()) {
-    rules = [
-      {
-        regexp: /\*([^*]+)\*/,
-        replacer: function (match, submatch1) {
-          return '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-                 submatch1 +
-                 '\u001b[' + ansiColors.modifiers.bold[1] + 'm'
-        }
-      },
-      {
-        regexp: /_([^_]+)_/,
-        replacer: function (match, submatch1) {
-          return '\u001b[' + ansiColors.modifiers.italic[0] + 'm' +
-                 submatch1 +
-                 '\u001b[' + ansiColors.modifiers.italic[1] + 'm'
-        }
-      },
-      {
-        regexp: /`([^`]+)`/,
-        replacer: function (match, submatch1) {
-          return '\u001b[' + ansiColors.bgColors.bgYellow[0] + 'm' +
-                 '\u001b[' + ansiColors.colors.black[0] + 'm' +
-                 ' ' + submatch1 + ' ' +
-                 '\u001b[' + ansiColors.colors.black[1] + 'm' +
-                 '\u001b[' + ansiColors.bgColors.bgYellow[1] + 'm'
-        }
-      }
-    ]
-  }
-
-  //
-  rules.forEach(function (rule) {
-    var match = text.match(rule.regexp)
-    if (match) {
-      matches.push({
-        rule: rule,
-        match: match
-      })
-    }
-  })
-  if (matches.length === 0) {
-    return null
-  }
-
-  //
-  matches.sort(function (a, b) {
-    return a.match.index - b.match.index
-  })
-
-  return matches[0]
-}
-
-function prepareOutputToBrowser (args, instance) {
-  var preparedOutput = []
-  var parsedMarkdown
-
-  if (instance.opts.prefix) {
-    if (isColorSupported()) {
-      preparedOutput.push('%c' + instance.opts.prefix + '%c ')
-      preparedOutput.push(
-        'color:' + instance.opts.prefixColor + '; font-weight:bold;',
-        '' // Empty string resets style.
-      )
-    } else {
-      preparedOutput.push('[' + instance.prefix + '] ')
-    }
-  } else {
-    preparedOutput.push('')
-  }
-
-  // Only first argument on `console` can have style.
-  if (typeof args[0] === 'string') {
-    if (instance.opts.markdown && isColorSupported()) {
-      parsedMarkdown = parseMarkdown(args[0])
-      preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text
-      preparedOutput = preparedOutput.concat(parsedMarkdown.styles)
-    } else {
-      preparedOutput[0] = preparedOutput[0] + args[0]
-    }
-  } else {
-    preparedOutput[0] = args[0]
-  }
-
-  if (args.length > 1) {
-    preparedOutput = preparedOutput.concat(args.splice(1))
-  }
-
-  return preparedOutput
-}
-
-function prepareOutputToNode (args, method, instance) {
-  var preparedOutput = []
-
-  if (instance.opts.prefix) {
-    if (isColorSupported()) {
-      preparedOutput[0] =
-        '\u001b[' + instance.opts.prefixColor[0] + 'm' +
-        '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-        instance.opts.prefix +
-        '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-        '\u001b[' + instance.opts.prefixColor[1] + 'm'
-    } else {
-      preparedOutput[0] = '[' + instance.opts.prefix + ']'
-    }
-  }
-
-  if (method === 'warn') {
-    preparedOutput[0] =
-      '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
-      '⚠' +
-      '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
-      (preparedOutput[0] || '')
-  } else if (method === 'error') {
-    preparedOutput[0] =
-      '\u001b[' + ansiColors.colors.red[0] + 'm' +
-      '✖' +
-      '\u001b[' + ansiColors.colors.red[1] + 'm ' +
-      (preparedOutput[0] || '')
-  } else if (method === 'info') {
-    preparedOutput[0] =
-      '\u001b[' + ansiColors.colors.blue[0] + 'm' +
-      'ℹ' +
-      '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
-      (preparedOutput[0] || '')
-  } else if (method === 'debug') {
-    preparedOutput[0] =
-      '\u001b[' + ansiColors.colors.gray[0] + 'm' +
-      '🐛' +
-      '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
-      (preparedOutput[0] || '')
-  }
-
-  args.forEach(function (arg) {
-    if (typeof arg === 'string') {
-      if (instance.opts.markdown) {
-        preparedOutput.push(parseMarkdown(arg).text)
-      } else {
-        preparedOutput.push(arg)
-      }
-    } else {
-      preparedOutput.push(arg)
-    }
-  })
-
-  return preparedOutput
-}
-
-function isDisabled (instance) {
-  var isDisabled_ = false
-  filterRegExps.forEach(function (filter) {
-    if (
-      filter.type === 'enable' &&
-      filter.regExp.test(instance.opts.prefix)
-    ) {
-      isDisabled_ = false
-    } else if (
-      filter.type === 'disable' &&
-      filter.regExp.test(instance.opts.prefix)
-    ) {
-      isDisabled_ = true
-    }
-  })
-
-  return isDisabled_
-}
-
-function prepareRegExpForPrefixSearch (str) {
-  return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
-}
-
-function isPrefixAlreadyInUse (prefix, instances) {
-  var isPrefixAlreadyInUse_ = false
-
-  instances.forEach(function (instance) {
-    if (instance.opts.prefix === prefix) {
-      isPrefixAlreadyInUse_ = true
-    }
-  })
-  return isPrefixAlreadyInUse_
-}
-
-function getInstanceByPrefix (prefix, instances) {
-  var instance
-
-  instances.forEach(function (instanceCur) {
-    if (instanceCur.opts.prefix === prefix) {
-      instance = instanceCur
-    }
-  })
-
-  return instance
-}
-
-function sanitizeStringToBrowser (str) {
-  if (typeof str === 'string') {
-    return str.replace(/%c/g, '')
-  } else {
-    return str
-  }
-}
+},{}],11:[function(require,module,exports){
+(function (process){
+var isBrowser = require('./is-browser')
+var isNode = require('./is-node')
 
 /**
  * Currently only WebKit-based Web Inspectors, Firefox >= v31,
@@ -679,7 +755,7 @@ function sanitizeStringToBrowser (str) {
  *
  * Code took from https://github.com/visionmedia/debug/blob/master/browser.js
  */
-function isColorSupported () {
+module.exports = function isColorSupported () {
   if (isBrowser()) {
     // Is webkit? http://stackoverflow.com/a/16459606/376773
     var isWebkit = ('WebkitAppearance' in document.documentElement.style)
@@ -724,36 +800,19 @@ function isColorSupported () {
   }
 }
 
-function isNode () {
+}).call(this,require('_process'))
+},{"./is-browser":10,"./is-node":12,"_process":1}],12:[function(require,module,exports){
+module.exports = function isNode () {
   return (
     typeof module !== 'undefined' &&
     typeof module.exports !== 'undefined'
   )
 }
 
-function isBrowser () {
-  return (typeof window !== 'undefined')
+},{}],13:[function(require,module,exports){
+module.exports = function toArray (arg) {
+  return Array.prototype.slice.call(arg, 0)
 }
 
-var getNextPrefixColor = (function () {
-  var lastUsed = 0
-  var nodePrefixColors = [
-    [31, 39], // red
-    [32, 39], // green
-    [33, 39], // yellow
-    [34, 39], // blue
-    [35, 39], // magenta
-    [36, 39] // cyan
-  ]
-
-  return function () {
-    lastUsed += 1
-    return nodePrefixColors[lastUsed % nodePrefixColors.length]
-  }
-})()
-
-module.exports = Logdown
-
-}).call(this,require('_process'))
-},{"_process":1}]},{},[2])(2)
+},{}]},{},[4])(4)
 });

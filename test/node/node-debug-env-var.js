@@ -1,8 +1,8 @@
-/* global describe, it, beforeEach, afterEach, xit */
+/* global describe, it, beforeEach, afterEach */
 
 var chai = require('chai')
 var sinon = require('sinon')
-var logdown = require('../../src/logdown')
+var logdown = require('../../src/index')
 
 sinon.assert.expose(chai.assert, {prefix: ''})
 var assert = chai.assert
@@ -57,7 +57,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       sandbox.restore()
     })
 
-    xit('`' + envVar + '=*foo` should enable only instances with names ending with “foo”', function () {
+    it('`' + envVar + '=*foo` should enable only instances with names ending with “foo”', function () {
       try {
         process.env[envVar] = '*foo'
 
@@ -82,7 +82,7 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
       sandbox.restore()
     })
 
-    xit('`' + envVar + '=foo*` should enable only instances with names beginning with “foo”', function () {
+    it('`' + envVar + '=foo*` should enable only instances with names beginning with “foo”', function () {
       try {
         process.env[envVar] = 'foo*'
 

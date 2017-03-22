@@ -1,8 +1,8 @@
-/* global describe, it, beforeEach */
+/* global describe, it, beforeEach, afterEach */
 
 var chai = require('chai')
 var sinon = require('sinon')
-var logdown = require('../../src/logdown')
+var logdown = require('../../src/index')
 
 sinon.assert.expose(chai.assert, {prefix: ''})
 var assert = chai.assert
@@ -26,6 +26,10 @@ describe('logdown.disable', function () {
     logdown.enable('*')
   })
 
+  afterEach(function () {
+    sandbox.restore()
+  })
+
   it('`(\'*\')` should disable all instances', function () {
     logdown.enable('*')
     logdown.disable('*')
@@ -39,30 +43,29 @@ describe('logdown.disable', function () {
     sandbox.restore()
   })
 
-  it('`(\'foo\')` should disable only instances with “foo” prefix',
-     function () {
-       try {
-         var foo = logdown('foo')
-         var bar = logdown('bar')
-         var quz = logdown('quz')
-         var baz = logdown('baz')
+  it('`(\'foo\')` should disable only instances with “foo” prefix', function () {
+    try {
+      var foo = logdown('foo')
+      var bar = logdown('bar')
+      var quz = logdown('quz')
+      var baz = logdown('baz')
 
-         logdown.enable('*')
-         logdown.disable('foo')
+      logdown.enable('*')
+      logdown.disable('foo')
 
-         foo.log('lorem')
-         assert.notCalled(console.log)
-         bar.log('lorem')
-         quz.log('lorem')
-         baz.log('lorem')
-         assert.calledThrice(console.log)
-       } catch (error) {
-         sandbox.restore()
-         throw error
-       }
+      foo.log('lorem')
+      assert.notCalled(console.log)
+      bar.log('lorem')
+      quz.log('lorem')
+      baz.log('lorem')
+      assert.calledThrice(console.log)
+    } catch (error) {
+      sandbox.restore()
+      throw error
+    }
 
-       sandbox.restore()
-     })
+    sandbox.restore()
+  })
 
   it('`(\'*foo\')` should disable only instances with names ending' +
      'with “foo”', function () {

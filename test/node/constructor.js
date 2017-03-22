@@ -2,7 +2,7 @@
 
 var chai = require('chai')
 var sinon = require('sinon')
-var logdown = require('../../src/logdown')
+var logdown = require('../../src/index')
 
 sinon.assert.expose(chai.assert, {prefix: ''})
 var assert = chai.assert
@@ -23,14 +23,6 @@ describe('logdown()', function () {
     assert.notEqual(foo.opts.prefixColor, bar.opts.prefixColor)
     assert.notEqual(foo.opts.prefixColor, quz.opts.prefixColor)
     assert.notEqual(foo.opts.prefixColor, baz.opts.prefixColor)
-  })
-
-  it('should sanitize prefixes name', function () {
-    var log1 = logdown('%cfoo%c')
-    assert.equal(log1.opts.prefix, 'foo')
-
-    var log2 = logdown('%cba%cr')
-    assert.equal(log2.opts.prefix, 'bar')
   })
 
   // For compatibiltiy with debug

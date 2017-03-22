@@ -9,17 +9,14 @@
     "dist/"
   ],
   "types": "dist/logdown.d.ts",
-  "directories": {
-    "example": "example"
-  },
   "scripts": {
-    "test": "npm run build && npm run test:server && npm run test:client && npm run test:lint",
-    "test:server": "mocha test/server/**/*.js",
-    "test:client": "npm run build && karma start test/karma.conf.js --single-run",
+    "test": "npm run build && npm run test:node && npm run test:browser && npm run test:lint",
+    "test:node": "mocha test/node/**/*.js",
+    "test:browser": "npm run build && karma start test/karma.conf.js --single-run",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",
     "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
     "test:travisci": "karma start test/karma-travisci.conf.js --single-run",
-    "build": "browserify src/logdown.js --standalone logdown > dist/logdown.js && cp dist/logdown.js example/lib/logdown.js",
+    "build": "browserify src/index.js --standalone logdown > dist/logdown.js && cp dist/logdown.js example/lib/logdown.js",
     "preversion": "npm run test",
     "version": "npm run build && git add ."
   },
