@@ -80,18 +80,18 @@ SystemJS.config({
 
 ```js
 System.import('logdown').then(function(Logdown) {
-  const logger = logdown('foo')
+  const logger = Logdown('foo')
 });
 ```
 
 ### TypeScript
 
 ```ts
-import Logdown = require('logdown');
+import Logdown = require('logdown')
 ```
 
 ```ts
-const logger: Logdown = new Logdown('foo');
+const logger: Logdown = new Logdown('foo')
 ```
 
 ## Usage
