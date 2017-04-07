@@ -1,340 +1,241 @@
-/* global describe, it, beforeEach, afterEach */
+/* eslint-env jest */
 
-var chai = require('chai')
-var sinon = require('sinon')
-var logdown = require('../../src/index')
-var ansiColors = require('../../src/util/ansi-colors')
+const logdown = require('../../src/index')
+const ansiColors = require('../../src/util/ansi-colors')
 
-sinon.assert.expose(chai.assert, {prefix: ''})
-var assert = chai.assert
+//
+// Helpers
+//
 
-var methods = ['debug', 'log', 'info', 'warn', 'error']
-methods.forEach(function (method) {
-  describe('logdown::' + method, function () {
-    var sandbox
-    var symbol = ''
+const getSymbol = (method) => {
+  switch (method) {
+    case 'debug':
+      return `\u001b[${ansiColors.colors.gray[0]}m🐞 \u001b[${ansiColors.colors.gray[1]}m `
+    case 'info':
+      return `\u001b[${ansiColors.colors.blue[0]}mℹ️ \u001b[${ansiColors.colors.blue[1]}m `
+    case 'warn':
+      return `\u001b[${ansiColors.colors.yellow[0]}m⚠️ \u001b[${ansiColors.colors.yellow[1]}m `
+    case 'error':
+      return `\u001b[${ansiColors.colors.red[0]}m❌ \u001b[${ansiColors.colors.red[1]}m `
+    default:
+      return ''
+  }
+}
 
-    if (method === 'debug') {
-      symbol =
-        '\u001b[' + ansiColors.colors.gray[0] + 'm' +
-        '🐞 ' +
-        '\u001b[' + ansiColors.colors.gray[1] + 'm '
-    } else if (method === 'info') {
-      symbol =
-        '\u001b[' + ansiColors.colors.blue[0] + 'm' +
-        'ℹ️ ' +
-        '\u001b[' + ansiColors.colors.blue[1] + 'm '
-    } else if (method === 'warn') {
-      symbol =
-        '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
-        '⚠️ ' +
-        '\u001b[' + ansiColors.colors.yellow[1] + 'm '
-    } else if (method === 'error') {
-      symbol =
-        '\u001b[' + ansiColors.colors.red[0] + 'm' +
-        '❌ ' +
-        '\u001b[' + ansiColors.colors.red[1] + 'm '
-    }
+//
+// Tests
+//
 
-    beforeEach(function () {
-      global.console[method] = global.console[method] || global.console.log
-      sandbox = sinon.sandbox.create()
-      sandbox.stub(global.console, method)
+;['debug', 'log', 'info', 'warn', 'error'].forEach(method => {
+  describe(`logdown.${method}`, () => {
+    const symbol = getSymbol(method)
 
+    beforeEach(() => {
+      console[method] = console[method] || console.log
+      console[method] = jest.fn()
+
+      logdown._instances = []
       logdown.enable('*')
       process.env.NODE_DEBUG = ''
     })
 
-    afterEach(function () {
-      sandbox.restore()
+    afterEach(() => {
+      console[method].mockClear()
     })
 
-    it('should output multiple arguments', function () {
-      try {
-        var foo = logdown({markdown: true})
+    it('should output multiple arguments', () => {
+      const foo = logdown({markdown: true})
 
-        foo[method]('one', 'two', 'three')
+      foo[method]('one', 'two', 'three')
 
-        var args = [
-          symbol,
-          'one',
-          'two',
-          'three'
-        ]
+      const args = [
+        symbol,
+        'one',
+        'two',
+        'three'
+      ]
 
-        if (method === 'log') {
-          assert.calledWith(
-            console[method],
-            args[1],
-            args[2],
-            args[3]
-          )
-        } else {
-          assert.calledWith(
-            console[method],
-            args[0],
-            args[1],
-            args[2],
-            args[3]
-          )
-        }
-      } catch (error) {
-        sandbox.restore()
-        throw error
+      if (method === 'log') {
+        expect(console[method]).toHaveBeenCalledWith(
+          args[1],
+          args[2],
+          args[3]
+        )
+      } else {
+        // throw new Error('aksj')
+        expect(console[method]).toHaveBeenCalledWith(
+          args[0],
+          args[1],
+          args[2],
+          args[3]
+        )
       }
-
-      sandbox.restore()
     })
 
-    it('should parse markdown in multiple arguments', function () {
-      try {
-        var foo = logdown({markdown: true})
+    it('should parse markdown in multiple arguments', () => {
+      const foo = logdown({markdown: true})
 
-        var args = [
-          symbol,
-          'one',
-          '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-          'two' +
-          '\u001b[' + ansiColors.modifiers.bold[1] + 'm',
-          'three'
-        ]
+      const args = [
+        symbol,
+        'one',
+        `\u001b[${ansiColors.modifiers.bold[0]}mtwo\u001b[${ansiColors.modifiers.bold[1]}m`,
+        'three'
+      ]
 
-        foo[method]('one', '*two*', 'three')
+      foo[method]('one', '*two*', 'three')
 
-        if (method === 'log') {
-          assert.calledWith(
-            console[method],
-            args[1]
-          )
-        } else {
-          assert.calledWith(
-            console[method],
-            args[0],
-            args[1]
-          )
-        }
-      } catch (error) {
-        sandbox.restore()
-        throw error
+      if (method === 'log') {
+        expect(console[method]).toHaveBeenCalledWith(
+          args[1],
+          args[2],
+          args[3]
+        )
+      } else {
+        expect(console[method]).toHaveBeenCalledWith(
+          args[0],
+          args[1],
+          args[2],
+          args[3]
+        )
       }
-
-      sandbox.restore()
     })
 
-    it('should parse markdown if enabled', function () {
-      try {
-        logdown._instances = []
-        const foo = logdown({ markdown: true })
+    it('should parse markdown if enabled', () => {
+      const foo = logdown({ markdown: true })
 
-        const args1 = [
-          symbol,
-          'lorem ' +
-          '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-          'ipsum' +
-          '\u001b[' + ansiColors.modifiers.bold[1] + 'm'
-        ]
+      const args1 = [
+        symbol,
+        `lorem \u001b[${ansiColors.modifiers.bold[0]}mipsum\u001b[${ansiColors.modifiers.bold[1]}m`
+      ]
 
-        foo[method]('lorem *ipsum*')
+      foo[method]('lorem *ipsum*')
 
-        if (method === 'log') {
-          assert.calledWith(
-            console[method],
-            args1[1]
-          )
-        } else {
-          assert.calledWith(
-            console[method],
-            args1[0],
-            args1[1]
-          )
-        }
-
-        const args2 = [
-          symbol,
-          'lorem ' +
-          '\u001b[' + ansiColors.modifiers.italic[0] + 'm' +
-          'ipsum' +
-          '\u001b[' + ansiColors.modifiers.italic[1] + 'm'
-        ]
-
-        foo[method]('lorem _ipsum_')
-
-        if (method === 'log') {
-          assert.calledWith(
-            console[method],
-            args2[1]
-          )
-        } else {
-          assert.calledWith(
-            console[method],
-            args2[0],
-            args2[1]
-          )
-        }
-
-        const args3 = [
-          symbol,
-          'lorem ' +
-          '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
-          'ipsum' +
-          '\u001b[' + ansiColors.colors.yellow[1] + 'm'
-        ]
-
-        foo[method]('lorem `ipsum`')
-
-        if (method === 'log') {
-          assert.calledWith(
-            console[method],
-            args3[1]
-          )
-        } else {
-          assert.calledWith(
-            console[method],
-            args3[0],
-            args3[1]
-          )
-        }
-      } catch (error) {
-        sandbox.restore()
-        throw error
+      if (method === 'log') {
+        expect(console[method]).toHaveBeenCalledWith(
+          args1[1]
+        )
+      } else {
+        expect(console[method]).toHaveBeenCalledWith(
+          args1[0],
+          args1[1]
+        )
       }
 
-      sandbox.restore()
+      const args2 = [
+        symbol,
+        `lorem \u001b[${ansiColors.modifiers.italic[0]}mipsum\u001b[${ansiColors.modifiers.italic[1]}m`
+      ]
+
+      foo[method]('lorem _ipsum_')
+
+      if (method === 'log') {
+        expect(console[method]).toHaveBeenCalledWith(
+          args2[1]
+        )
+      } else {
+        expect(console[method]).toHaveBeenCalledWith(
+          args2[0],
+          args2[1]
+        )
+      }
+
+      const args3 = [
+        symbol,
+        `lorem \u001b[${ansiColors.colors.yellow[0]}mipsum\u001b[${ansiColors.colors.yellow[1]}m`
+      ]
+
+      foo[method]('lorem `ipsum`')
+
+      if (method === 'log') {
+        expect(console[method]).toHaveBeenCalledWith(
+          args3[1]
+        )
+      } else {
+        expect(console[method]).toHaveBeenCalledWith(
+          args3[0],
+          args3[1]
+        )
+      }
     })
 
-    it('should not parse markdown if disabled', function () {
-      try {
-        logdown._instances = []
-        const foo = logdown({ markdown: false })
+    it('should not parse markdown if disabled', () => {
+      const foo = logdown({ markdown: false })
 
-        const args1 = [
-          symbol,
-          'lorem *ipsum*'
-        ]
+      const args1 = [
+        symbol,
+        'lorem *ipsum*'
+      ]
 
-        foo[method]('lorem *ipsum*')
+      foo[method]('lorem *ipsum*')
 
-        if (method === 'log') {
-          assert.calledWith(
-            console[method],
-            args1[1]
-          )
-        } else {
-          assert.calledWith(
-            console[method],
-            args1[0],
-            args1[1]
-          )
-        }
-
-        //
-
-        const args2 = [
-          symbol,
-          'lorem _ipsum_ dolor'
-        ]
-
-        foo[method]('lorem _ipsum_ dolor')
-
-        if (method === 'log') {
-          assert.calledWith(
-            console[method],
-            args2[1]
-          )
-        } else {
-          assert.calledWith(
-            console[method],
-            args2[0],
-            args2[1]
-          )
-        }
-      } catch (error) {
-        sandbox.restore()
-        throw error
+      if (method === 'log') {
+        expect(console[method]).toHaveBeenCalledWith(
+          args1[1]
+        )
+      } else {
+        expect(console[method]).toHaveBeenCalledWith(
+          args1[0],
+          args1[1]
+        )
       }
 
-      sandbox.restore()
+      //
+
+      const args2 = [
+        symbol,
+        'lorem _ipsum_ dolor'
+      ]
+
+      foo[method]('lorem _ipsum_ dolor')
+
+      if (method === 'log') {
+        expect(console[method]).toHaveBeenCalledWith(
+          args2[1]
+        )
+      } else {
+        expect(console[method]).toHaveBeenCalledWith(
+          args2[0],
+          args2[1]
+        )
+      }
     })
 
-    it('can add whitespace to align logger output', function () {
-      try {
-        var abc = logdown('abc')
-        var text = logdown('text', { alignOutput: 'yes' })
-        var demo = logdown('demo', { alignOutput: true })
-        var longDemo = logdown('longDemo', { alignOutput: true })
-        var demoFalse = logdown('demoFalse', { alignOutput: false })
-        var longerDemo = logdown('longerDemo', { alignOutput: true })
+    it('can add whitespace to align logger output', () => {
+      const abc = logdown('abc')
+      const text = logdown('text', { alignOutput: 'yes' })
+      const demo = logdown('demo', { alignOutput: true })
+      const longDemo = logdown('longDemo', { alignOutput: true })
+      const demoFalse = logdown('demoFalse', { alignOutput: false })
+      const longerDemo = logdown('longerDemo', { alignOutput: true })
 
-        assert.equal(
-          abc.opts.prefix.length,
-          3,
-          'Skipping \'alignOutput\' will not add whitespace characters'
-        )
-        assert.equal(abc.opts.alignOutput, false)
+      expect(abc.opts.prefix.length).toBe(3)
+      expect(abc.opts.alignOutput).toBe(false)
 
-        assert.equal(
-          text.opts.prefix.length,
-          10,
-          'Inputs will be converted into Boolean values'
-        )
-        assert.equal(text.opts.alignOutput, true)
+      expect(text.opts.prefix.length).toBe(10)
+      expect(text.opts.alignOutput).toBe(true)
 
-        assert.equal(
-          demo.opts.prefix.length,
-          10,
-          'Padding will be added to make short names as long as the longest'
-        )
-        assert.equal(demo.opts.alignOutput, true)
+      expect(demo.opts.prefix.length).toBe(10)
+      expect(demo.opts.alignOutput).toBe(true)
 
-        assert.equal(
-          longDemo.opts.prefix.length,
-          10,
-          'Padding will be added to make long names as long as the longest'
-        )
-        assert.equal(longDemo.opts.alignOutput, true)
+      expect(longDemo.opts.prefix.length).toBe(10)
+      expect(longDemo.opts.alignOutput).toBe(true)
 
-        assert.equal(
-          demoFalse.opts.prefix.length,
-          9,
-          'Padding will be skipped if set to \'false\''
-        )
-        assert.equal(demoFalse.opts.alignOutput, false)
+      expect(demoFalse.opts.prefix.length).toBe(9)
+      expect(demoFalse.opts.alignOutput).toBe(false)
 
-        assert.equal(
-          longerDemo.opts.prefix.length,
-          10,
-          'The longest name will set the width for every other logger name'
-        )
-        assert.equal(longerDemo.opts.alignOutput, true)
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
-      sandbox.restore()
+      expect(longerDemo.opts.prefix.length).toBe(10)
+      expect(longerDemo.opts.alignOutput).toBe(true)
     })
 
     // https://github.com/caiogondim/logdown/issues/14
-    it('should print not-string arguments as is', function () {
-      try {
-        var foo = logdown('foo')
-        var obj = {bar: 2, foo: 1}
-        foo[method](obj)
-        assert.calledWith(
-          console[method],
-          symbol +
-          '\u001b[' + foo.opts.prefixColor[0] + 'm' +
-          '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-          foo.opts.prefix +
-          '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-          '\u001b[' + foo.opts.prefixColor[1] + 'm',
-          obj
-        )
-      } catch (error) {
-        sandbox.restore()
-        throw error
-      }
-
-      sandbox.restore()
+    it('should print not-string arguments as is', () => {
+      const foo = logdown('foo')
+      const obj = {bar: 2, foo: 1}
+      foo[method](obj)
+      expect(console[method]).toHaveBeenCalledWith(
+        `${symbol}\u001b[${foo.opts.prefixColor[0]}m\u001b[${ansiColors.modifiers.bold[0]}m${foo.opts.prefix}\u001b[${ansiColors.modifiers.bold[1]}m\u001b[${foo.opts.prefixColor[1]}m`,
+        obj
+      )
     })
   })
 })

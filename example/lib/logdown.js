@@ -350,18 +350,20 @@ module.exports = Logdown
 var Logdown = require('./base')
 var markdown = require('./markdown')
 var isColorSupported = require('./util/is-color-supported')
+var localStorage = require('./util/local-storage')
 
 //
 // Static
 //
+  // console.warn(localStorage.setItem('debug', 'asd'))
 
 Logdown._updateEnabledDisabled = function () {
   if (
-    window.localStorage &&
-    typeof window.localStorage.getItem('debug') === 'string'
+    localStorage &&
+    typeof localStorage.getItem('debug') === 'string'
   ) {
     Logdown.disable('*')
-    window.localStorage
+    localStorage
       .getItem('debug')
       .split(',')
       .forEach(function (regExp) {
@@ -438,7 +440,7 @@ Logdown.prototype._prepareOutput = function (args, instance) {
 
 module.exports = Logdown
 
-},{"./base":2,"./markdown":5,"./util/is-color-supported":11}],4:[function(require,module,exports){
+},{"./base":2,"./markdown":5,"./util/is-color-supported":10,"./util/local-storage":12}],4:[function(require,module,exports){
 var isBrowser = require('./util/is-browser')
 
 if (isBrowser()) {
@@ -447,7 +449,7 @@ if (isBrowser()) {
   module.exports = require('./node')
 }
 
-},{"./browser":3,"./node":8,"./util/is-browser":10}],5:[function(require,module,exports){
+},{"./browser":3,"./node":3,"./util/is-browser":9}],5:[function(require,module,exports){
 var isBrowser = require('../util/is-browser')
 
 var rules
@@ -511,7 +513,7 @@ module.exports = {
   parse: parse
 }
 
-},{"../util/is-browser":10,"./rules/browser":6,"./rules/node":7}],6:[function(require,module,exports){
+},{"../util/is-browser":9,"./rules/browser":6,"./rules/node":7}],6:[function(require,module,exports){
 module.exports = [
   {
     regexp: /\*([^*]+)\*/,
@@ -576,130 +578,7 @@ module.exports = [
   }
 ]
 
-},{"../../util/ansi-colors":9}],8:[function(require,module,exports){
-(function (process){
-var Logdown = require('./base')
-var markdown = require('./markdown')
-var ansiColors = require('./util/ansi-colors')
-var isColorSupported = require('./util/is-color-supported')
-
-//
-// Static
-//
-
-Logdown._updateEnabledDisabled = function () {
-  // Parsing `NODE_DEBUG` and `DEBUG` env var.
-  var envVar = null
-  if (
-    typeof process !== 'undefined' &&
-    process.env !== undefined
-  ) {
-    // `NODE_DEBUG` has precedence over `DEBUG`
-    if (
-      process.env.NODE_DEBUG !== undefined &&
-      process.env.NODE_DEBUG !== ''
-    ) {
-      envVar = 'NODE_DEBUG'
-    } else if (
-      process.env.DEBUG !== undefined &&
-      process.env.DEBUG !== ''
-    ) {
-      envVar = 'DEBUG'
-    }
-
-    if (envVar) {
-      Logdown.disable('*')
-      process.env[envVar]
-        .split(',')
-        .forEach(function (regExp) {
-          Logdown.enable(regExp)
-        })
-    }
-  }
-}
-
-Logdown._getNextPrefixColor = (function () {
-  var lastUsed = 0
-  var nodePrefixColors = [
-    [31, 39], // red
-    [32, 39], // green
-    [33, 39], // yellow
-    [34, 39], // blue
-    [35, 39], // magenta
-    [36, 39] // cyan
-  ]
-
-  return function () {
-    lastUsed += 1
-    return nodePrefixColors[lastUsed % nodePrefixColors.length]
-  }
-})()
-
-//
-// Instance
-//
-
-Logdown.prototype._prepareOutput = function (args, method) {
-  var preparedOutput = []
-
-  if (this.opts.prefix) {
-    if (isColorSupported()) {
-      preparedOutput[0] =
-        '\u001b[' + this.opts.prefixColor[0] + 'm' +
-        '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-        this.opts.prefix +
-        '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-        '\u001b[' + this.opts.prefixColor[1] + 'm'
-    } else {
-      preparedOutput[0] = '[' + this.opts.prefix + ']'
-    }
-  }
-
-  if (method === 'warn') {
-    preparedOutput[0] =
-      '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
-      '⚠️ ' +
-      '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
-      (preparedOutput[0] || '')
-  } else if (method === 'error') {
-    preparedOutput[0] =
-      '\u001b[' + ansiColors.colors.red[0] + 'm' +
-      '❌ ' +
-      '\u001b[' + ansiColors.colors.red[1] + 'm ' +
-      (preparedOutput[0] || '')
-  } else if (method === 'info') {
-    preparedOutput[0] =
-      '\u001b[' + ansiColors.colors.blue[0] + 'm' +
-      'ℹ️' + ' ' + // When the `i` symbol has a trailling space, it don't render the emoji.
-      '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
-      (preparedOutput[0] || '')
-  } else if (method === 'debug') {
-    preparedOutput[0] =
-      '\u001b[' + ansiColors.colors.gray[0] + 'm' +
-      '🐞 ' +
-      '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
-      (preparedOutput[0] || '')
-  }
-
-  args.forEach(function (arg) {
-    if (typeof arg === 'string') {
-      if (this.opts.markdown) {
-        preparedOutput.push(markdown.parse(arg).text)
-      } else {
-        preparedOutput.push(arg)
-      }
-    } else {
-      preparedOutput.push(arg)
-    }
-  }, this)
-
-  return preparedOutput
-}
-
-module.exports = Logdown
-
-}).call(this,require('_process'))
-},{"./base":2,"./markdown":5,"./util/ansi-colors":9,"./util/is-color-supported":11,"_process":1}],9:[function(require,module,exports){
+},{"../../util/ansi-colors":8}],8:[function(require,module,exports){
 // Taken from ansi-styles npm module
 // https://github.com/sindresorhus/ansi-styles/blob/master/index.js
 var ansiColors = {
@@ -738,12 +617,12 @@ var ansiColors = {
 
 module.exports = ansiColors
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = function isBrowser () {
   return (typeof window !== 'undefined')
 }
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (process){
 var isBrowser = require('./is-browser')
 var isNode = require('./is-node')
@@ -801,13 +680,16 @@ module.exports = function isColorSupported () {
 }
 
 }).call(this,require('_process'))
-},{"./is-browser":10,"./is-node":12,"_process":1}],12:[function(require,module,exports){
+},{"./is-browser":9,"./is-node":11,"_process":1}],11:[function(require,module,exports){
 module.exports = function isNode () {
   return (
     typeof module !== 'undefined' &&
     typeof module.exports !== 'undefined'
   )
 }
+
+},{}],12:[function(require,module,exports){
+module.exports = (window && window.localStorage)
 
 },{}],13:[function(require,module,exports){
 module.exports = function toArray (arg) {

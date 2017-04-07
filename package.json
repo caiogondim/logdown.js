@@ -2,7 +2,8 @@
   "name": "logdown",
   "version": "2.2.0",
   "description": "Debug utility with markdown support that runs on browser and server",
-  "main": "dist/logdown.js",
+  "main": "src/node.js",
+  "browser": "src/browser.js",
   "files": [
     "src/",
     "test/",
@@ -10,14 +11,11 @@
   ],
   "types": "dist/logdown.d.ts",
   "scripts": {
-    "test": "npm run build && npm run test:node && npm run test:browser && npm run test:lint",
-    "test:node": "mocha test/node/**/*.js",
-    "test:browser": "npm run build && karma start test/karma.conf.js --single-run",
-    "test:lint": "standard './src/**/*.js' './test/**/*.js'",
-    "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
-    "test:travisci": "karma start test/karma-travisci.conf.js --single-run",
     "build": "browserify src/index.js --standalone logdown > dist/logdown.js && cp dist/logdown.js example/lib/logdown.js",
     "preversion": "npm run test",
+    "test": "jest && npm run test:lint",
+    "test:lint": "standard './src/**/*.js' './test/**/*.js'",
+    "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
     "version": "npm run build && git add ."
   },
   "repository": {
@@ -41,17 +39,15 @@
   "homepage": "https://github.com/caiogondim/logdown",
   "devDependencies": {
     "browserify": "^14.1.0",
-    "chai": "^3.5.0",
-    "karma": "^1.5.0",
-    "karma-chai": "^0.1.0",
-    "karma-chrome-launcher": "^2.0.0",
-    "karma-cli": "^1.0.1",
-    "karma-firefox-launcher": "^1.0.1",
-    "karma-mocha": "^1.3.0",
-    "karma-sinon": "^1.0.5",
-    "mocha": "^3.2.0",
-    "sinon": "^1.17.5",
+    "jest": "^19.0.2",
     "standard": "^9.0.1"
+  },
+  "jest": {
+    "roots": [
+      "test/"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": ["src/**"]
   },
   "dependencies": {}
 }

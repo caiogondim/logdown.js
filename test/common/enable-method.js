@@ -1,29 +1,45 @@
 /* eslint-env jest */
 
-jest.mock('../../src/util/local-storage', () => require('../mocks/local-storage'))
+const logdown = require('../../src/index')
 
-const logdown = require('../../src/browser')
-const localStorage = require('../mocks/local-storage')
+function createInstances () {
+  return [
+    logdown('foo'),
+    logdown('bar'),
+    logdown('quz'),
+    logdown('baz')
+  ]
+}
 
-describe('localStorage.debug', () => {
+describe('logdown.enable', () => {
   beforeEach(() => {
     console.log = jest.fn()
     logdown.enable('*')
-    logdown._instances = []
   })
 
   afterEach(() => {
-    localStorage.removeItem('debug')
     console.log.mockClear()
   })
 
-  it('`localStorage.debug=foo` should enable only instances with “foo” prefix', () => {
-    localStorage.debug = 'foo'
+  it('`(\'*\')` should enable all instances', () => {
+    logdown.disable('*')
+    logdown.enable('*')
+    const instances = createInstances()
+    instances.forEach(instance => {
+      instance.log('Lorem')
+    })
 
+    expect(console.log).toHaveBeenCalled()
+  })
+
+  it('`(\'foo\')` should enable only instances with “foo” prefix', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const quz = logdown('quz')
     const baz = logdown('baz')
+
+    logdown.disable('*')
+    logdown.enable('foo')
 
     bar.log('lorem')
     expect(console.log).not.toHaveBeenCalled()
@@ -35,13 +51,14 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalled()
   })
 
-  it('`localStorage.debug=*foo` should enable only instances with names ending with “foo”', () => {
-    localStorage.debug = '*foo'
-
+  it('`(\'*foo\')` should enable only instances with names ending with “foo”', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
     const barfoo = logdown('barfoo')
+
+    logdown.disable('*')
+    logdown.enable('*foo')
 
     bar.log('lorem')
     foobar.log('lorem')
@@ -51,13 +68,14 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('`localStorage.debug=foo*` should enable only instances with names beginning with “foo”', () => {
-    localStorage.debug = 'foo*'
-
+  it('`(\'foo*\')` should enable only instances with names beginning with “foo”', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
     const barfoo = logdown('barfoo')
+
+    logdown.disable('*')
+    logdown.enable('foo*')
 
     bar.log('lorem')
     barfoo.log('lorem')
@@ -67,13 +85,13 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('`localStorage.debug=-*` should disable all instances', () => {
-    localStorage.debug = '-*'
-
+  it('`(\'-*\')` should disable all instances', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
     const barfoo = logdown('barfoo')
+
+    logdown.enable('-*')
 
     foobar.log('lorem')
     foo.log('lorem')
@@ -82,29 +100,29 @@ describe('localStorage.debug', () => {
     expect(console.log).not.toHaveBeenCalled()
   })
 
-  it('`localStorage.debug=*,-foo` should enable all but only instances with “foo” prefix', () => {
-    localStorage.debug = '*,-foo'
-
+  it('`(\'*\', \'-foo\')` should enable all but only instances with “foo” prefix', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const quz = logdown('quz')
     const baz = logdown('baz')
+
+    logdown.enable('*', '-foo')
 
     foo.log('lorem')
     expect(console.log).not.toHaveBeenCalled()
     bar.log('lorem')
     quz.log('lorem')
     baz.log('lorem')
-    expect(console.log).toHaveBeenCalledTimes(3)
+    expect(console.log).toHaveBeenCalled()
   })
 
-  it('`localStorage.debug=*,-*foo` should enable all but instances with names ending with “foo”', () => {
-    localStorage.debug = '*,-*foo'
-
+  it('`(\'*\', \'-*foo\')` should enable all but instances with names ending with “foo”', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
     const barfoo = logdown('barfoo')
+
+    logdown.enable('*', '-*foo')
 
     foo.log('lorem')
     barfoo.log('lorem')
@@ -114,13 +132,13 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('`localStorage.debug=*,-foo*` should enable all but instances with names beginning with “foo”', () => {
-    localStorage.debug = '*,-foo*'
-
+  it('`(\'*\', \'-foo*\')` should enable all but instances with names beginning with “foo”', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
     const barfoo = logdown('barfoo')
+
+    logdown.enable('*', '-foo*')
 
     foobar.log('lorem')
     foo.log('lorem')
@@ -130,14 +148,14 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('`localStorage.debug` should accept N arguments', () => {
-    logdown.enable('*')
-    localStorage.debug = 'foo,barfoo'
-
+  it('should accept N arguments', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
     const barfoo = logdown('barfoo')
+
+    logdown.disable('*')
+    logdown.enable('foo', 'barfoo')
 
     bar.log('lorem')
     foobar.log('lorem')
