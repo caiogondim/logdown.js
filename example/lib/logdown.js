@@ -346,7 +346,7 @@ Logdown.prototype._isDisabled = function () {
 
 module.exports = Logdown
 
-},{"./util/to-array":13}],3:[function(require,module,exports){
+},{"./util/to-array":14}],3:[function(require,module,exports){
 var Logdown = require('./base')
 var markdown = require('./markdown')
 var isColorSupported = require('./util/is-color-supported')
@@ -355,7 +355,6 @@ var localStorage = require('./util/local-storage')
 //
 // Static
 //
-  // console.warn(localStorage.setItem('debug', 'asd'))
 
 Logdown._updateEnabledDisabled = function () {
   if (
@@ -440,16 +439,7 @@ Logdown.prototype._prepareOutput = function (args, instance) {
 
 module.exports = Logdown
 
-},{"./base":2,"./markdown":5,"./util/is-color-supported":10,"./util/local-storage":12}],4:[function(require,module,exports){
-var isBrowser = require('./util/is-browser')
-
-if (isBrowser()) {
-  module.exports = require('./browser')
-} else {
-  module.exports = require('./node')
-}
-
-},{"./browser":3,"./node":3,"./util/is-browser":9}],5:[function(require,module,exports){
+},{"./base":2,"./markdown":4,"./util/is-color-supported":9,"./util/local-storage":13}],4:[function(require,module,exports){
 var isBrowser = require('../util/is-browser')
 
 var rules
@@ -513,7 +503,7 @@ module.exports = {
   parse: parse
 }
 
-},{"../util/is-browser":9,"./rules/browser":6,"./rules/node":7}],6:[function(require,module,exports){
+},{"../util/is-browser":8,"./rules/browser":5,"./rules/node":6}],5:[function(require,module,exports){
 module.exports = [
   {
     regexp: /\*([^*]+)\*/,
@@ -542,7 +532,7 @@ module.exports = [
   }
 ]
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var ansiColors = require('../../util/ansi-colors')
 
 module.exports = [
@@ -578,7 +568,7 @@ module.exports = [
   }
 ]
 
-},{"../../util/ansi-colors":8}],8:[function(require,module,exports){
+},{"../../util/ansi-colors":7}],7:[function(require,module,exports){
 // Taken from ansi-styles npm module
 // https://github.com/sindresorhus/ansi-styles/blob/master/index.js
 var ansiColors = {
@@ -617,15 +607,17 @@ var ansiColors = {
 
 module.exports = ansiColors
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = function isBrowser () {
   return (typeof window !== 'undefined')
 }
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (process){
 var isBrowser = require('./is-browser')
 var isNode = require('./is-node')
+var isWebkit = require('./is-webkit')
+var isFirefox = require('./is-firefox')
 
 /**
  * Currently only WebKit-based Web Inspectors, Firefox >= v31,
@@ -636,22 +628,7 @@ var isNode = require('./is-node')
  */
 module.exports = function isColorSupported () {
   if (isBrowser()) {
-    // Is webkit? http://stackoverflow.com/a/16459606/376773
-    var isWebkit = ('WebkitAppearance' in document.documentElement.style)
-    // Is firebug? http://stackoverflow.com/a/398120/376773
-    var isFirebug = (
-      window.console &&
-      (console.firebug || (console.exception && console.table))
-    )
-    // Is firefox >= v31?
-    // https://developer.mozilla.org/en-US/docs/Tools/
-    //  Web_Console#Styling_messages
-    var isFirefox31Plus = (
-      navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) &&
-      parseInt(RegExp.$1, 10) >= 31
-    )
-
-    return (isWebkit || isFirebug || isFirefox31Plus)
+    return (isWebkit() || isFirefox())
   } else if (isNode()) {
     if (process.stdout && !process.stdout.isTTY) {
       return false
@@ -680,7 +657,12 @@ module.exports = function isColorSupported () {
 }
 
 }).call(this,require('_process'))
-},{"./is-browser":9,"./is-node":11,"_process":1}],11:[function(require,module,exports){
+},{"./is-browser":8,"./is-firefox":10,"./is-node":11,"./is-webkit":12,"_process":1}],10:[function(require,module,exports){
+module.exports = function isFirefox () {
+  return navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)
+}
+
+},{}],11:[function(require,module,exports){
 module.exports = function isNode () {
   return (
     typeof module !== 'undefined' &&
@@ -689,12 +671,18 @@ module.exports = function isNode () {
 }
 
 },{}],12:[function(require,module,exports){
-module.exports = (window && window.localStorage)
+// Is webkit? http://stackoverflow.com/a/16459606/376773
+module.exports = function isWebkit () {
+  return ('WebkitAppearance' in document.documentElement.style)
+}
 
 },{}],13:[function(require,module,exports){
+module.exports = (window && window.localStorage)
+
+},{}],14:[function(require,module,exports){
 module.exports = function toArray (arg) {
   return Array.prototype.slice.call(arg, 0)
 }
 
-},{}]},{},[4])(4)
+},{}]},{},[3])(3)
 });
