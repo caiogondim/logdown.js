@@ -9,7 +9,6 @@
     "test/",
     "dist/"
   ],
-  "types": "dist/logdown.d.ts",
   "scripts": {
     "build": "browserify src/index.js --standalone logdown > dist/logdown.js && cp dist/logdown.js example/lib/logdown.js",
     "preversion": "npm run test",
