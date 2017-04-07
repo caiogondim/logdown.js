@@ -3,13 +3,7 @@ var isNode = require('./is-node')
 var isWebkit = require('./is-webkit')
 var isFirefox = require('./is-firefox')
 
-/**
- * Currently only WebKit-based Web Inspectors, Firefox >= v31,
- * and the Firebug extension (any Firefox version) are known
- * to support "%c" CSS customizations.
- *
- * Code took from https://github.com/visionmedia/debug/blob/master/browser.js
- */
+// Code took from https://github.com/visionmedia/debug/blob/master/browser.js
 module.exports = function isColorSupported () {
   if (isBrowser()) {
     return (isWebkit() || isFirefox())
