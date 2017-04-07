@@ -2,3 +2,5 @@
 node_modules/
 .publish/
 npm-debug.log*
+coverage/
+.DS_Store
