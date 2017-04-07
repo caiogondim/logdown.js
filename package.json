@@ -10,7 +10,7 @@
     "dist/"
   ],
   "scripts": {
-    "build": "browserify src/browser.js --standalone logdown > dist/logdown.js && cp dist/logdown.js example/lib/logdown.js && uglifyjs --compress --mangle -- dist/logdown.js > dist/logdown.min.js && gzip dist/logdown.min.js --stdout --best > dist/logdown.min.js.gzip",
+    "build": "browserify src/browser.js --standalone logdown > dist/logdown.js && cp dist/logdown.js example/lib/logdown.js && uglifyjs --compress --mangle  --screw-ie8 -- dist/logdown.js > dist/logdown.min.js && gzip dist/logdown.min.js --stdout --best > dist/logdown.min.js.gzip",
     "preversion": "npm run test",
     "test": "jest && npm run test:lint",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",
