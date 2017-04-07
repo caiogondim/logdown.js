@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-const logdown = require('../../src/index')
+const logdown = require('../../src/node')
 const ansiColors = require('../../src/util/ansi-colors')
 
 //

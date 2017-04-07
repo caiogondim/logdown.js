@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-const logdown = require('../../src/index')
+const logdown = require('../../src/node')
 
 function createInstances () {
   return [
