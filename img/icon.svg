@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <svg width="980px" height="400px" viewBox="0 0 980 400" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
     <title>Slice 1</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="github-banner" transform="translate(-16.000000, -21.000000)">
-            <polygon id="Polygon" stroke="#2B303A" fill="#EFF1F5" points="506.299363 74 633.598726 147.496321 633.598726 294.488964 506.299363 367.985286 379 294.488964 379 147.496321"></polygon>
-            <path d="M433.05356,183.324494 L525.391122,275.91 L558.312834,275.752809 L558.626374,242.742697 L466.132041,150 L433.05356,183.324494 Z M547.4957,264.749438 L532.445775,264.906629 L547.4957,249.816292 L547.4957,264.749438 Z M541.068128,240.699213 L523.509881,258.461798 L448.573795,183.324494 L466.132041,165.719101 L541.068128,240.699213 Z" id="Shape" fill="#2B303A" fill-rule="nonzero"></path>
-            <polygon id="Rectangle-path" fill="#2B303A" fill-rule="nonzero" points="379 285 558.626374 285 558.626374 295 379 295"></polygon>
+        <g id="github-banner" transform="translate(-16.000000, -21.000000)" fill="#4A4A4A">
+            <path d="M379.88514,295 L558.626374,295 L558.626374,285 L379,285 L379,289.744482 L379,147.496321 L506.299363,74 L633.598726,147.496321 L633.598726,294.488964 L506.299363,367.985286 L379.88514,295 Z M433.05356,183.324494 L525.391122,275.91 L558.312834,275.752809 L558.626374,242.742697 L466.132041,150 L433.05356,183.324494 Z M547.4957,264.749438 L532.445775,264.906629 L547.4957,249.816292 L547.4957,264.749438 Z M541.068128,240.699213 L523.509881,258.461798 L448.573795,183.324494 L466.132041,165.719101 L541.068128,240.699213 Z" id="Combined-Shape"></path>
         </g>
     </g>
 </svg>
