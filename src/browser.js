@@ -1,6 +1,6 @@
 var Logdown = require('./base')
-var markdown = require('./markdown')
-var isColorSupported = require('./util/is-color-supported')
+var markdown = require('./markdown/browser')
+var isColorSupported = require('./util/is-color-supported/browser')
 var localStorage = require('./util/local-storage')
 
 //
