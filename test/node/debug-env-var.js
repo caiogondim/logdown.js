@@ -9,9 +9,6 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
   var envVars = ['NODE_DEBUG', 'DEBUG']
 
   beforeEach(function () {
-    envVars.forEach(function (envVar) {
-      process.env[envVar] = ''
-    })
     console.log = jest.fn()
     logdown.enable('*')
     logdown._instances = []
@@ -19,6 +16,9 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
 
   afterEach(function () {
     console.log.mockClear()
+    envVars.forEach(function (envVar) {
+      process.env[envVar] = ''
+    })
   })
 
   envVars.forEach(function (envVar) {
