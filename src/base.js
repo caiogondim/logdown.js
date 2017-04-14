@@ -131,10 +131,9 @@ methods.forEach(function (method) {
       return
     }
 
-    var preparedOutput
     var args = toArray(arguments)
+    var preparedOutput = this._prepareOutput(args, method)
 
-    preparedOutput = this._prepareOutput(args, method)
     ;(console[method] || console.log).apply(
       console,
       preparedOutput
