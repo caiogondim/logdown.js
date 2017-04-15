@@ -1,3 +1,7 @@
 module.exports = function isFirefox () {
-  return navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)
+  try {
+    return navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)
+  } catch (error) {
+    return false
+  }
 }

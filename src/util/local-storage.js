@@ -1,1 +1,1 @@
-module.exports = (window && window.localStorage)
+module.exports = (typeof window !== 'undefined' && window && window.localStorage)
