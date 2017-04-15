@@ -58,7 +58,7 @@ Logdown.prototype._prepareOutput = function (args, instance) {
         '' // Empty string resets style.
       )
     } else {
-      preparedOutput.push('[' + this.prefix + '] ')
+      preparedOutput.push('[' + this.opts.prefix + '] ')
     }
   } else {
     preparedOutput.push('')
