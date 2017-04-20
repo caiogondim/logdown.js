@@ -239,4 +239,6 @@ Or via [PayPal.me](https://www.paypal.me/caiogondim) https://www.paypal.me/caiog
 
 ---
 
-Made with ❤️ by the 📼 team in 🗽
+[caiogondim.com](https://caiogondim.com) &nbsp;&middot;&nbsp;
+GitHub [@caiogondim](https://github.com/caiogondim) &nbsp;&middot;&nbsp;
+Twitter [@caio_gondim](https://twitter.com/caio_gondim)
