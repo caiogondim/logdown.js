@@ -215,6 +215,17 @@ Logdown.enable('*', '-foo')
 Logdown.disable('*foo*', '-foobar')
 ```
 
+## Recipes
+
+### Disabling logging on an instance level
+```js
+// To disable a given method, just pass a no-op to it
+logger.warn = function() {}
+
+// To reenable, attach it again to the prototype
+logger.warn = Logdown.prototype.warn
+```
+
 ## Contributors
 
 ```
