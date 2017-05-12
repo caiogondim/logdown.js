@@ -170,5 +170,8 @@ describe('NODE_DEBUG and DEBUG environment variables', function () {
     foo.log('lorem')
     barfoo.log('lorem')
     expect(console.log).toHaveBeenCalledTimes(2)
+
+    process.env.NODE_DEBUG = ''
+    process.env.DEBUG = ''
   })
 })

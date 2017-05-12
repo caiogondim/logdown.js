@@ -1,4 +1,4 @@
-var Logdown = require('./base')
+var Logdown = require('./base')()
 var markdown = require('./markdown/node')
 var ansiColors = require('./util/ansi-colors')
 var isColorSupported = require('./util/is-color-supported/node')

@@ -6,4 +6,5 @@ jest.mock('../../src/util/is-color-supported/browser', () => () => true)
 describe('browser', () => {
   require('./local-storage-debug-var')
   require('./logging-methods')
+  // require('./abstract-debug')
 })
