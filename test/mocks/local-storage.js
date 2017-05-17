@@ -1,4 +1,4 @@
-let localStorage = {
+const localStorage = {
   setItem (key, value) {
     localStorage[key] = value
   },

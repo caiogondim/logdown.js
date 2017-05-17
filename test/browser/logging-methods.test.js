@@ -1,5 +1,8 @@
 /* eslint-env jest */
 
+jest.mock('../../src/util/is-webkit', () => () => true)
+jest.mock('../../src/util/is-color-supported/browser', () => () => true)
+
 const logdown = require('../../src/browser')
 
 const methods = ['debug', 'log', 'info', 'warn', 'error']

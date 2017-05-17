@@ -1,9 +1,11 @@
 /* eslint-env jest */
 
-jest.mock('../../src/util/local-storage', () => require('../mocks/local-storage'))
+// Mock localStorage
+const globalObject = require('../../src/util/get-global')()
+const localStorage = require('../mocks/local-storage')
+globalObject.localStorage = localStorage
 
 const logdown = require('../../src/browser')
-const localStorage = require('../mocks/local-storage')
 
 describe('localStorage.debug', () => {
   beforeEach(() => {

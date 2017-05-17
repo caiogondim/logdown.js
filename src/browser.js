@@ -1,7 +1,7 @@
 var Logdown = require('./base')()
 var markdown = require('./markdown/browser')
 var isColorSupported = require('./util/is-color-supported/browser')
-var localStorage = require('./util/local-storage')
+var globalObject = require('./util/get-global')()
 
 //
 // Static
@@ -9,11 +9,11 @@ var localStorage = require('./util/local-storage')
 
 Logdown._updateEnabledDisabled = function () {
   if (
-    localStorage &&
-    typeof localStorage.getItem('debug') === 'string'
+    globalObject.localStorage &&
+    typeof globalObject.localStorage.getItem('debug') === 'string'
   ) {
     Logdown.disable('*')
-    localStorage
+    globalObject.localStorage
       .getItem('debug')
       .split(',')
       .forEach(function (regExp) {

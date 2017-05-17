@@ -8,7 +8,7 @@ var isColorSupported = require('./util/is-color-supported/node')
 //
 
 Logdown._updateEnabledDisabled = function () {
-  // Parsing `NODE_DEBUG` and `DEBUG` env var.
+  // Parsing `NODE_DEBUG` and `DEBUG` env var
   var envVar = null
   if (
     typeof process !== 'undefined' &&
@@ -16,13 +16,13 @@ Logdown._updateEnabledDisabled = function () {
   ) {
     // `NODE_DEBUG` has precedence over `DEBUG`
     if (
-      process.env.NODE_DEBUG !== undefined &&
-      process.env.NODE_DEBUG !== ''
+      process.env['NODE_DEBUG'] !== undefined &&
+      process.env['NODE_DEBUG'] !== ''
     ) {
       envVar = 'NODE_DEBUG'
     } else if (
-      process.env.DEBUG !== undefined &&
-      process.env.DEBUG !== ''
+      process.env['DEBUG'] !== undefined &&
+      process.env['DEBUG'] !== ''
     ) {
       envVar = 'DEBUG'
     }
