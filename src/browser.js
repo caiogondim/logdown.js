@@ -8,18 +8,20 @@ var globalObject = require('./util/get-global')()
 //
 
 Logdown._updateEnabledDisabled = function () {
-  if (
-    globalObject.localStorage &&
-    typeof globalObject.localStorage.getItem('debug') === 'string'
-  ) {
-    Logdown.disable('*')
-    globalObject.localStorage
-      .getItem('debug')
-      .split(',')
-      .forEach(function (regExp) {
-        Logdown.enable(regExp)
-      })
-  }
+  try {
+    if (
+      globalObject.localStorage &&
+      typeof globalObject.localStorage.getItem('debug') === 'string'
+    ) {
+      Logdown.disable('*')
+      globalObject.localStorage
+        .getItem('debug')
+        .split(',')
+        .forEach(function (regExp) {
+          Logdown.enable(regExp)
+        })
+    }
+  } catch (error) {}
 }
 
 Logdown._getNextPrefixColor = (function () {
