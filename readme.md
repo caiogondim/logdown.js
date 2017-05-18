@@ -11,6 +11,8 @@
 logdown is a debug utility for the browser and the server with Markdown support.
 It doesn't have dependencies and is less than 2K gzipped.
 
+<a href="https://github.com/caiogondim/abstract-debug.js"><img src="https://github.com/caiogondim/abstract-debug.js/raw/master/img/badge@2x.png" width="190" alt="abstract debug badge" /></a>
+
 You can see it in action in the [example page](//caiogondim.github.io/logdown.js) or in the preview
 below.
 
