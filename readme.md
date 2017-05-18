@@ -8,12 +8,11 @@
 
 <br>
 
-Logdown is a debug utility for the browser and the server with Markdown support.
-It does not have any dependencies and is only 2K gzipped.
+logdown is a debug utility for the browser and the server with Markdown support.
+It doesn't have dependencies and is less than 2K gzipped.
 
-You can see it in action in the [example page](//caiogondim.github.io/logdown.js)
-or in the preview below.
-
+You can see it in action in the [example page](//caiogondim.github.io/logdown.js) or in the preview
+below.
 
 ## Preview
 
@@ -23,7 +22,6 @@ or in the preview below.
 ### Server
 <img src="http://rawgit.com/caiogondim/logdown.js/master/img/node-preview.gif">
 
-
 ## Installation
 
 ```bash
@@ -31,72 +29,25 @@ npm install --save logdown
 ```
 
 ```js
-const Logdown = require('logdown')
+const logdown = require('logdown')
 const logger = logdown('foo')
 ```
 
-Or as a more idiomatic way:
+Or in a more idiomatic way:
 
 ```js
 const logger = require('logdown')('foo')
-```
-
-### Bower
-
-In the browser you can install it through [Bower](http://bower.io):
-
-```bash
-bower install logdown
-```
-
-```js
-const logger = require('logdown')('foo')
-```
-
-### Other
-
-You can also use the lib in the browser in the same way as in the server if you use [Browserify](http://browserify.org/). Or you can just download it [here](https://github.com/caiogondim/logdown.js/archive/master.zip) and put the `dist/logdown.js` file in your public folder. Another way of retrieving Logdown is [via jsDelivr](http://www.jsdelivr.com/projects/logdown.js), a public Open Source CDN.
-
-## Import
-
-### SystemJS
-
-Using the dynamic module loader [SystemJS](https://github.com/systemjs/systemjs), Logdown can be loaded as a CommonJS module:
-
-```js
-SystemJS.config({
-  map: {
-    'logdown': 'bower_components/logdown/dist/logdown.js'
-  },
-  packages: {
-    'logdown': {format: 'cjs'}
-  }
-});
-```
-
-```js
-System.import('logdown').then(function(Logdown) {
-  const logger = Logdown('foo')
-});
-```
-
-### TypeScript
-
-```ts
-import Logdown = require('logdown')
-```
-
-```ts
-const logger: Logdown = new Logdown('foo')
 ```
 
 ## Usage
 
 ### Logging
 
-It is highly recommended to use a prefix for your instance, this way you get a nice prefixed message on console and it is possible to silence instances based on the prefix name, as we will see after.
+It is highly recommended to use a prefix for your instance, this way you get a nice prefixed message
+on console and it is possible to silence instances based on the prefix name, as we will see after.
 
-After creating your object, you can use the regular `log`, `warn`, `info` and `error` methods as we have on `console`, but now with Markdown support.
+After creating your object, you can use the regular `log`, `warn`, `info` and `error` methods as we
+have on `console`, but now with Markdown support.
 
 ```js
 logger.log('lorem *ipsum*')
@@ -119,8 +70,7 @@ The constructor accepts one object for configuration on instantiation time.
 **Example**
 
 ```js
-const options = {alignOutput: true, prefix: 'foo'}
-const logger = new Logdown(options)
+const logger = logdown({ alignOutput: true })
 ```
 
 The following options can be used for configuration.
@@ -145,10 +95,10 @@ You should use the name of your module.
 You can, also, use `:` to separate modules inside one big module.
 
 ```js
-var fooBarLogger = Logdown('foo:bar')
+var fooBarLogger = logdown('foo:bar')
 fooBarLogger.log('Lorem ipsum')
 
-var fooQuzLogger = Logdown('foo:quz')
+var fooQuzLogger = logdown('foo:quz')
 fooQuzLogger.log('Lorem Ipsum')
 ```
 
@@ -160,7 +110,7 @@ fooQuzLogger.log('Lorem Ipsum')
 If setted to `false`, markdown will not be parsed.
 
 ```js
-var logger = Logdown({markdown: false})
+var logger = logdown({markdown: false})
 logger.log('Lorem *ipsum*') // Will not parse the markdown
 ```
 
@@ -182,33 +132,33 @@ logger.log('lorem `ipsum`')
 - Type: 'Boolean'
 - Default: `false`
 
-If setted to `true`, the name of the logger instance will have the same length as the longest name of any other Logdown instance.
+If setted to `true`, the name of the logger instance will have the same length as the longest name of any other logdown instance.
 
 ## Enabling/disabling instances
 
 It is possible to enable/disable the output of instances using the
-`Logdown.disable` or `Logdown.enable` methods.
+`logdown.disable` or `logdown.enable` methods.
 
 ```js
-Logdown.disable('foo') // will disable the instance with *foo* prefix
-Logdown.enable('bar') // will enable the instance with *bar* prefix
+logdown.disable('foo') // will disable the instance with *foo* prefix
+logdown.enable('bar') // will enable the instance with *bar* prefix
 ```
 
 You can also use wildcards.
 
 ```js
-Logdown.enable('*') // enables all instances
-Logdown.disable('*') // disables all instances
-Logdown.enable('foo*') // enables all instances with a prefix starting with *foo*
+logdown.enable('*') // enables all instances
+logdown.disable('*') // disables all instances
+logdown.enable('foo*') // enables all instances with a prefix starting with *foo*
 ```
 
 Use `-` to do a negation.
 
 ```js
 // enables all instances but the one with *foo* prefix
-Logdown.enable('*', '-foo')
+logdown.enable('*', '-foo')
 // disables all intances with foo in the prefix, but don't disable *foobar*
-Logdown.disable('*foo*', '-foobar')
+logdown.disable('*foo*', '-foobar')
 ```
 
 ## Recipes
@@ -219,21 +169,7 @@ Logdown.disable('*foo*', '-foobar')
 logger.warn = function() {}
 
 // To reenable, attach it again to the prototype
-logger.warn = Logdown.prototype.warn
-```
-
-## Contributors
-
-```
-203	Caio Gondim
- 30	Benny Neugebauer
-  5	David Godfrey
-  2	Sven Anders Robbestad
-  1	Dan Lukinykh
-  1	Bent Cardan
-  1	Gleb Bahmutov
-  1	Panayiotis Lipiridis
-  1	netmml
+logger.warn = logdown.prototype.warn
 ```
 
 ## Donating
