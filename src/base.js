@@ -13,7 +13,6 @@ module.exports = function () {
     }
 
     Logdown._instances.push(this)
-    Logdown._alignPrefixes()
     Logdown._updateEnabledDisabled()
 
     return this
@@ -90,19 +89,6 @@ module.exports = function () {
     return instance
   }
 
-  Logdown._alignPrefixes = function () {
-    var longest = Logdown._instances.sort(function (a, b) {
-      return b.opts.prefix.length - a.opts.prefix.length
-    })[0]
-
-    Logdown._instances
-      .filter(function (instance) { return instance.opts.alignOutput })
-      .forEach(function (instance) {
-        var padding = new Array(Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0)).join(' ')
-        instance.opts.prefix = instance.opts.prefix + padding
-      })
-  }
-
   Logdown._normalizeOpts = function (prefix, opts) {
     if (typeof prefix !== 'string') {
       throw new TypeError('prefix must be a string')
@@ -110,13 +96,11 @@ module.exports = function () {
 
     opts = opts || {}
 
-    var alignOutput = Boolean(opts.alignOutput)
     var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
     var prefixColor = Logdown._getNextPrefixColor()
 
     return {
       prefix: prefix,
-      alignOutput: alignOutput,
       markdown: markdown,
       prefixColor: prefixColor
     }

@@ -69,12 +69,6 @@ logger.warn('consectetur', '`adipiscing` elit')
 
 The constructor accepts one object for configuration on instantiation time.
 
-**Example**
-
-```js
-const logger = logdown({ alignOutput: true })
-```
-
 The following options can be used for configuration.
 
 #### `prefix`
@@ -129,13 +123,6 @@ logger.log('lorem _ipsum_')
 logger.log('lorem `ipsum`')
 ```
 
-#### `alignOutput`
-
-- Type: 'Boolean'
-- Default: `false`
-
-If setted to `true`, the name of the logger instance will have the same length as the longest name of any other logdown instance.
-
 ## Enabling/disabling instances
 
 It is possible to enable/disable the output of instances using the
@@ -172,6 +159,30 @@ logger.warn = function() {}
 
 // To reenable, attach it again to the prototype
 logger.warn = logdown.prototype.warn
+```
+
+### Align prefixes
+
+If you want to align the output of each instance, like the example below:
+```
+[ipsum]   lorem
+[sitamet] lorem
+[dolor]   lorem
+```
+
+Use the the following function
+```js
+function alignPrefixes(Logdown) {
+  var longest = Logdown._instances.sort(function (a, b) {
+    return b.opts.prefix.length - a.opts.prefix.length
+  })[0]
+
+  Logdown._instances
+    .forEach(function (instance) {
+      var padding = new Array(Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0)).join(' ')
+      instance.opts.prefix = instance.opts.prefix + padding
+    })
+}
 ```
 
 ## Sponsor

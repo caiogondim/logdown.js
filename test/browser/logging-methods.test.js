@@ -58,28 +58,6 @@ methods.forEach((method) => {
       })
     })
 
-    it('can add whitespace to align logger output', () => {
-      const abc = logdown('abc')
-      const text = logdown('text', {alignOutput: 'yes'})
-      const demo = logdown('demo', {alignOutput: true})
-      const longDemo = logdown('longDemo', {alignOutput: true})
-      const demoFalse = logdown('demoFalse', {alignOutput: false})
-      const longerDemo = logdown('longerDemo', {alignOutput: true})
-
-      expect(abc.opts.prefix.length).toBe(3)
-      expect(abc.opts.alignOutput).toBe(false)
-      expect(text.opts.prefix.length).toBe(10)
-      expect(text.opts.alignOutput).toBe(true)
-      expect(demo.opts.prefix.length).toBe(10)
-      expect(demo.opts.alignOutput).toBe(true)
-      expect(longDemo.opts.prefix.length).toBe(10)
-      expect(longDemo.opts.alignOutput).toBe(true)
-      expect(demoFalse.opts.prefix.length).toBe(9)
-      expect(demoFalse.opts.alignOutput).toBe(false)
-      expect(longerDemo.opts.prefix.length).toBe(10)
-      expect(longerDemo.opts.alignOutput).toBe(true)
-    })
-
     // https://github.com/caiogondim/logdown/issues/14
     it('prints not-string arguments as is', () => {
       const foo = logdown('foo')
