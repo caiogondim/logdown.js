@@ -1,8 +1,8 @@
 # TODO
  ☐ Only print if prefix on localStorage or NODE_DEBUG
  ☐ 100% coverage
- ☐ Delete bower.json
- ☐ Update Jest
+ ✔ Delete bower.json @done (17-06-27 00:40)
+ ✔ Update Jest @done (17-06-27 00:41)
  ☐ Remove align prefixes and make recipe
  ☐ Custom formatter
  ☐ Stream
@@ -12,4 +12,3 @@
  ☐ Instance opts and state
  ☐ Remove `logger.info`
  ☐ Remove `logger.debug`
-Remove should fomr tests
