@@ -21,7 +21,7 @@ describe('logdown.enable', () => {
     console.log.mockClear()
   })
 
-  it('`(\'*\')` should enable all instances', () => {
+  it('`(\'*\')` enables all instances', () => {
     logdown.disable('*')
     logdown.enable('*')
     const instances = createInstances()
@@ -32,7 +32,7 @@ describe('logdown.enable', () => {
     expect(console.log).toHaveBeenCalled()
   })
 
-  it('`(\'foo\')` should enable only instances with “foo” prefix', () => {
+  it('`(\'foo\')` enables only instances with “foo” prefix', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const quz = logdown('quz')
@@ -51,7 +51,7 @@ describe('logdown.enable', () => {
     expect(console.log).toHaveBeenCalled()
   })
 
-  it('`(\'*foo\')` should enable only instances with names ending with “foo”', () => {
+  it('`(\'*foo\')` enables only instances with names ending with “foo”', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
@@ -68,7 +68,7 @@ describe('logdown.enable', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('`(\'foo*\')` should enable only instances with names beginning with “foo”', () => {
+  it('`(\'foo*\')` enables only instances with names beginning with “foo”', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
@@ -100,7 +100,7 @@ describe('logdown.enable', () => {
     expect(console.log).not.toHaveBeenCalled()
   })
 
-  it('`(\'*\', \'-foo\')` should enable all but only instances with “foo” prefix', () => {
+  it('`(\'*\', \'-foo\')` enables all but only instances with “foo” prefix', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const quz = logdown('quz')
@@ -116,7 +116,7 @@ describe('logdown.enable', () => {
     expect(console.log).toHaveBeenCalled()
   })
 
-  it('`(\'*\', \'-*foo\')` should enable all but instances with names ending with “foo”', () => {
+  it('`(\'*\', \'-*foo\')` enables all but instances with names ending with “foo”', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
@@ -132,7 +132,7 @@ describe('logdown.enable', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('`(\'*\', \'-foo*\')` should enable all but instances with names beginning with “foo”', () => {
+  it('`(\'*\', \'-foo*\')` enables all but instances with names beginning with “foo”', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')
@@ -148,7 +148,7 @@ describe('logdown.enable', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('should accept N arguments', () => {
+  it('accepts N arguments', () => {
     const foo = logdown('foo')
     const bar = logdown('bar')
     const foobar = logdown('foobar')

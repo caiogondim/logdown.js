@@ -104,10 +104,11 @@ module.exports = function () {
   }
 
   Logdown._normalizeOpts = function (prefix, opts) {
-    if (typeof prefix === 'object') opts = prefix
-    opts = opts || {}
+    if (typeof prefix !== 'string') {
+      throw new TypeError('prefix must be a string')
+    }
 
-    if (typeof prefix !== 'string') prefix = opts.prefix || ''
+    opts = opts || {}
 
     var alignOutput = Boolean(opts.alignOutput)
     var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)

@@ -1,26 +1,7 @@
 /* eslint-env jest */
 
 const logdown = require('../../src/node')
-const ansiColors = require('../../src/util/ansi-colors')
-
-//
-// Helpers
-//
-
-const getSymbol = (method) => {
-  switch (method) {
-    case 'debug':
-      return `\u001b[${ansiColors.colors.gray[0]}m🐞 \u001b[${ansiColors.colors.gray[1]}m `
-    case 'info':
-      return `\u001b[${ansiColors.colors.blue[0]}mℹ️ \u001b[${ansiColors.colors.blue[1]}m `
-    case 'warn':
-      return `\u001b[${ansiColors.colors.yellow[0]}m⚠️ \u001b[${ansiColors.colors.yellow[1]}m `
-    case 'error':
-      return `\u001b[${ansiColors.colors.red[0]}m❌ \u001b[${ansiColors.colors.red[1]}m `
-    default:
-      return ''
-  }
-}
+const markdown = require('../../src/markdown/node')
 
 //
 // Tests
@@ -28,176 +9,81 @@ const getSymbol = (method) => {
 
 ;['debug', 'log', 'info', 'warn', 'error'].forEach(method => {
   describe(`logdown.${method}`, () => {
-    const symbol = getSymbol(method)
-
     beforeEach(() => {
       console[method] = console[method] || console.log
       console[method] = jest.fn()
 
       logdown._instances = []
       logdown.enable('*')
-      process.env.NODE_DEBUG = ''
+      process.env.NODE_DEBUG = 'foo'
     })
 
     afterEach(() => {
       console[method].mockClear()
     })
 
-    it('should output multiple arguments', () => {
-      const foo = logdown({markdown: true})
+    it('outputs multiple arguments', () => {
+      const foo = logdown('foo', { markdown: true })
 
       foo[method]('one', 'two', 'three')
 
-      const args = [
-        symbol,
+      expect(console[method]).toHaveBeenCalledWith(
+        foo._getDecoratedPrefix(method),
         'one',
         'two',
         'three'
-      ]
-
-      if (method === 'log') {
-        expect(console[method]).toHaveBeenCalledWith(
-          args[1],
-          args[2],
-          args[3]
-        )
-      } else {
-        // throw new Error('aksj')
-        expect(console[method]).toHaveBeenCalledWith(
-          args[0],
-          args[1],
-          args[2],
-          args[3]
-        )
-      }
+      )
     })
 
-    it('should parse markdown in multiple arguments', () => {
-      const foo = logdown({markdown: true})
-
-      const args = [
-        symbol,
-        'one',
-        `\u001b[${ansiColors.modifiers.bold[0]}mtwo\u001b[${ansiColors.modifiers.bold[1]}m`,
-        'three'
-      ]
+    it('parses markdown in multiple arguments', () => {
+      const foo = logdown('foo')
 
       foo[method]('one', '*two*', 'three')
 
-      if (method === 'log') {
-        expect(console[method]).toHaveBeenCalledWith(
-          args[1],
-          args[2],
-          args[3]
-        )
-      } else {
-        expect(console[method]).toHaveBeenCalledWith(
-          args[0],
-          args[1],
-          args[2],
-          args[3]
-        )
-      }
+      expect(console[method]).toHaveBeenCalledWith(
+        foo._getDecoratedPrefix(method),
+        'one',
+        markdown.parse('*two*').text,
+        'three'
+      )
     })
 
-    it('should parse markdown if enabled', () => {
-      const foo = logdown({ markdown: true })
-
-      const args1 = [
-        symbol,
-        `lorem \u001b[${ansiColors.modifiers.bold[0]}mipsum\u001b[${ansiColors.modifiers.bold[1]}m`
-      ]
+    it('parses markdown if enabled', () => {
+      const foo = logdown('foo', { markdown: true })
 
       foo[method]('lorem *ipsum*')
-
-      if (method === 'log') {
-        expect(console[method]).toHaveBeenCalledWith(
-          args1[1]
-        )
-      } else {
-        expect(console[method]).toHaveBeenCalledWith(
-          args1[0],
-          args1[1]
-        )
-      }
-
-      const args2 = [
-        symbol,
-        `lorem \u001b[${ansiColors.modifiers.italic[0]}mipsum\u001b[${ansiColors.modifiers.italic[1]}m`
-      ]
+      expect(console[method]).toHaveBeenCalledWith(
+        foo._getDecoratedPrefix(method),
+        markdown.parse('lorem *ipsum*').text
+      )
 
       foo[method]('lorem _ipsum_')
-
-      if (method === 'log') {
-        expect(console[method]).toHaveBeenCalledWith(
-          args2[1]
-        )
-      } else {
-        expect(console[method]).toHaveBeenCalledWith(
-          args2[0],
-          args2[1]
-        )
-      }
-
-      const args3 = [
-        symbol,
-        `lorem \u001b[${ansiColors.colors.yellow[0]}mipsum\u001b[${ansiColors.colors.yellow[1]}m`
-      ]
+      expect(console[method]).toHaveBeenCalledWith(
+        foo._getDecoratedPrefix(method),
+        markdown.parse('lorem _ipsum_').text
+      )
 
       foo[method]('lorem `ipsum`')
-
-      if (method === 'log') {
-        expect(console[method]).toHaveBeenCalledWith(
-          args3[1]
-        )
-      } else {
-        expect(console[method]).toHaveBeenCalledWith(
-          args3[0],
-          args3[1]
-        )
-      }
+      expect(console[method]).toHaveBeenCalledWith(
+        foo._getDecoratedPrefix(method),
+        markdown.parse('lorem `ipsum`').text
+      )
     })
 
-    it('should not parse markdown if disabled', () => {
-      const foo = logdown({ markdown: false })
-
-      const args1 = [
-        symbol,
-        'lorem *ipsum*'
-      ]
+    it('doesnt parse markdown if disabled', () => {
+      const foo = logdown('foo', { markdown: false })
 
       foo[method]('lorem *ipsum*')
-
-      if (method === 'log') {
-        expect(console[method]).toHaveBeenCalledWith(
-          args1[1]
-        )
-      } else {
-        expect(console[method]).toHaveBeenCalledWith(
-          args1[0],
-          args1[1]
-        )
-      }
-
-      //
-
-      const args2 = [
-        symbol,
-        'lorem _ipsum_ dolor'
-      ]
+      expect(console[method]).toHaveBeenCalledWith(
+        foo._getDecoratedPrefix(method),
+        'lorem *ipsum*'
+      )
 
       foo[method]('lorem _ipsum_ dolor')
-
-      if (method === 'log') {
-        expect(console[method]).toHaveBeenCalledWith(
-          args2[1]
-        )
-      } else {
-        expect(console[method]).toHaveBeenCalledWith(
-          args2[0],
-          args2[1]
-        )
-      }
+      expect(console[method]).toHaveBeenCalledWith(
+        foo._getDecoratedPrefix(method),
+        'lorem _ipsum_ dolor'
+      )
     })
 
     it('can add whitespace to align logger output', () => {
@@ -228,12 +114,12 @@ const getSymbol = (method) => {
     })
 
     // https://github.com/caiogondim/logdown/issues/14
-    it('should print not-string arguments as is', () => {
+    it('prints not-string arguments as is', () => {
       const foo = logdown('foo')
-      const obj = {bar: 2, foo: 1}
+      const obj = { bar: 2, foo: 1 }
       foo[method](obj)
       expect(console[method]).toHaveBeenCalledWith(
-        `${symbol}\u001b[${foo.opts.prefixColor[0]}m\u001b[${ansiColors.modifiers.bold[0]}m${foo.opts.prefix}\u001b[${ansiColors.modifiers.bold[1]}m\u001b[${foo.opts.prefixColor[1]}m`,
+        foo._getDecoratedPrefix(method),
         obj
       )
     })

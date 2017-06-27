@@ -19,7 +19,7 @@ describe('localStorage.debug', () => {
     console.log.mockClear()
   })
 
-  it('`localStorage.debug=foo` should enable only instances with “foo” prefix', () => {
+  it('`localStorage.debug=foo` enables only instances with “foo” prefix', () => {
     localStorage.debug = 'foo'
 
     const foo = logdown('foo')
@@ -37,7 +37,7 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalled()
   })
 
-  it('`localStorage.debug=*foo` should enable only instances with names ending with “foo”', () => {
+  it('`localStorage.debug=*foo` enables only instances with names ending with “foo”', () => {
     localStorage.debug = '*foo'
 
     const foo = logdown('foo')
@@ -53,7 +53,7 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('`localStorage.debug=foo*` should enable only instances with names beginning with “foo”', () => {
+  it('`localStorage.debug=foo*` enables only instances with names beginning with “foo”', () => {
     localStorage.debug = 'foo*'
 
     const foo = logdown('foo')
@@ -84,7 +84,7 @@ describe('localStorage.debug', () => {
     expect(console.log).not.toHaveBeenCalled()
   })
 
-  it('`localStorage.debug=*,-foo` should enable all but only instances with “foo” prefix', () => {
+  it('`localStorage.debug=*,-foo` enables all but only instances with “foo” prefix', () => {
     localStorage.debug = '*,-foo'
 
     const foo = logdown('foo')
@@ -100,7 +100,7 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalledTimes(3)
   })
 
-  it('`localStorage.debug=*,-*foo` should enable all but instances with names ending with “foo”', () => {
+  it('`localStorage.debug=*,-*foo` enables all but instances with names ending with “foo”', () => {
     localStorage.debug = '*,-*foo'
 
     const foo = logdown('foo')
@@ -116,7 +116,7 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('`localStorage.debug=*,-foo*` should enable all but instances with names beginning with “foo”', () => {
+  it('`localStorage.debug=*,-foo*` enables all but instances with names beginning with “foo”', () => {
     localStorage.debug = '*,-foo*'
 
     const foo = logdown('foo')
@@ -132,7 +132,7 @@ describe('localStorage.debug', () => {
     expect(console.log).toHaveBeenCalledTimes(2)
   })
 
-  it('`localStorage.debug` should accept N arguments', () => {
+  it('`localStorage.debug` accepts N arguments', () => {
     logdown.enable('*')
     localStorage.debug = 'foo,barfoo'
 

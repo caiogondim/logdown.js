@@ -4,6 +4,7 @@ jest.mock('../../src/util/is-webkit', () => () => true)
 jest.mock('../../src/util/is-color-supported/browser', () => () => true)
 
 const logdown = require('../../src/browser')
+const markdown = require('../../src/markdown/browser')
 
 const methods = ['debug', 'log', 'info', 'warn', 'error']
 methods.forEach((method) => {
@@ -20,70 +21,41 @@ methods.forEach((method) => {
       console[method].mockClear()
     })
 
-    it('should parse markdown if enabled', () => {
-      var foo = logdown({markdown: true})
+    it('parses markdown if enabled', () => {
+      const foo = logdown('foo', { markdown: true })
 
-      foo[method]('lorem *ipsum*')
-      expect(console[method]).toHaveBeenCalledWith(
-        'lorem %cipsum%c',
-        'font-weight:bold;',
-        ''
-      )
+      ;[
+        'lorem *ipsum*',
+        'lorem _ipsum_',
+        'lorem `ipsum`',
+        'lorem `ipsum` *dolor* sit _amet_'
+      ].forEach(str => {
+        foo[method](str)
 
-      foo[method]('lorem _ipsum_')
-      expect(console[method]).toHaveBeenCalledWith(
-        'lorem %cipsum%c',
-        'font-style:italic;',
-        ''
-      )
+        let expectedArgs = foo._getDecoratedPrefix()
+        expectedArgs[0] = expectedArgs[0] + markdown.parse(str).text
+        expectedArgs = expectedArgs.concat(markdown.parse(str).styles)
 
-      foo[method]('lorem `ipsum`')
-      expect(console[method]).toHaveBeenCalledWith(
-        'lorem %cipsum%c',
-        'background-color:rgba(255,204,102, 0.1);' +
-          'color:#FFCC66;' +
-          'padding:2px 5px;' +
-          'border-radius:2px;',
-        ''
-      )
-
-      foo[method]('lorem `ipsum` *dolor* sit _amet_')
-      expect(console[method]).toHaveBeenCalledWith(
-        'lorem %cipsum%c %cdolor%c sit %camet%c',
-        'background-color:rgba(255,204,102, 0.1);' +
-          'color:#FFCC66;' +
-          'padding:2px 5px;' +
-          'border-radius:2px;',
-        '',
-        'font-weight:bold;',
-        '',
-        'font-style:italic;',
-        ''
-      )
+        expect(console[method]).toHaveBeenLastCalledWith(...expectedArgs)
+      })
     })
 
-    it('should not parse markdown if disabled', () => {
-      const foo = logdown({markdown: false})
+    it('doesnt parse markdown if disabled', () => {
+      const foo = logdown('foo', { markdown: false })
 
-      foo[method]('lorem *ipsum*')
-      expect(console[method]).toHaveBeenCalledWith('lorem *ipsum*')
+      ;[
+        'lorem *ipsum*',
+        'lorem _ipsum_',
+        'lorem `ipsum`',
+        'lorem `ipsum` *dolor* sit _amet_'
+      ].forEach(str => {
+        foo[method](str)
 
-      foo[method]('lorem _ipsum_ dolor')
-      expect(console[method]).toHaveBeenCalledWith('lorem _ipsum_ dolor')
+        let expectedArgs = foo._getDecoratedPrefix()
+        expectedArgs[0] = expectedArgs[0] + str
 
-      foo[method]('lorem `ipsum` dolor')
-      expect(console[method]).toHaveBeenCalledWith('lorem `ipsum` dolor')
-    })
-
-    it('should print prefix if present', () => {
-      const foo = logdown('foo')
-
-      foo[method]('lorem ipsum')
-      expect(console[method]).toHaveBeenCalledWith(
-        '%cfoo%c lorem ipsum',
-        'color:' + foo.opts.prefixColor + '; font-weight:bold;',
-        ''
-      )
+        expect(console[method]).toHaveBeenLastCalledWith(...expectedArgs)
+      })
     })
 
     it('can add whitespace to align logger output', () => {
@@ -109,11 +81,15 @@ methods.forEach((method) => {
     })
 
     // https://github.com/caiogondim/logdown/issues/14
-    it('should print not-string arguments as is', () => {
-      const foo = logdown()
-      const obj = {foo: 1, bar: 2}
+    it('prints not-string arguments as is', () => {
+      const foo = logdown('foo')
+      const obj = { foo: 1, bar: 2 }
+
       foo[method](obj)
-      expect(console[method]).toHaveBeenCalledWith(obj)
+
+      let expectedArgs = foo._getDecoratedPrefix()
+      expectedArgs = expectedArgs.concat(obj)
+      expect(console[method]).toHaveBeenLastCalledWith(...expectedArgs)
     })
   })
 })

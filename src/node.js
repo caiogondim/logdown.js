@@ -55,51 +55,71 @@ Logdown._getNextPrefixColor = (function () {
   }
 })()
 
+Logdown.methodEmoji = {
+  warn: '⚠️',
+  error: '❌',
+  info: `\u{2139}\u{FE0F}`, // Forces emoji information instead of "i" symbol
+  debug: '🐞',
+  log: ' '
+}
+
 //
 // Instance
 //
 
-Logdown.prototype._prepareOutput = function (args, method) {
-  var preparedOutput = []
+Logdown.prototype._getDecoratedPrefix = function (method) {
+  var decoratedPrefix
 
-  if (this.opts.prefix) {
-    if (isColorSupported()) {
-      preparedOutput[0] =
-        '\u001b[' + this.opts.prefixColor[0] + 'm' +
-        '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-        this.opts.prefix +
-        '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-        '\u001b[' + this.opts.prefixColor[1] + 'm'
-    } else {
-      preparedOutput[0] = '[' + this.opts.prefix + ']'
-    }
+  if (isColorSupported()) {
+    decoratedPrefix =
+      '\u001b[' + this.opts.prefixColor[0] + 'm' +
+      '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
+      this.opts.prefix +
+      '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
+      '\u001b[' + this.opts.prefixColor[1] + 'm'
+  } else {
+    decoratedPrefix = '[' + this.opts.prefix + ']'
   }
 
   if (method === 'warn') {
-    preparedOutput[0] =
+    decoratedPrefix =
       '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
-      '⚠️ ' +
-      '\u001b[' + ansiColors.colors.yellow[1] + 'm ' +
-      (preparedOutput[0] || '')
+      Logdown.methodEmoji.warn +
+      '\u001b[' + ansiColors.colors.yellow[1] + 'm  ' +
+      (decoratedPrefix || '')
   } else if (method === 'error') {
-    preparedOutput[0] =
+    decoratedPrefix =
       '\u001b[' + ansiColors.colors.red[0] + 'm' +
-      '❌ ' +
-      '\u001b[' + ansiColors.colors.red[1] + 'm ' +
-      (preparedOutput[0] || '')
+      Logdown.methodEmoji.error +
+      '\u001b[' + ansiColors.colors.red[1] + 'm  ' +
+      (decoratedPrefix || '')
   } else if (method === 'info') {
-    preparedOutput[0] =
+    decoratedPrefix =
       '\u001b[' + ansiColors.colors.blue[0] + 'm' +
-      'ℹ️' + ' ' + // When the `i` symbol has a trailling space, it don't render the emoji.
-      '\u001b[' + ansiColors.colors.blue[1] + 'm ' +
-      (preparedOutput[0] || '')
+      Logdown.methodEmoji.info +
+      '\u001b[' + ansiColors.colors.blue[1] + 'm  ' +
+      (decoratedPrefix || '')
   } else if (method === 'debug') {
-    preparedOutput[0] =
+    decoratedPrefix =
       '\u001b[' + ansiColors.colors.gray[0] + 'm' +
-      '🐞 ' +
-      '\u001b[' + ansiColors.colors.gray[1] + 'm ' +
-      (preparedOutput[0] || '')
+      Logdown.methodEmoji.debug +
+      '\u001b[' + ansiColors.colors.gray[1] + 'm  ' +
+      (decoratedPrefix || '')
+  } else if (method === 'log') {
+    decoratedPrefix =
+      '\u001b[' + ansiColors.colors.white[0] + 'm' +
+      Logdown.methodEmoji.log +
+      '\u001b[' + ansiColors.colors.white[1] + 'm  ' +
+      (decoratedPrefix || '')
   }
+
+  return decoratedPrefix
+}
+
+Logdown.prototype._prepareOutput = function (args, method) {
+  var preparedOutput = []
+
+  preparedOutput[0] = this._getDecoratedPrefix(method)
 
   args.forEach(function (arg) {
     if (typeof arg === 'string') {
