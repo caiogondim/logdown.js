@@ -7,6 +7,18 @@ var globalObject = require('./util/get-global')()
 // Static
 //
 
+// Tomorrow Night Eighties colors
+// https://github.com/chriskempson/tomorrow-theme#tomorrow-night-eighties
+Logdown.prefixColors = [
+  '#F2777A',
+  '#F99157',
+  '#FFCC66',
+  '#99CC99',
+  '#66CCCC',
+  '#6699CC',
+  '#CC99CC'
+]
+
 Logdown._setPrefixRegExps = function () {
   try {
     if (
@@ -40,21 +52,10 @@ Logdown._setPrefixRegExps = function () {
 
 Logdown._getNextPrefixColor = (function () {
   var lastUsed = 0
-  // Tomorrow Night Eighties colors
-  // https://github.com/chriskempson/tomorrow-theme#tomorrow-night-eighties
-  var colors = [
-    '#F2777A',
-    '#F99157',
-    '#FFCC66',
-    '#99CC99',
-    '#66CCCC',
-    '#6699CC',
-    '#CC99CC'
-  ]
 
   return function () {
     lastUsed += 1
-    return colors[lastUsed % colors.length]
+    return Logdown.prefixColors[lastUsed % Logdown.prefixColors.length]
   }
 })()
 

@@ -15,6 +15,15 @@ Logdown.methodEmoji = {
   log: ' '
 }
 
+Logdown.prefixColors = [
+  [31, 39], // red
+  [32, 39], // green
+  [33, 39], // yellow
+  [34, 39], // blue
+  [35, 39], // magenta
+  [36, 39] // cyan
+]
+
 Logdown._setPrefixRegExps = function () {
   // Parsing `NODE_DEBUG` and `DEBUG` env var
   var envVar = null
@@ -62,18 +71,10 @@ Logdown._setPrefixRegExps = function () {
 
 Logdown._getNextPrefixColor = (function () {
   var lastUsed = 0
-  var nodePrefixColors = [
-    [31, 39], // red
-    [32, 39], // green
-    [33, 39], // yellow
-    [34, 39], // blue
-    [35, 39], // magenta
-    [36, 39] // cyan
-  ]
 
   return function () {
     lastUsed += 1
-    return nodePrefixColors[lastUsed % nodePrefixColors.length]
+    return Logdown.prefixColors[lastUsed % Logdown.prefixColors.length]
   }
 })()
 

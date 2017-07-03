@@ -1,7 +1,6 @@
 var logdown = require('../src/node')
 
 var demo = logdown('demo')
-console.log(logdown)
 
 demo.log('Initializing demo')
 
