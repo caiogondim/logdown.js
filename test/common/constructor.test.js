@@ -3,6 +3,10 @@
 const logdown = require('../../src/node')
 
 describe('logdown()', () => {
+  beforeEach(() => {
+    logdown._instances = []
+  })
+
   it('returns an existing instance if the prefix is already in use', () => {
     const foo = logdown('foo')
     const foo2 = logdown('foo')
@@ -20,9 +24,14 @@ describe('logdown()', () => {
     expect(foo.opts.prefixColor).not.toEqual(baz.opts.prefixColor)
   })
 
-  // For compatibiltiy with debug
   it('sets prefix if string is passed as only argument', () => {
     const log1 = logdown('foo')
     expect(log1.opts.prefix).toEqual('foo')
+  })
+
+  it('accepts custom prefixColor', () => {
+    const prefixColor = '#FF0000'
+    const log1 = logdown('foo', { prefixColor })
+    expect(log1.opts.prefixColor).toEqual(prefixColor)
   })
 })

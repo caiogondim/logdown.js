@@ -1,34 +1,22 @@
-var ansiColors = require('../../util/ansi-colors')
+var chalk = require('chalk')
 
 module.exports = [
   {
     regexp: /\*([^*]+)\*/,
     replacer: function (match, submatch1) {
-      return (
-        '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-        submatch1 +
-        '\u001b[' + ansiColors.modifiers.bold[1] + 'm'
-      )
+      return chalk.bold(submatch1)
     }
   },
   {
     regexp: /_([^_]+)_/,
     replacer: function (match, submatch1) {
-      return (
-        '\u001b[' + ansiColors.modifiers.italic[0] + 'm' +
-        submatch1 +
-        '\u001b[' + ansiColors.modifiers.italic[1] + 'm'
-      )
+      return chalk.italic(submatch1)
     }
   },
   {
     regexp: /`([^`]+)`/,
     replacer: function (match, submatch1) {
-      return (
-        '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
-        submatch1 +
-        '\u001b[' + ansiColors.colors.yellow[1] + 'm'
-      )
+      return chalk.yellow(submatch1)
     }
   }
 ]

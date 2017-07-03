@@ -1,7 +1,7 @@
 var Logdown = require('./base')()
 var markdown = require('./markdown/node')
-var ansiColors = require('./util/ansi-colors')
 var isColorSupported = require('./util/is-color-supported/node')
+var chalk = require('chalk')
 
 //
 // Static
@@ -16,12 +16,12 @@ Logdown.methodEmoji = {
 }
 
 Logdown.prefixColors = [
-  [31, 39], // red
-  [32, 39], // green
-  [33, 39], // yellow
-  [34, 39], // blue
-  [35, 39], // magenta
-  [36, 39] // cyan
+  'red',
+  'green',
+  'yellow',
+  'blue',
+  'magenta',
+  'cyan'
 ]
 
 Logdown._setPrefixRegExps = function () {
@@ -86,46 +86,26 @@ Logdown.prototype._getDecoratedPrefix = function (method) {
   var decoratedPrefix
 
   if (isColorSupported()) {
-    decoratedPrefix =
-      '\u001b[' + this.opts.prefixColor[0] + 'm' +
-      '\u001b[' + ansiColors.modifiers.bold[0] + 'm' +
-      this.opts.prefix +
-      '\u001b[' + ansiColors.modifiers.bold[1] + 'm' +
-      '\u001b[' + this.opts.prefixColor[1] + 'm'
+    // If is a hex color value
+    if (this.opts.prefixColor[0] === '#') {
+      decoratedPrefix = chalk.bold.hex(this.opts.prefixColor)(this.opts.prefix)
+    } else {
+      decoratedPrefix = chalk.bold[this.opts.prefixColor](this.opts.prefix)
+    }
   } else {
     decoratedPrefix = '[' + this.opts.prefix + ']'
   }
 
   if (method === 'warn') {
-    decoratedPrefix =
-      '\u001b[' + ansiColors.colors.yellow[0] + 'm' +
-      Logdown.methodEmoji.warn +
-      '\u001b[' + ansiColors.colors.yellow[1] + 'm  ' +
-      (decoratedPrefix || '')
+    decoratedPrefix = chalk.yellow(Logdown.methodEmoji.warn) + '  ' + (decoratedPrefix || '')
   } else if (method === 'error') {
-    decoratedPrefix =
-      '\u001b[' + ansiColors.colors.red[0] + 'm' +
-      Logdown.methodEmoji.error +
-      '\u001b[' + ansiColors.colors.red[1] + 'm  ' +
-      (decoratedPrefix || '')
+    decoratedPrefix = chalk.red(Logdown.methodEmoji.error) + '  ' + (decoratedPrefix || '')
   } else if (method === 'info') {
-    decoratedPrefix =
-      '\u001b[' + ansiColors.colors.blue[0] + 'm' +
-      Logdown.methodEmoji.info +
-      '\u001b[' + ansiColors.colors.blue[1] + 'm  ' +
-      (decoratedPrefix || '')
+    decoratedPrefix = chalk.blue(Logdown.methodEmoji.info) + '  ' + (decoratedPrefix || '')
   } else if (method === 'debug') {
-    decoratedPrefix =
-      '\u001b[' + ansiColors.colors.gray[0] + 'm' +
-      Logdown.methodEmoji.debug +
-      '\u001b[' + ansiColors.colors.gray[1] + 'm  ' +
-      (decoratedPrefix || '')
+    decoratedPrefix = chalk.gray(Logdown.methodEmoji.debug) + '  ' + (decoratedPrefix || '')
   } else if (method === 'log') {
-    decoratedPrefix =
-      '\u001b[' + ansiColors.colors.white[0] + 'm' +
-      Logdown.methodEmoji.log +
-      '\u001b[' + ansiColors.colors.white[1] + 'm  ' +
-      (decoratedPrefix || '')
+    decoratedPrefix = chalk.white(Logdown.methodEmoji.log) + '  ' + (decoratedPrefix || '')
   }
 
   return decoratedPrefix

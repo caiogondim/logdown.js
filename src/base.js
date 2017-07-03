@@ -49,7 +49,7 @@ module.exports = function () {
     opts = opts || {}
 
     var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
-    var prefixColor = Logdown._getNextPrefixColor()
+    var prefixColor = opts.prefixColor || Logdown._getNextPrefixColor()
 
     return {
       prefix: prefix,

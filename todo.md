@@ -4,11 +4,9 @@
  ✔ Update Jest @done (17-06-27 00:41)
  ☐ Custom formatter
  ☐ Stream
- ☐ customizable colors
+ ✔ customizable colors @done (17-07-03 17:28)
  ☐ validate args
  ☐ logging without emoji on node
  ☐ Remove `logger.info`
  ☐ Remove `logger.debug`
  ☐ custom methods (hability to create new methods with emoji, ...)
-true colors on node with color-convert lib
-logdown.env = {}
