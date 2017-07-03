@@ -75,5 +75,13 @@ methods.forEach((method) => {
       expectedArgs = expectedArgs.concat(obj)
       expect(console[method]).toHaveBeenLastCalledWith(...expectedArgs)
     })
+
+    it('doesnt print is state.isEnable is false', () => {
+      const foo = logdown('foo')
+      foo.state.isEnabled = false
+      foo[method]('lorem')
+
+      expect(console[method]).not.toHaveBeenCalled()
+    })
   })
 })
