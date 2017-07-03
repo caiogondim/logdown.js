@@ -1,350 +1,326 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.logdown = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var toArray = require('./util/to-array')
+(function () {
+  var __captured_scopes = Array(1);
 
-module.exports = function () {
-  function Logdown (prefix, opts) {
-    if (!(this instanceof Logdown)) {
-      return new Logdown(prefix, opts)
+  var _$0 = this;
+
+  function _0(prefix, opts) {
+    if (!(this instanceof _0)) {
+      return new _0(prefix, opts);
     }
 
-    if (Logdown._isPrefixAlreadyInUse(prefix)) {
-      return Logdown._getInstanceByPrefix(prefix)
+    if (_0._isPrefixAlreadyInUse(prefix)) {
+      return _0._getInstanceByPrefix(prefix);
     }
 
-    this.opts = Logdown._normalizeOpts(prefix, opts)
-    this.state = Logdown._getInitialState(this.opts)
+    this.opts = _0._normalizeOpts(prefix, opts);
+    this.state = _0._getInitialState(this.opts);
 
-    Logdown._instances.push(this)
+    _0._instances.push(this);
 
-    return this
+    return this;
   }
 
-  //
-  // Static
-  //
+  var _d = _0.prototype;
 
-  Logdown._instances = []
-  Logdown._prefixRegExps = []
-
-  Logdown._prepareRegExpForPrefixSearch = function (str) {
-    return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
+  function _3(str) {
+    return new _$0.RegExp('^' + str.replace(/\*/g, '.*?') + '$');
   }
 
-  Logdown._isPrefixAlreadyInUse = function (prefix) {
-    return Logdown._instances.some(function (instance) {
-      return (instance.opts.prefix === prefix)
-    })
+  function _4(prefix) {
+    return _0._instances.some(function (instance) {
+      return instance.opts.prefix === prefix;
+    });
   }
 
-  Logdown._getInstanceByPrefix = function (prefix) {
-    return Logdown._instances.filter(function (instanceCur) {
-      return instanceCur.opts.prefix === prefix
-    })[0]
+  function _5(prefix) {
+    return _0._instances.filter(function (instanceCur) {
+      return instanceCur.opts.prefix === prefix;
+    })[0];
   }
 
-  Logdown._normalizeOpts = function (prefix, opts) {
+  function _6(prefix, opts) {
     if (typeof prefix !== 'string') {
-      throw new TypeError('prefix must be a string')
+      throw new _$0.TypeError('prefix must be a string');
     }
 
-    opts = opts || {}
+    opts = opts || {};
+    var markdown = opts.markdown === void 0 ? true : _$0.Boolean(opts.markdown);
 
-    var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
-    var prefixColor = Logdown._getNextPrefixColor()
+    var prefixColor = opts.prefixColor || _0._getNextPrefixColor();
 
     return {
       prefix: prefix,
       prefixColor: prefixColor,
       markdown: markdown
-    }
+    };
   }
 
-  Logdown._getInitialState = function (opts) {
+  function _7(opts) {
     return {
-      isEnabled: Logdown._getEnableState(opts)
-    }
+      isEnabled: _0._getEnableState(opts)
+    };
   }
 
-  Logdown._getEnableState = function (opts) {
-    var isEnabled = false
+  function _8(opts) {
+    var isEnabled = false;
 
-    Logdown._prefixRegExps.forEach(function (filter) {
-      if (
-        filter.type === 'enable' &&
-        filter.regExp.test(opts.prefix)
-      ) {
-        isEnabled = true
-      } else if (
-        filter.type === 'disable' &&
-        filter.regExp.test(opts.prefix)
-      ) {
-        isEnabled = false
+    _0._prefixRegExps.forEach(function (filter) {
+      if (filter.type === 'enable' && filter.regExp.test(opts.prefix)) {
+        isEnabled = true;
+      } else if (filter.type === 'disable' && filter.regExp.test(opts.prefix)) {
+        isEnabled = false;
       }
-    })
+    });
 
-    return isEnabled
+    return isEnabled;
   }
 
-  //
-  // Instance
-  //
+  function _a() {
+    try {
+      if (_b.localStorage && typeof _b.localStorage.getItem('debug') === 'string') {
+        _0._prefixRegExps = [];
 
-  var methods = ['debug', 'log', 'info', 'warn', 'error']
-  methods.forEach(function (method) {
-    Logdown.prototype[method] = function () {
-      if (!this.state.isEnabled) {
-        return
-      }
-
-      var args = toArray(arguments)
-      var preparedOutput = this._prepareOutput(args, method)
-
-      ;(console[method] || console.log).apply(
-        console,
-        preparedOutput
-      )
-    }
-  }, this)
-
-  return Logdown
-}
-
-},{"./util/to-array":10}],2:[function(require,module,exports){
-var Logdown = require('./base')()
-var markdown = require('./markdown/browser')
-var isColorSupported = require('./util/is-color-supported/browser')
-var globalObject = require('./util/get-global')()
-
-//
-// Static
-//
-
-Logdown._setPrefixRegExps = function () {
-  try {
-    if (
-      globalObject.localStorage &&
-      typeof globalObject.localStorage.getItem('debug') === 'string'
-    ) {
-      Logdown._prefixRegExps = []
-
-      globalObject.localStorage
-        .getItem('debug')
-        .split(',')
-        .forEach(function (str) {
-          str = str.trim()
-          var type = 'enable'
+        _b.localStorage.getItem('debug').split(',').forEach(function (str) {
+          str = str.trim();
+          var type = 'enable';
 
           if (str[0] === '-') {
-            str = str.substr(1)
-            type = 'disable'
+            str = str.substr(1);
+            type = 'disable';
           }
 
-          var regExp = Logdown._prepareRegExpForPrefixSearch(str)
+          var regExp = _0._prepareRegExpForPrefixSearch(str);
 
-          Logdown._prefixRegExps.push({
+          _0._prefixRegExps.push({
             type: type,
             regExp: regExp
-          })
-        })
+          });
+        });
+      }
+    } catch (error) {}
+  }
+
+  function _c() {
+    var __scope_0 = 0;
+    if (!__captured_scopes[__scope_0]) __captured_scopes[__scope_0] = {
+      lastUsed: 0
+    };
+    __captured_scopes[__scope_0].lastUsed += 1;
+    return _0.prefixColors[__captured_scopes[__scope_0].lastUsed % _0.prefixColors.length];
+  }
+
+  function _f(arg) {
+    return _$0.Array.prototype.slice.call(arg, 0);
+  }
+
+  function _e() {
+    if (!this.state.isEnabled) {
+      return;
     }
-  } catch (error) {}
-}
 
-Logdown._getNextPrefixColor = (function () {
-  var lastUsed = 0
-  // Tomorrow Night Eighties colors
-  // https://github.com/chriskempson/tomorrow-theme#tomorrow-night-eighties
-  var colors = [
-    '#F2777A',
-    '#F99157',
-    '#FFCC66',
-    '#99CC99',
-    '#66CCCC',
-    '#6699CC',
-    '#CC99CC'
-  ]
+    var args = _f(arguments);
 
-  return function () {
-    lastUsed += 1
-    return colors[lastUsed % colors.length]
-  }
-})()
+    var preparedOutput = this._prepareOutput(args, "debug");
 
-//
-// Instance
-//
-
-Logdown.prototype._getDecoratedPrefix = function () {
-  var decoratedPrefix = []
-
-  if (isColorSupported()) {
-    decoratedPrefix.push('%c' + this.opts.prefix + '%c ')
-    decoratedPrefix.push(
-      'color:' + this.opts.prefixColor + '; font-weight:bold;',
-      '' // Empty string resets style.
-    )
-  } else {
-    decoratedPrefix.push('[' + this.opts.prefix + '] ')
+    (_$0.console["debug"] || _$0.console.log).apply(_$0.console, preparedOutput);
   }
 
-  return decoratedPrefix
-}
+  function _g() {
+    if (!this.state.isEnabled) {
+      return;
+    }
 
-Logdown.prototype._prepareOutput = function (args) {
-  var preparedOutput = this._getDecoratedPrefix()
-  var parsedMarkdown
+    var args = _f(arguments);
 
-  // Only first argument on `console` can have style.
-  if (typeof args[0] === 'string') {
-    if (this.opts.markdown && isColorSupported()) {
-      parsedMarkdown = markdown.parse(args[0])
-      preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text
-      preparedOutput = preparedOutput.concat(parsedMarkdown.styles)
+    var preparedOutput = this._prepareOutput(args, "log");
+
+    (_$0.console["log"] || _$0.console.log).apply(_$0.console, preparedOutput);
+  }
+
+  function _h() {
+    if (!this.state.isEnabled) {
+      return;
+    }
+
+    var args = _f(arguments);
+
+    var preparedOutput = this._prepareOutput(args, "info");
+
+    (_$0.console["info"] || _$0.console.log).apply(_$0.console, preparedOutput);
+  }
+
+  function _i() {
+    if (!this.state.isEnabled) {
+      return;
+    }
+
+    var args = _f(arguments);
+
+    var preparedOutput = this._prepareOutput(args, "warn");
+
+    (_$0.console["warn"] || _$0.console.log).apply(_$0.console, preparedOutput);
+  }
+
+  function _j() {
+    if (!this.state.isEnabled) {
+      return;
+    }
+
+    var args = _f(arguments);
+
+    var preparedOutput = this._prepareOutput(args, "error");
+
+    (_$0.console["error"] || _$0.console.log).apply(_$0.console, preparedOutput);
+  }
+
+  function _m() {
+    try {
+      return 'WebkitAppearance' in _$0.document.documentElement.style;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function _n() {
+    try {
+      return navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function _l() {
+    return _m() || _n();
+  }
+
+  function _k() {
+    var decoratedPrefix = [];
+
+    if (_l()) {
+      decoratedPrefix.push('%c' + this.opts.prefix + '%c ');
+      decoratedPrefix.push('color:' + this.opts.prefixColor + '; font-weight:bold;', '' // Empty string resets style.
+      );
     } else {
-      preparedOutput[0] = preparedOutput[0] + args[0]
+      decoratedPrefix.push('[' + this.opts.prefix + '] ');
     }
-  } else {
-    preparedOutput.push(args[0])
+
+    return decoratedPrefix;
   }
 
-  if (args.length > 1) {
-    preparedOutput = preparedOutput.concat(args.slice(1))
-  }
+  function _r(text, rules) {
+    var matches = [];
+    rules.forEach(function (rule) {
+      var match = text.match(rule.regexp);
 
-  return preparedOutput
-}
+      if (match) {
+        matches.push({
+          rule: rule,
+          match: match
+        });
+      }
+    });
 
-//
-// API
-//
-
-Logdown._setPrefixRegExps()
-
-module.exports = Logdown
-
-},{"./base":1,"./markdown/browser":3,"./util/get-global":6,"./util/is-color-supported/browser":7}],3:[function(require,module,exports){
-var rules = require('./rules/browser')
-var getNextMatch = require('./get-next-match')
-
-function parse (text) {
-  var styles = []
-  var match = getNextMatch(text, rules)
-
-  while (match) {
-    styles.push(match.rule.style)
-    styles.push('') // Empty string resets style.
-
-    text = text.replace(match.rule.regexp, match.rule.replacer)
-    match = getNextMatch(text, rules)
-  }
-
-  return {
-    text: text,
-    styles: styles
-  }
-}
-
-//
-// API
-//
-
-module.exports = {
-  parse: parse
-}
-
-},{"./get-next-match":4,"./rules/browser":5}],4:[function(require,module,exports){
-module.exports = function getNextMatch (text, rules) {
-  var matches = []
-
-  rules.forEach(function (rule) {
-    var match = text.match(rule.regexp)
-
-    if (match) {
-      matches.push({
-        rule: rule,
-        match: match
-      })
+    if (matches.length === 0) {
+      return null;
     }
-  })
 
-  if (matches.length === 0) {
-    return null
+    matches.sort(function (a, b) {
+      return a.match.index - b.match.index;
+    });
+    return matches[0];
   }
 
-  matches.sort(function (a, b) {
-    return a.match.index - b.match.index
-  })
+  function _v(match, submatch1) {
+    return '%c' + submatch1 + '%c';
+  }
 
-  return matches[0]
-}
+  function _y(match, submatch1) {
+    return '%c' + submatch1 + '%c';
+  }
 
-},{}],5:[function(require,module,exports){
-module.exports = [
-  {
+  function _B(match, submatch1) {
+    return '%c' + submatch1 + '%c';
+  }
+
+  function _q(text) {
+    var styles = [];
+
+    var match = _r(text, _s);
+
+    while (match) {
+      styles.push(match.rule.style);
+      styles.push(''); // Empty string resets style.
+
+      text = text.replace(match.rule.regexp, match.rule.replacer);
+      match = _r(text, _s);
+    }
+
+    return {
+      text: text,
+      styles: styles
+    };
+  }
+
+  function _o(args) {
+    var preparedOutput = this._getDecoratedPrefix();
+
+    var parsedMarkdown; // Only first argument on `console` can have style.
+
+    if (typeof args[0] === 'string') {
+      if (this.opts.markdown && _l()) {
+        parsedMarkdown = _p.parse(args[0]);
+        preparedOutput[0] = preparedOutput[0] + parsedMarkdown.text;
+        preparedOutput = preparedOutput.concat(parsedMarkdown.styles);
+      } else {
+        preparedOutput[0] = preparedOutput[0] + args[0];
+      }
+    } else {
+      preparedOutput.push(args[0]);
+    }
+
+    if (args.length > 1) {
+      preparedOutput = preparedOutput.concat(args.slice(1));
+    }
+
+    return preparedOutput;
+  }
+
+  _0._instances = [];
+  _0._prefixRegExps = [];
+  _0._prepareRegExpForPrefixSearch = _3;
+  _0._isPrefixAlreadyInUse = _4;
+  _0._getInstanceByPrefix = _5;
+  _0._normalizeOpts = _6;
+  _0._getInitialState = _7;
+  _0._getEnableState = _8;
+  _0.prefixColors = ["#F2777A", "#F99157", "#FFCC66", "#99CC99", "#66CCCC", "#6699CC", "#CC99CC"];
+
+  var _b = this;
+
+  _0._setPrefixRegExps = _a;
+  _0._getNextPrefixColor = _c;
+  var _s = [{
     regexp: /\*([^*]+)\*/,
-    replacer: function (match, submatch1) {
-      return '%c' + submatch1 + '%c'
-    },
-    style: 'font-weight:bold;'
-  },
-  {
+    replacer: _v,
+    style: "font-weight:bold;"
+  }, {
     regexp: /_([^_]+)_/,
-    replacer: function (match, submatch1) {
-      return '%c' + submatch1 + '%c'
-    },
-    style: 'font-style:italic;'
-  },
-  {
+    replacer: _y,
+    style: "font-style:italic;"
+  }, {
     regexp: /`([^`]+)`/,
-    replacer: function (match, submatch1) {
-      return '%c' + submatch1 + '%c'
-    },
-    style:
-      'background-color:rgba(255,204,102, 0.1);' +
-      'color:#FFCC66;' +
-      'padding:2px 5px;' +
-      'border-radius:2px;'
-  }
-]
-
-},{}],6:[function(require,module,exports){
-/* eslint-disable no-new-func */
-
-module.exports = function getGlobal () {
-  return Function('return this')()
-}
-
-},{}],7:[function(require,module,exports){
-var isWebkit = require('../is-webkit')
-var isFirefox = require('../is-firefox')
-
-module.exports = function isColorSupported () {
-  return (isWebkit() || isFirefox())
-}
-
-},{"../is-firefox":8,"../is-webkit":9}],8:[function(require,module,exports){
-module.exports = function isFirefox () {
-  try {
-    return navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)
-  } catch (error) {
-    return false
-  }
-}
-
-},{}],9:[function(require,module,exports){
-// Is webkit? http://stackoverflow.com/a/16459606/376773
-module.exports = function isWebkit () {
-  try {
-    return ('WebkitAppearance' in document.documentElement.style)
-  } catch (error) {
-    return false
-  }
-}
-
-},{}],10:[function(require,module,exports){
-module.exports = function toArray (arg) {
-  return Array.prototype.slice.call(arg, 0)
-}
-
-},{}]},{},[2])(2)
-});
+    replacer: _B,
+    style: "background-color:rgba(255,204,102, 0.1);color:#FFCC66;padding:2px 5px;border-radius:2px;"
+  }];
+  var _p = {
+    parse: _q
+  };
+  _d._prepareOutput = _o;
+  _d._getDecoratedPrefix = _k;
+  _d.error = _j;
+  _d.warn = _i;
+  _d.info = _h;
+  _d.log = _g;
+  _d.debug = _e;
+  logdown = _0;
+}).call(this);
