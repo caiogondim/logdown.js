@@ -14,8 +14,8 @@ const markdown = require('../../src/markdown/node')
       console[method] = jest.fn()
 
       logdown._instances = []
-      logdown.enable('*')
       process.env.NODE_DEBUG = 'foo'
+      logdown._setPrefixRegExps()
     })
 
     afterEach(() => {
@@ -95,6 +95,14 @@ const markdown = require('../../src/markdown/node')
         foo._getDecoratedPrefix(method),
         obj
       )
+    })
+
+    it('doesnt print is state.isEnable is false', () => {
+      const foo = logdown('foo')
+      foo.state.isEnabled = false
+      foo[method]('lorem')
+
+      expect(console[method]).not.toHaveBeenCalled()
     })
   })
 })

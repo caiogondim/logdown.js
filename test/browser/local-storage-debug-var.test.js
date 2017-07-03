@@ -10,7 +10,6 @@ const logdown = require('../../src/browser')
 describe('localStorage.debug', () => {
   beforeEach(() => {
     console.log = jest.fn()
-    logdown.enable('*')
     logdown._instances = []
   })
 
@@ -21,6 +20,7 @@ describe('localStorage.debug', () => {
 
   it('`localStorage.debug=foo` enables only instances with “foo” prefix', () => {
     localStorage.debug = 'foo'
+    logdown._setPrefixRegExps()
 
     const foo = logdown('foo')
     const bar = logdown('bar')
@@ -39,6 +39,7 @@ describe('localStorage.debug', () => {
 
   it('`localStorage.debug=*foo` enables only instances with names ending with “foo”', () => {
     localStorage.debug = '*foo'
+    logdown._setPrefixRegExps()
 
     const foo = logdown('foo')
     const bar = logdown('bar')
@@ -55,6 +56,7 @@ describe('localStorage.debug', () => {
 
   it('`localStorage.debug=foo*` enables only instances with names beginning with “foo”', () => {
     localStorage.debug = 'foo*'
+    logdown._setPrefixRegExps()
 
     const foo = logdown('foo')
     const bar = logdown('bar')
@@ -71,6 +73,7 @@ describe('localStorage.debug', () => {
 
   it('`localStorage.debug=-*` should disable all instances', () => {
     localStorage.debug = '-*'
+    logdown._setPrefixRegExps()
 
     const foo = logdown('foo')
     const bar = logdown('bar')
@@ -86,6 +89,7 @@ describe('localStorage.debug', () => {
 
   it('`localStorage.debug=*,-foo` enables all but only instances with “foo” prefix', () => {
     localStorage.debug = '*,-foo'
+    logdown._setPrefixRegExps()
 
     const foo = logdown('foo')
     const bar = logdown('bar')
@@ -102,6 +106,7 @@ describe('localStorage.debug', () => {
 
   it('`localStorage.debug=*,-*foo` enables all but instances with names ending with “foo”', () => {
     localStorage.debug = '*,-*foo'
+    logdown._setPrefixRegExps()
 
     const foo = logdown('foo')
     const bar = logdown('bar')
@@ -118,6 +123,7 @@ describe('localStorage.debug', () => {
 
   it('`localStorage.debug=*,-foo*` enables all but instances with names beginning with “foo”', () => {
     localStorage.debug = '*,-foo*'
+    logdown._setPrefixRegExps()
 
     const foo = logdown('foo')
     const bar = logdown('bar')
@@ -133,8 +139,8 @@ describe('localStorage.debug', () => {
   })
 
   it('`localStorage.debug` accepts N arguments', () => {
-    logdown.enable('*')
     localStorage.debug = 'foo,barfoo'
+    logdown._setPrefixRegExps()
 
     const foo = logdown('foo')
     const bar = logdown('bar')

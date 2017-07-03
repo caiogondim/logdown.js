@@ -3,6 +3,11 @@
 jest.mock('../../src/util/is-webkit', () => () => true)
 jest.mock('../../src/util/is-color-supported/browser', () => () => true)
 
+// Mock localStorage
+const globalObject = require('../../src/util/get-global')()
+const localStorage = require('../mocks/local-storage')
+globalObject.localStorage = localStorage
+
 const logdown = require('../../src/browser')
 const markdown = require('../../src/markdown/browser')
 
@@ -13,8 +18,9 @@ methods.forEach((method) => {
       console[method] = console[method] || console.log
       console[method] = jest.fn()
 
-      logdown.enable('*')
       logdown._instances = []
+      localStorage.setItem('debug', 'foo')
+      logdown._setPrefixRegExps()
     })
 
     afterEach(() => {

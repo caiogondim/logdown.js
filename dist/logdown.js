@@ -14,7 +14,6 @@ module.exports = function () {
     }
 
     Logdown._instances.push(this)
-    Logdown._alignPrefixes()
     Logdown._updateEnabledDisabled()
 
     return this
@@ -91,32 +90,18 @@ module.exports = function () {
     return instance
   }
 
-  Logdown._alignPrefixes = function () {
-    var longest = Logdown._instances.sort(function (a, b) {
-      return b.opts.prefix.length - a.opts.prefix.length
-    })[0]
-
-    Logdown._instances
-      .filter(function (instance) { return instance.opts.alignOutput })
-      .forEach(function (instance) {
-        var padding = new Array(Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0)).join(' ')
-        instance.opts.prefix = instance.opts.prefix + padding
-      })
-  }
-
   Logdown._normalizeOpts = function (prefix, opts) {
-    if (typeof prefix === 'object') opts = prefix
+    if (typeof prefix !== 'string') {
+      throw new TypeError('prefix must be a string')
+    }
+
     opts = opts || {}
 
-    if (typeof prefix !== 'string') prefix = opts.prefix || ''
-
-    var alignOutput = Boolean(opts.alignOutput)
     var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
     var prefixColor = Logdown._getNextPrefixColor()
 
     return {
       prefix: prefix,
-      alignOutput: alignOutput,
       markdown: markdown,
       prefixColor: prefixColor
     }
@@ -216,23 +201,25 @@ Logdown._getNextPrefixColor = (function () {
 // Instance
 //
 
-Logdown.prototype._prepareOutput = function (args, instance) {
-  var preparedOutput = []
-  var parsedMarkdown
+Logdown.prototype._getDecoratedPrefix = function () {
+  var decoratedPrefix = []
 
-  if (this.opts.prefix) {
-    if (isColorSupported()) {
-      preparedOutput.push('%c' + this.opts.prefix + '%c ')
-      preparedOutput.push(
-        'color:' + this.opts.prefixColor + '; font-weight:bold;',
-        '' // Empty string resets style.
-      )
-    } else {
-      preparedOutput.push('[' + this.opts.prefix + '] ')
-    }
+  if (isColorSupported()) {
+    decoratedPrefix.push('%c' + this.opts.prefix + '%c ')
+    decoratedPrefix.push(
+      'color:' + this.opts.prefixColor + '; font-weight:bold;',
+      '' // Empty string resets style.
+    )
   } else {
-    preparedOutput.push('')
+    decoratedPrefix.push('[' + this.opts.prefix + '] ')
   }
+
+  return decoratedPrefix
+}
+
+Logdown.prototype._prepareOutput = function (args) {
+  var preparedOutput = this._getDecoratedPrefix()
+  var parsedMarkdown
 
   // Only first argument on `console` can have style.
   if (typeof args[0] === 'string') {
@@ -244,19 +231,15 @@ Logdown.prototype._prepareOutput = function (args, instance) {
       preparedOutput[0] = preparedOutput[0] + args[0]
     }
   } else {
-    preparedOutput[0] = args[0]
+    preparedOutput.push(args[0])
   }
 
   if (args.length > 1) {
-    preparedOutput = preparedOutput.concat(args.splice(1))
+    preparedOutput = preparedOutput.concat(args.slice(1))
   }
 
   return preparedOutput
 }
-
-//
-// API
-//
 
 module.exports = Logdown
 

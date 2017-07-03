@@ -7,18 +7,32 @@ var globalObject = require('./util/get-global')()
 // Static
 //
 
-Logdown._updateEnabledDisabled = function () {
+Logdown._setPrefixRegExps = function () {
   try {
     if (
       globalObject.localStorage &&
       typeof globalObject.localStorage.getItem('debug') === 'string'
     ) {
-      Logdown.disable('*')
+      Logdown._prefixRegExps = []
+
       globalObject.localStorage
         .getItem('debug')
         .split(',')
-        .forEach(function (regExp) {
-          Logdown.enable(regExp)
+        .forEach(function (str) {
+          str = str.trim()
+          var type = 'enable'
+
+          if (str[0] === '-') {
+            str = str.substr(1)
+            type = 'disable'
+          }
+
+          var regExp = Logdown._prepareRegExpForPrefixSearch(str)
+
+          Logdown._prefixRegExps.push({
+            type: type,
+            regExp: regExp
+          })
         })
     }
   } catch (error) {}
@@ -87,5 +101,11 @@ Logdown.prototype._prepareOutput = function (args) {
 
   return preparedOutput
 }
+
+//
+// API
+//
+
+Logdown._setPrefixRegExps()
 
 module.exports = Logdown

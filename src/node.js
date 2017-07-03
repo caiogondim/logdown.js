@@ -7,7 +7,15 @@ var isColorSupported = require('./util/is-color-supported/node')
 // Static
 //
 
-Logdown._updateEnabledDisabled = function () {
+Logdown.methodEmoji = {
+  warn: '⚠️',
+  error: '❌',
+  info: `\u{2139}\u{FE0F}`, // Forces emoji information instead of "i" symbol
+  debug: '🐞',
+  log: ' '
+}
+
+Logdown._setPrefixRegExps = function () {
   // Parsing `NODE_DEBUG` and `DEBUG` env var
   var envVar = null
   if (
@@ -28,11 +36,25 @@ Logdown._updateEnabledDisabled = function () {
     }
 
     if (envVar) {
-      Logdown.disable('*')
+      Logdown._prefixRegExps = []
+
       process.env[envVar]
         .split(',')
-        .forEach(function (regExp) {
-          Logdown.enable(regExp)
+        .forEach(function (str) {
+          str = str.trim()
+          var type = 'enable'
+
+          if (str[0] === '-') {
+            str = str.substr(1)
+            type = 'disable'
+          }
+
+          var regExp = Logdown._prepareRegExpForPrefixSearch(str)
+
+          Logdown._prefixRegExps.push({
+            type: type,
+            regExp: regExp
+          })
         })
     }
   }
@@ -54,14 +76,6 @@ Logdown._getNextPrefixColor = (function () {
     return nodePrefixColors[lastUsed % nodePrefixColors.length]
   }
 })()
-
-Logdown.methodEmoji = {
-  warn: '⚠️',
-  error: '❌',
-  info: `\u{2139}\u{FE0F}`, // Forces emoji information instead of "i" symbol
-  debug: '🐞',
-  log: ' '
-}
 
 //
 // Instance
@@ -135,5 +149,11 @@ Logdown.prototype._prepareOutput = function (args, method) {
 
   return preparedOutput
 }
+
+//
+// API
+//
+
+Logdown._setPrefixRegExps()
 
 module.exports = Logdown

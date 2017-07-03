@@ -2,7 +2,7 @@
 
 var logdown = require('../../src/node')
 
-describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
+describe('NODE_DEBUG and DEBUG environment variables', () => {
   // NODE_DEBUG is the official env var supported by Node
   // https://nodejs.org/api/util.html#util_util_debuglog_section
   // DEBUG is for compatibility with the debug lib
@@ -10,7 +10,6 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
 
   beforeEach(() => {
     console.log = jest.fn()
-    logdown.enable('*')
     logdown._instances = []
   })
 
@@ -24,6 +23,7 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
   envVars.forEach((envVar) => {
     it('`' + envVar + '=foo` enables only instances with “foo” prefix', () => {
       process.env[envVar] = 'foo'
+      logdown._setPrefixRegExps()
 
       var foo = logdown('foo')
       var bar = logdown('bar')
@@ -42,6 +42,7 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
 
     it('`' + envVar + '=*foo` enables only instances with names ending with “foo”', () => {
       process.env[envVar] = '*foo'
+      logdown._setPrefixRegExps()
 
       var foo = logdown('foo')
       var bar = logdown('bar')
@@ -58,6 +59,7 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
 
     it('`' + envVar + '=foo*` enables only instances with names beginning with “foo”', () => {
       process.env[envVar] = 'foo*'
+      logdown._setPrefixRegExps()
 
       var foo = logdown('foo')
       var bar = logdown('bar')
@@ -74,6 +76,7 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
 
     it('`' + envVar + '=-*` disables all instances', () => {
       process.env[envVar] = '-*'
+      logdown._setPrefixRegExps()
 
       var foo = logdown('foo')
       var bar = logdown('bar')
@@ -89,6 +92,7 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
 
     it('`' + envVar + '=*,-foo` enables all but only instances with “foo” prefix', () => {
       process.env[envVar] = '*,-foo'
+      logdown._setPrefixRegExps()
 
       var foo = logdown('foo')
       var bar = logdown('bar')
@@ -105,6 +109,7 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
 
     it('`' + envVar + '=*,-*foo` enables all but instances with names ending with “foo”', () => {
       process.env[envVar] = '*,-*foo'
+      logdown._setPrefixRegExps()
 
       var foo = logdown('foo')
       var bar = logdown('bar')
@@ -121,6 +126,7 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
 
     it('`' + envVar + '=*,-foo*` enables all but instances with names beginning with “foo”', () => {
       process.env[envVar] = '*,-foo*'
+      logdown._setPrefixRegExps()
 
       var foo = logdown('foo')
       var bar = logdown('bar')
@@ -136,8 +142,8 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
     })
 
     it('`' + envVar + '` accepts N arguments', () => {
-      logdown.enable('*')
       process.env[envVar] = 'foo,barfoo'
+      logdown._setPrefixRegExps()
 
       var foo = logdown('foo')
       var bar = logdown('bar')
@@ -158,6 +164,7 @@ describe.skip('NODE_DEBUG and DEBUG environment variables', () => {
   it('`NODE_DEBUG` has precedence over `DEBUG`', () => {
     process.env['NODE_DEBUG'] = 'foo,barfoo'
     process.env['DEBUG'] = 'bar,foobar'
+    logdown._setPrefixRegExps()
 
     var foo = logdown('foo')
     var bar = logdown('bar')

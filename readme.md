@@ -125,13 +125,21 @@ logger.log('lorem `ipsum`')
 
 ## Enabling/disabling instances
 
-It is possible to enable/disable the output of instances using the
-`logdown.disable` or `logdown.enable` methods.
+logdown is compatible with Node.js [util.debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) and [debug.js](https://github.com/visionmedia/debug).
 
-```js
-logdown.disable('foo') // will disable the instance with *foo* prefix
-logdown.enable('bar') // will enable the instance with *bar* prefix
+To enable a giving instance, use the `NODE_DEBUG` enviroment variable followed by the prefixes you want to enable.
+
+```bash
+NODE_DEBUG=foo node foo.js // will disable the instance with *foo* prefix
 ```
+
+Multiple instances should be separated by comma
+
+```bash
+NODE_DEBUG=foo,bar node foo.js // will disable the instance with *foo* prefix
+```
+
+### Wildcards
 
 You can also use wildcards.
 
@@ -173,16 +181,31 @@ If you want to align the output of each instance, like the example below:
 Use the the following function
 ```js
 function alignPrefixes(Logdown) {
-  var longest = Logdown._instances.sort(function (a, b) {
+  var longest = logdown._instances.sort(function (a, b) {
     return b.opts.prefix.length - a.opts.prefix.length
   })[0]
 
-  Logdown._instances
+  logdown._instances
     .forEach(function (instance) {
       var padding = new Array(Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0)).join(' ')
       instance.opts.prefix = instance.opts.prefix + padding
     })
 }
+```
+
+### Enable/disable instance at runtime
+
+Set the instance state `isEnabled` to false to prevent it to log.
+
+```js
+logger.state.isEnabled = false
+```
+
+If you don't have direct access to the instance, use `logdown.getInstanceByPrefix` to get an instance reference.
+
+```js
+const logger = logdown.getInstanceByPrefix('foo')
+logger.state.isEnabled = false
 ```
 
 ## Sponsor

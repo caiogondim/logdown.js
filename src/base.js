@@ -6,14 +6,14 @@ module.exports = function () {
       return new Logdown(prefix, opts)
     }
 
-    this.opts = Logdown._normalizeOpts(prefix, opts)
-
-    if (Logdown._isPrefixAlreadyInUse(this.opts.prefix)) {
-      return Logdown._getInstanceByPrefix(this.opts.prefix)
+    if (Logdown._isPrefixAlreadyInUse(prefix)) {
+      return Logdown._getInstanceByPrefix(prefix)
     }
 
+    this.opts = Logdown._normalizeOpts(prefix, opts)
+    this.state = Logdown._getInitialState(this.opts)
+
     Logdown._instances.push(this)
-    Logdown._updateEnabledDisabled()
 
     return this
   }
@@ -23,48 +23,7 @@ module.exports = function () {
   //
 
   Logdown._instances = []
-  Logdown._filterRegExps = []
-
-  Logdown.enable = function () {
-    toArray(arguments).forEach(function (str) {
-      if (str[0] === '-') {
-        Logdown.disable(str.substr(1))
-      }
-
-      var regExp = Logdown._prepareRegExpForPrefixSearch(str)
-
-      if (str === '*') {
-        Logdown._filterRegExps = []
-      } else {
-        Logdown._filterRegExps.push({
-          type: 'enable',
-          regExp: regExp
-        })
-      }
-    })
-  }
-
-  Logdown.disable = function () {
-    toArray(arguments).forEach(function (str) {
-      if (str[0] === '-') {
-        Logdown.enable(str.substr(1))
-      }
-
-      var regExp = Logdown._prepareRegExpForPrefixSearch(str)
-
-      if (str === '*') {
-        Logdown._filterRegExps = [{
-          type: 'disable',
-          regExp: regExp
-        }]
-      } else {
-        Logdown._filterRegExps.push({
-          type: 'disable',
-          regExp: regExp
-        })
-      }
-    })
-  }
+  Logdown._prefixRegExps = []
 
   Logdown._prepareRegExpForPrefixSearch = function (str) {
     return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
@@ -77,16 +36,9 @@ module.exports = function () {
   }
 
   Logdown._getInstanceByPrefix = function (prefix) {
-    var instance
-
-    Logdown._instances.some(function (instanceCur) {
-      if (instanceCur.opts.prefix === prefix) {
-        instance = instanceCur
-        return true
-      }
-    })
-
-    return instance
+    return Logdown._instances.filter(function (instanceCur) {
+      return instanceCur.opts.prefix === prefix
+    })[0]
   }
 
   Logdown._normalizeOpts = function (prefix, opts) {
@@ -101,9 +53,35 @@ module.exports = function () {
 
     return {
       prefix: prefix,
-      markdown: markdown,
-      prefixColor: prefixColor
+      prefixColor: prefixColor,
+      markdown: markdown
     }
+  }
+
+  Logdown._getInitialState = function (opts) {
+    return {
+      isEnabled: Logdown._getEnableState(opts)
+    }
+  }
+
+  Logdown._getEnableState = function (opts) {
+    var isEnabled = false
+
+    Logdown._prefixRegExps.forEach(function (filter) {
+      if (
+        filter.type === 'enable' &&
+        filter.regExp.test(opts.prefix)
+      ) {
+        isEnabled = true
+      } else if (
+        filter.type === 'disable' &&
+        filter.regExp.test(opts.prefix)
+      ) {
+        isEnabled = false
+      }
+    })
+
+    return isEnabled
   }
 
   //
@@ -113,7 +91,7 @@ module.exports = function () {
   var methods = ['debug', 'log', 'info', 'warn', 'error']
   methods.forEach(function (method) {
     Logdown.prototype[method] = function () {
-      if (this._isDisabled()) {
+      if (!this.state.isEnabled) {
         return
       }
 
@@ -126,25 +104,6 @@ module.exports = function () {
       )
     }
   }, this)
-
-  Logdown.prototype._isDisabled = function () {
-    var isDisabled = false
-    Logdown._filterRegExps.forEach(function (filter) {
-      if (
-        filter.type === 'enable' &&
-        filter.regExp.test(this.opts.prefix)
-      ) {
-        isDisabled = false
-      } else if (
-        filter.type === 'disable' &&
-        filter.regExp.test(this.opts.prefix)
-      ) {
-        isDisabled = true
-      }
-    }, this)
-
-    return isDisabled
-  }
 
   return Logdown
 }
