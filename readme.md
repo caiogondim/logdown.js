@@ -8,8 +8,6 @@
 
 <br>
 
-#### THIS VERSION (v3) IS UNDER DEVELOPMENT
-
 `logdown` is a debug utility for the browser and the server with Markdown support, providing a single interface and a similar behavior between the browser and the server.
 
 It doesn't have any dependencies for the browser version and it's only 2K gzipped.
