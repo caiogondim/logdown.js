@@ -171,6 +171,9 @@ const logger = logdown('foo', {
 
 ### `isEnabled`
 
+- type: 'Boolean'
+- default: default value is derived from `localStorage.debug` on browser and from env var `NODE_DEBUG` on node.
+
 Used to enable/disable a given instance at runtime.
 
 ```js
@@ -196,13 +199,6 @@ Multiple instances should be separated by comma
 NODE_DEBUG=foo,bar node foo.js // will disable the instance with *foo* prefix
 ```
 
-## Conventions
-
-If you're using this in one or more of your libraries, you should use the name of your library so
-that developers may toggle debugging as desired without guessing names. If you have more than one
-debuggers you should prefix them with your library name and use ":" to separate features. For
-example "bodyParser" from Connect would then be "connect:bodyParser".
-
 ### Wildcards
 
 You can also use wildcards.
@@ -221,6 +217,13 @@ logdown.enable('*', '-foo')
 // disables all intances with foo in the prefix, but don't disable *foobar*
 logdown.disable('*foo*', '-foobar')
 ```
+
+## Conventions
+
+If you're using this in one or more of your libraries, you should use the name of your library so
+that developers may toggle debugging as desired without guessing names. If you have more than one
+debuggers you should prefix them with your library name and use ":" to separate features. For
+example "bodyParser" from Connect would then be "connect:bodyParser".
 
 ## FAQ
 
