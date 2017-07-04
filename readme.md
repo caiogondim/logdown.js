@@ -156,9 +156,9 @@ const logger = logdown('foo', {
 })
 ```
 
-## State
+### State
 
-### `isEnabled`
+#### `isEnabled`
 
 - type: 'Boolean'
 - default: default value is derived from `localStorage.debug` on browser and from env var `NODE_DEBUG` on node.
