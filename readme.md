@@ -223,6 +223,10 @@ that developers may toggle debugging as desired without guessing names. If you h
 debuggers you should prefix them with your library name and use ":" to separate features. For
 example "bodyParser" from Connect would then be "connect:bodyParser".
 
+## FAQ
+
+[Link](.doc/faq.md)
+
 ## Sponsor
 
 If you found this library useful and are willing to donate, transfer some
