@@ -17,6 +17,12 @@ It doesn't have any dependencies for the browser version and it is less than 2K 
 You can see it in action in the [example page](//caiogondim.github.io/logdown.js) or in the preview
 below.
 
+## Installation
+
+```bash
+$ npm install --save logdown
+```
+
 ## Preview
 
 Out-of-the box colors work well on both light and dark themes.
@@ -29,12 +35,6 @@ Out-of-the box colors work well on both light and dark themes.
 
 <h3 align="center">Node</h3>
 <img src="http://rawgit.com/caiogondim/logdown.js/master/img/node-preview.png">
-
-## Installation
-
-```bash
-$ npm install --save logdown
-```
 
 ## Usage
 
