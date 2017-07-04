@@ -83,14 +83,11 @@ logger.warn('consectetur', '`adipiscing` elit')
 
 ### Options
 
-The constructor accepts one object for configuration on instantiation time.
-
 The following options can be used for configuration.
 
 #### `prefix`
 
-- Type: 'String'
-- Default: `''`
+- Type: `String`
 
 ```js
 const logger = logdown({ prefix: 'foo' })
@@ -116,7 +113,7 @@ fooQuzLogger.log('Lorem Ipsum')
 
 #### `markdown`
 
-- Type: 'Boolean'
+- Type: `Boolean`
 - Default: `true`
 
 If setted to `false`, markdown will not be parsed.
@@ -137,6 +134,48 @@ logger.log('lorem _ipsum_')
 
 // Code with ` (backtick) between words
 logger.log('lorem `ipsum`')
+```
+
+#### `prefixColor`
+
+- type: `String`
+- default: next value after last used on the `logdown.prefixColors` array.
+
+Hex value for a custom color.
+
+```js
+const logger1 = logdown('foo', { prefixColor: '#FF0000'}) // red prefix
+const logger2 = logdown('bar', { prefixColor: '#00FF00'}) // green prefix
+const logger3 = logdown('quz', { prefixColor: '#0000FF'}) // blue prefix
+```
+
+#### `logger`
+
+- type: 'Object'
+- default: `console`
+
+Custom logger. On Node it's possible to instantiate a new `console` setting it's output to a
+different stream other than `stdout` and `stderr`.
+
+```js
+const output = fs.createWriteStream('./stdout.log');
+const errorOutput = fs.createWriteStream('./stderr.log');
+const fileLogger =  new Console(output, errorOutput)
+
+const logger = logdown('foo', {
+  logger: fileLogger
+})
+```
+
+## State
+
+### `isEnabled`
+
+Used to enable/disable a given instance at runtime.
+
+```js
+// Prevents `logger` to output debug info
+logger.state.isEnabled = false
 ```
 
 ## Enabling/disabling instances
