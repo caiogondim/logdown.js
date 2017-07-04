@@ -8,3 +8,4 @@
  ☐ Remove `logger.info`
  ☐ Remove `logger.debug`
  ☐ custom methods (hability to create new methods with emoji, ...)
+fix example page

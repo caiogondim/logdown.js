@@ -10,21 +10,21 @@
 
 #### THIS VERSION (v3) IS UNDER DEVELOPMENT
 
-logdown is a debug utility for the browser and the server with Markdown support, compatible with both [debug.js](https://github.com/visionmedia/debug) and node core's [debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) technique.
+logdown is a debug utility for the browser and the server with Markdown support, compatible with both [debug.js](https://github.com/visionmedia/debug) and node core's [debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section).
 
-It doesn't have dependencies for the browser version and is less than 2K gzipped.
+It doesn't have any dependencies for the browser version and it is less than 2K gzipped.
 
 You can see it in action in the [example page](//caiogondim.github.io/logdown.js) or in the preview
 below.
 
 ## Preview
 
-Out-of-the box colors to work on both light and dark themes.
+Out-of-the box colors work well on both light and dark themes.
 
-<h3 align="center">Browser devtools dark</h3>
+<h3 align="center">Browser DevTools dark</h3>
 <img src="http://rawgit.com/caiogondim/logdown.js/master/img/browser-preview-dark.png">
 
-<h3 align="center">Browser devtools light</h3>
+<h3 align="center">Browser DevTools light</h3>
 <img src="http://rawgit.com/caiogondim/logdown.js/master/img/browser-preview-light.png">
 
 <h3 align="center">Node</h3>
@@ -38,8 +38,8 @@ $ npm install --save logdown
 
 ## Usage
 
-`logdown` exports a function. For the simplest use case, pass the name of your module to it and it
-will return a decorated `console`.
+`logdown` exports a function and for the simplest use case, pass the name of your module to it and
+it will return a decorated `console`.
 
 ```js
 const logdown = require('logdown')
@@ -141,7 +141,9 @@ logger.log('lorem `ipsum`')
 
 ## Enabling/disabling instances
 
-logdown is compatible with Node.js [util.debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) and [debug.js](https://github.com/visionmedia/debug).
+logdown is compatible with Node.js
+[util.debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) and
+[debug.js](https://github.com/visionmedia/debug).
 
 To enable a giving instance, use the `NODE_DEBUG` enviroment variable followed by the prefixes you want to enable.
 
@@ -154,6 +156,13 @@ Multiple instances should be separated by comma
 ```bash
 NODE_DEBUG=foo,bar node foo.js // will disable the instance with *foo* prefix
 ```
+
+## Conventions
+
+If you're using this in one or more of your libraries, you should use the name of your library so
+that developers may toggle debugging as desired without guessing names. If you have more than one
+debuggers you should prefix them with your library name and use ":" to separate features. For
+example "bodyParser" from Connect would then be "connect:bodyParser".
 
 ### Wildcards
 
@@ -174,9 +183,9 @@ logdown.enable('*', '-foo')
 logdown.disable('*foo*', '-foobar')
 ```
 
-## Recipes
+## FAQ
 
-### Disabling logging on an instance level
+### Disabling one method on an instance at runtime
 ```js
 // To disable a given method, just pass a no-op to it
 logger.warn = function() {}
@@ -228,6 +237,11 @@ logger.state.isEnabled = false
 
 If you found this library useful and are willing to donate, transfer some
 bitcoins to `1BqqKiZA8Tq43CdukdBEwCdDD42jxuX9UY`.
+
+## Credits
+
+- [debug.js](https://github.com/visionmedia/debug) for some pieces of copied documentation
+- [Node core's debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section)
 
 ---
 
