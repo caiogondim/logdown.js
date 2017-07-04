@@ -10,7 +10,7 @@
 
 #### THIS VERSION (v3) IS UNDER DEVELOPMENT
 
-logdown is a debug utility for the browser and the server with Markdown support, providing a single interface and a similar behavior between the browser and the server.
+`logdown` is a debug utility for the browser and the server with Markdown support, providing a single interface and a similar behavior between the browser and the server.
 
 It doesn't have any dependencies for the browser version and it is less than 2K gzipped.
 
@@ -88,18 +88,9 @@ The following options can be used for configuration.
 - Type: `String`
 
 ```js
-const logger = logdown({ prefix: 'foo' })
-logger.log('Lorem ipsum') // Will use console.log with a prefix
-```
-
-The above code is the same as:
-```js
 const logger = logdown('foo')
 logger.log('Lorem ipsum')
 ```
-
-You should use the name of your module.
-You can, also, use `:` to separate modules inside one big module.
 
 ```js
 var fooBarLogger = logdown('foo:bar')
@@ -117,7 +108,7 @@ fooQuzLogger.log('Lorem Ipsum')
 If setted to `false`, markdown will not be parsed.
 
 ```js
-var logger = logdown({markdown: false})
+var logger = logdown({ markdown: false })
 logger.log('Lorem *ipsum*') // Will not parse the markdown
 ```
 
@@ -142,9 +133,9 @@ logger.log('lorem `ipsum`')
 Hex value for a custom color.
 
 ```js
-const logger1 = logdown('foo', { prefixColor: '#FF0000'}) // red prefix
-const logger2 = logdown('bar', { prefixColor: '#00FF00'}) // green prefix
-const logger3 = logdown('quz', { prefixColor: '#0000FF'}) // blue prefix
+const logger1 = logdown('foo', { prefixColor: '#FF0000' }) // red prefix
+const logger2 = logdown('bar', { prefixColor: '#00FF00' }) // green prefix
+const logger3 = logdown('quz', { prefixColor: '#0000FF' }) // blue prefix
 ```
 
 #### `logger`
@@ -181,38 +172,48 @@ logger.state.isEnabled = false
 
 ## Enabling/disabling instances
 
-logdown is compatible with Node.js
+`logdown` is compatible with Node.js
 [util.debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) and
 [debug.js](https://github.com/visionmedia/debug) as it uses the `NODE_DEBUG` enviroment variable to
 control which instances are enabled to output debug info.
 
+For the browser use `localStorage.debug`.
+
 ```bash
-NODE_DEBUG=foo node foo.js // will disable the instance with *foo* prefix
+NODE_DEBUG=foo node foo.js # will disable the instance with *foo* prefix
+```
+
+```js
+localStorage.debug = 'foo'
 ```
 
 Multiple instances should be separated by comma
 
 ```bash
-NODE_DEBUG=foo,bar node foo.js // will disable the instance with *foo* prefix
+NODE_DEBUG=foo,bar node foo.js # will disable the instance with *foo* prefix
+```
+
+```js
+localStorage.debug = 'foo,bar'
 ```
 
 ### Wildcards
 
-You can also use wildcards.
+Wildcard `*` is supported.
 
-```js
-logdown.enable('*') // enables all instances
-logdown.disable('*') // disables all instances
-logdown.enable('foo*') // enables all instances with a prefix starting with *foo*
+```bash
+NODE_DEBUG=* node foo.js # enables all instances
+NODE_DEBUG=foo* node foo.js # enables all instances with a prefix starting with *foo*
 ```
 
 Use `-` to do a negation.
 
 ```js
-// enables all instances but the one with *foo* prefix
-logdown.enable('*', '-foo')
-// disables all intances with foo in the prefix, but don't disable *foobar*
-logdown.disable('*foo*', '-foobar')
+# enables all instances but the one with *foo* prefix
+NODE_DEBUG=*,-foo node foo.js
+
+# disables all intances with foo in the prefix, but don't disable *foobar*
+NODE_DEBUG=*foo*,-foobar node foo.js
 ```
 
 ## Conventions
@@ -221,56 +222,6 @@ If you're using this in one or more of your libraries, you should use the name o
 that developers may toggle debugging as desired without guessing names. If you have more than one
 debuggers you should prefix them with your library name and use ":" to separate features. For
 example "bodyParser" from Connect would then be "connect:bodyParser".
-
-## FAQ
-
-### Disabling one method on an instance at runtime
-```js
-// To disable a given method, just pass a no-op to it
-logger.warn = function() {}
-
-// To reenable, attach it again to the prototype
-logger.warn = logdown.prototype.warn
-```
-
-### Align prefixes
-
-If you want to align the output of each instance, like the example below:
-```
-[ipsum]   lorem
-[sitamet] lorem
-[dolor]   lorem
-```
-
-Use the the following function
-```js
-function alignPrefixes(Logdown) {
-  var longest = logdown._instances.sort(function (a, b) {
-    return b.opts.prefix.length - a.opts.prefix.length
-  })[0]
-
-  logdown._instances
-    .forEach(function (instance) {
-      var padding = new Array(Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0)).join(' ')
-      instance.opts.prefix = instance.opts.prefix + padding
-    })
-}
-```
-
-### Enable/disable instance at runtime
-
-Set the instance state `isEnabled` to false to prevent it to log.
-
-```js
-logger.state.isEnabled = false
-```
-
-If you don't have direct access to the instance, use `logdown.getInstanceByPrefix` to get an instance reference.
-
-```js
-const logger = logdown.getInstanceByPrefix('foo')
-logger.state.isEnabled = false
-```
 
 ## Sponsor
 
