@@ -19,14 +19,15 @@ below.
 
 ## Preview
 
-### Browser
 Out-of-the box colors to work on both light and dark themes.
 
+<h3 align="center">Browser devtools dark</h3>
 <img src="http://rawgit.com/caiogondim/logdown.js/master/img/browser-preview-dark.png">
 
+<h3 align="center">Browser devtools light</h3>
 <img src="http://rawgit.com/caiogondim/logdown.js/master/img/browser-preview-light.png">
 
-### Server
+<h3 align="center">Node</h3>
 <img src="http://rawgit.com/caiogondim/logdown.js/master/img/node-preview.png">
 
 ## Installation
