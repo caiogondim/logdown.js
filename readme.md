@@ -10,7 +10,7 @@
 
 #### THIS VERSION (v3) IS UNDER DEVELOPMENT
 
-logdown is a debug utility for the browser and the server with Markdown support, compatible with both [debug.js](https://github.com/visionmedia/debug) and node core's [debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section).
+logdown is a debug utility for the browser and the server with Markdown support, providing a single interface and a similar behavior between the browser and the server.
 
 It doesn't have any dependencies for the browser version and it is less than 2K gzipped.
 
@@ -38,7 +38,7 @@ $ npm install --save logdown
 
 ## Usage
 
-`logdown` exports a function and for the simplest use case, pass the name of your module to it and
+`logdown` exports a function. For the simplest use case, pass the name of your module and
 it will return a decorated `console`.
 
 ```js
@@ -61,11 +61,9 @@ $ NODE_DEBUG=foo node example/node.js
 
 ### Logging
 
-It is highly recommended to use a prefix for your instance, this way you get a nice prefixed message
-on console and it is possible to silence instances based on the prefix name, as we will see after.
-
 After creating your object, you can use the regular `log`, `warn`, `info` and `error` methods as we
-have on `console`, but now with Markdown support.
+have on `console`, but now with Markdown support. If a method is not provided by `logdown`, it will
+just delegate to the original `console` object or `opts.logger` if passed.
 
 ```js
 logger.log('lorem *ipsum*')
@@ -73,7 +71,7 @@ logger.info('dolor _sit_ amet')
 logger.warn('consectetur `adipiscing` elit')
 ```
 
-You can pass multiple arguments
+As the native APIs, multiple arguments are supported.
 
 ```js
 logger.log('lorem', '*ipsum*')
@@ -185,9 +183,8 @@ logger.state.isEnabled = false
 
 logdown is compatible with Node.js
 [util.debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) and
-[debug.js](https://github.com/visionmedia/debug).
-
-To enable a giving instance, use the `NODE_DEBUG` enviroment variable followed by the prefixes you want to enable.
+[debug.js](https://github.com/visionmedia/debug) as it uses the `NODE_DEBUG` enviroment variable to
+control which instances are enabled to output debug info.
 
 ```bash
 NODE_DEBUG=foo node foo.js // will disable the instance with *foo* prefix
