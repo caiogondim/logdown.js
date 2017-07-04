@@ -38,11 +38,11 @@
   },
   "homepage": "https://github.com/caiogondim/logdown",
   "devDependencies": {
-    "browserify": "^14.1.0",
+    "browserify": "^14.4.0",
     "jest": "^20.0.4",
     "prepack": "^0.2.4",
-    "standard": "^10.0.1",
-    "uglify-js": "^2.8.21"
+    "standard": "^10.0.2",
+    "uglify-js": "^3.0.23"
   },
   "jest": {
     "roots": [
