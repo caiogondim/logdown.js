@@ -2,9 +2,8 @@
  ✔ Remove align prefixes and make recipe @done (17-06-27 00:55)
  ✔ Delete bower.json @done (17-06-27 00:40)
  ✔ Update Jest @done (17-06-27 00:41)
- ☐ Stream
+ ✔ Stream @done (17-07-03 20:52)
  ✔ customizable colors @done (17-07-03 17:28)
- ☐ validate args
  ☐ logging without emoji on node
  ☐ Remove `logger.info`
  ☐ Remove `logger.debug`
