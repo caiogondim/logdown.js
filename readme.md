@@ -8,10 +8,9 @@
 
 <br>
 
-logdown is a debug utility for the browser and the server with Markdown support.
-It doesn't have dependencies and is less than 2K gzipped.
+logdown is a debug utility for the browser and the server with Markdown support, compatible with both [debug.js](https://github.com/visionmedia/debug) and node core's [debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) technique.
 
-<a href="https://github.com/caiogondim/abstract-debug.js"><img src="https://github.com/caiogondim/abstract-debug.js/raw/master/img/badge@2x.png" width="190" alt="abstract debug badge" /></a>
+It doesn't have dependencies for the browser version and is less than 2K gzipped.
 
 You can see it in action in the [example page](//caiogondim.github.io/logdown.js) or in the preview
 below.
@@ -31,8 +30,13 @@ Out-of-the box colors to work on both light and dark themes.
 ## Installation
 
 ```bash
-npm install --save logdown
+$ npm install --save logdown
 ```
+
+## Usage
+
+`logdown` exports a function. For the simplest use case, pass the name of your module to it and it
+will return a decorated `console`.
 
 ```js
 const logdown = require('logdown')
@@ -45,7 +49,12 @@ Or in a more idiomatic way:
 const logger = require('logdown')('foo')
 ```
 
-## Usage
+Just like [debug.js](https://github.com/visionmedia/debug) and node core's [debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section), the enviroment variable `NODE_DEBUG` is used to decide which
+module will print debug information.
+
+```js
+$ NODE_DEBUG=foo node example/node.js
+```
 
 ### Logging
 
