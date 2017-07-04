@@ -1,6 +1,6 @@
-## FAQ
+# FAQ
 
-### Disabling one method on an instance at runtime
+## Disabling one method on an instance at runtime
 ```js
 // To disable a given method, just pass a no-op to it
 logger.warn = function() {}
@@ -9,7 +9,7 @@ logger.warn = function() {}
 logger.warn = logdown.prototype.warn
 ```
 
-### Align prefixes
+## Align prefixes
 
 If you want to align the output of each instance, like the example below:
 ```
@@ -33,7 +33,7 @@ function alignPrefixes(Logdown) {
 }
 ```
 
-### Enable/disable instance at runtime
+## Enable/disable instance at runtime
 
 Set the instance state `isEnabled` to false to prevent it to log.
 

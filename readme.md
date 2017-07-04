@@ -225,7 +225,7 @@ example "bodyParser" from Connect would then be "connect:bodyParser".
 
 ## FAQ
 
-[Link](.doc/faq.md)
+[Link](doc/faq.md)
 
 ## Sponsor
 
