@@ -8,6 +8,8 @@
 
 <br>
 
+#### THIS VERSION (v3) IS UNDER DEVELOPMENT
+
 logdown is a debug utility for the browser and the server with Markdown support, compatible with both [debug.js](https://github.com/visionmedia/debug) and node core's [debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) technique.
 
 It doesn't have dependencies for the browser version and is less than 2K gzipped.
