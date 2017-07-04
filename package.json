@@ -1,6 +1,6 @@
 {
   "name": "logdown",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "Debug utility with markdown support that runs on browser and server",
   "main": "src/node.js",
   "browser": "dist/logdown.min.js",
