@@ -208,7 +208,7 @@ NODE_DEBUG=foo* node foo.js # enables all instances with a prefix starting with 
 
 Use `-` to do a negation.
 
-```js
+```bash
 # enables all instances but the one with *foo* prefix
 NODE_DEBUG=*,-foo node foo.js
 
