@@ -19,10 +19,14 @@ below.
 ## Preview
 
 ### Browser
-<img src="http://rawgit.com/caiogondim/logdown.js/master/img/browser-preview.gif">
+Out-of-the box colors to work on both light and dark themes.
+
+<img src="http://rawgit.com/caiogondim/logdown.js/master/img/browser-preview-dark.png">
+
+<img src="http://rawgit.com/caiogondim/logdown.js/master/img/browser-preview-light.png">
 
 ### Server
-<img src="http://rawgit.com/caiogondim/logdown.js/master/img/node-preview.gif">
+<img src="http://rawgit.com/caiogondim/logdown.js/master/img/node-preview.png">
 
 ## Installation
 
