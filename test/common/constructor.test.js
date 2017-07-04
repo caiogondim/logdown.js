@@ -34,4 +34,18 @@ describe('logdown()', () => {
     const log1 = logdown('foo', { prefixColor })
     expect(log1.opts.prefixColor).toEqual(prefixColor)
   })
+
+  it.only('accepts custom logger', () => {
+    process.env.NODE_DEBUG = 'foo'
+    logdown._setPrefixRegExps()
+
+    const logger = {
+      log: jest.fn()
+    }
+    const log1 = logdown('foo', { logger })
+
+    expect(logger.log).not.toHaveBeenCalled()
+    log1.log('lorem')
+    expect(logger.log).toHaveBeenCalled()
+  })
 })

@@ -50,11 +50,13 @@ module.exports = function () {
 
     var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
     var prefixColor = opts.prefixColor || Logdown._getNextPrefixColor()
+    var logger = opts.logger || console
 
     return {
+      logger: logger,
+      markdown: markdown,
       prefix: prefix,
-      prefixColor: prefixColor,
-      markdown: markdown
+      prefixColor: prefixColor
     }
   }
 
@@ -98,8 +100,8 @@ module.exports = function () {
       var args = toArray(arguments)
       var preparedOutput = this._prepareOutput(args, method)
 
-      ;(console[method] || console.log).apply(
-        console,
+      ;(this.opts.logger[method] || this.opts.logger.log).apply(
+        this.opts.logger,
         preparedOutput
       )
     }
