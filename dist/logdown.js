@@ -311,12 +311,21 @@ module.exports = [
 ]
 
 },{}],6:[function(require,module,exports){
+(function (global){
 /* eslint-disable no-new-func */
 
-module.exports = function getGlobal () {
-  return Function('return this')()
+module.exports = function getGlobal() {
+    // return global object based on the environment present in.
+    // window for browser and global for node.
+    // https://github.com/purposeindustries/window-or-global/blob/master/lib/index.js
+    return (
+        (typeof self === 'object' && self.self === self && self) ||
+        (typeof global === 'object' && global.global === global && global) ||
+        this
+    )
 }
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],7:[function(require,module,exports){
 var isWebkit = require('../is-webkit')
 var isFirefox = require('../is-firefox')
