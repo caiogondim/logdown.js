@@ -1,8 +1,4 @@
 module.exports = function isColorSupported () {
-  if (process.stdout && !process.stdout.isTTY) {
-    return false
-  }
-
   if (process.platform === 'win32') {
     return true
   }
@@ -11,14 +7,18 @@ module.exports = function isColorSupported () {
     return true
   }
 
-  if (process.env.TERM === 'dumb') {
-    return false
-  }
-
   if (
     /^screen|^xterm|^vt100|color|ansi|cygwin|linux/i.test(process.env.TERM)
   ) {
     return true
+  }
+
+  if (process.env.TERM === 'dumb') {
+    return false
+  }
+
+  if (process.stdout && !process.stdout.isTTY) {
+    return false
   }
 
   return false
