@@ -7,7 +7,7 @@ const markdown = require('../../src/markdown/node')
 // Tests
 //
 
-;['debug', 'log', 'info', 'warn', 'error'].forEach(method => {
+Object.keys(console).forEach(method => {
   describe(`logdown.${method}`, () => {
     beforeEach(() => {
       console[method] = console[method] || console.log
@@ -103,6 +103,15 @@ const markdown = require('../../src/markdown/node')
       foo[method]('lorem')
 
       expect(console[method]).not.toHaveBeenCalled()
+    })
+
+    it('has a facade for every method on opts.logger', () => {
+      const consoleKeys = Object.keys(console)
+      const foo = logdown('foo', { logger: console })
+
+      consoleKeys.forEach(consoleMethod => {
+        expect(typeof foo[consoleMethod]).toBe('function')
+      })
     })
   })
 })

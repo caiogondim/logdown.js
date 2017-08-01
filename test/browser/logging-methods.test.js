@@ -11,8 +11,7 @@ globalObject.localStorage = localStorage
 const logdown = require('../../src/browser')
 const markdown = require('../../src/markdown/browser')
 
-const methods = ['debug', 'log', 'info', 'warn', 'error']
-methods.forEach((method) => {
+Object.keys(console).forEach((method) => {
   describe('logdown.' + method, () => {
     beforeEach(() => {
       console[method] = console[method] || console.log
@@ -82,6 +81,15 @@ methods.forEach((method) => {
       foo[method]('lorem')
 
       expect(console[method]).not.toHaveBeenCalled()
+    })
+
+    it('has a facade for every method on opts.logger', () => {
+      const consoleKeys = Object.keys(console)
+      const foo = logdown('foo', { logger: console })
+
+      consoleKeys.forEach(consoleMethod => {
+        expect(typeof foo[consoleMethod]).toBe('function')
+      })
     })
   })
 })
