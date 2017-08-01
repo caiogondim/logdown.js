@@ -14,6 +14,7 @@ module.exports = function () {
     this.opts = Logdown._normalizeOpts(prefix, opts)
     this.state = Logdown._getInitialState(this.opts)
 
+    Logdown._decorateLoggerMethods(this)
     Logdown._instances.push(this)
 
     return this
@@ -87,26 +88,23 @@ module.exports = function () {
     return isEnabled
   }
 
-  //
-  // Instance
-  //
+  Logdown._decorateLoggerMethods = function (instance) {
+    Object.keys(instance.opts.logger).forEach(function (method) {
+      instance[method] = function () {
+        if (!this.state.isEnabled) {
+          return
+        }
 
-  var methods = ['debug', 'log', 'info', 'warn', 'error']
-  methods.forEach(function (method) {
-    Logdown.prototype[method] = function () {
-      if (!this.state.isEnabled) {
-        return
+        var args = toArray(arguments)
+        var preparedOutput = this._prepareOutput(args, method)
+
+        ;(this.opts.logger[method] || this.opts.logger.log).apply(
+          this.opts.logger,
+          preparedOutput
+        )
       }
-
-      var args = toArray(arguments)
-      var preparedOutput = this._prepareOutput(args, method)
-
-      ;(this.opts.logger[method] || this.opts.logger.log).apply(
-        this.opts.logger,
-        preparedOutput
-      )
-    }
-  }, this)
+    })
+  }
 
   return Logdown
 }
