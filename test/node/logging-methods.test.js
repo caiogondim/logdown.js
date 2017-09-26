@@ -7,11 +7,13 @@ const markdown = require('../../src/markdown/node')
 // Tests
 //
 
-Object.keys(console).forEach(method => {
+const consoleMethods = Object.keys(console)
+  .filter(method => typeof console[method] === 'function');
+
+consoleMethods.forEach(method => {
   describe(`logdown.${method}`, () => {
     beforeEach(() => {
-      console[method] = console[method] || console.log
-      console[method] = jest.fn()
+      jest.spyOn(console, method).mockImplementation(jest.fn());
 
       logdown._instances = []
       process.env.NODE_DEBUG = 'foo'
@@ -19,7 +21,7 @@ Object.keys(console).forEach(method => {
     })
 
     afterEach(() => {
-      console[method].mockClear()
+      console[method].mockRestore()
     })
 
     it('outputs multiple arguments', () => {
@@ -106,10 +108,9 @@ Object.keys(console).forEach(method => {
     })
 
     it('has a facade for every method on opts.logger', () => {
-      const consoleKeys = Object.keys(console)
       const foo = logdown('foo', { logger: console })
 
-      consoleKeys.forEach(consoleMethod => {
+      consoleMethods.forEach(consoleMethod => {
         expect(typeof foo[consoleMethod]).toBe('function')
       })
     })

@@ -88,20 +88,21 @@ module.exports = function () {
   }
 
   Logdown._decorateLoggerMethods = function (instance) {
-    Object.keys(instance.opts.logger).forEach(function (method) {
-      instance[method] = function () {
-        if (!this.state.isEnabled) {
-          return
+    const logger = instance.opts.logger;
+
+    Object.keys(logger)
+      .filter(method => typeof logger[method] === 'function')
+      .forEach(function (method) {
+        instance[method] = function () {
+          if (!this.state.isEnabled) {
+            return
+          }
+
+          var args = toArray(arguments)
+          var preparedOutput = this._prepareOutput(args, method)
+
+          logger[method].apply(logger, preparedOutput)
         }
-
-        var args = toArray(arguments)
-        var preparedOutput = this._prepareOutput(args, method)
-
-        ;(this.opts.logger[method] || this.opts.logger.log).apply(
-          this.opts.logger,
-          preparedOutput
-        )
-      }
     })
   }
 
