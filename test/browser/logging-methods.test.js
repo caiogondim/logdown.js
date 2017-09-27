@@ -12,12 +12,12 @@ const logdown = require('../../src/browser')
 const markdown = require('../../src/markdown/browser')
 
 const consoleMethods = Object.keys(console)
-  .filter(method => typeof console[method] === 'function');
+  .filter(method => typeof console[method] === 'function')
 
 consoleMethods.forEach((method) => {
   describe('logdown.' + method, () => {
     beforeEach(() => {
-      jest.spyOn(console, method).mockImplementation(jest.fn());
+      jest.spyOn(console, method).mockImplementation(jest.fn())
 
       logdown._instances = []
       localStorage.setItem('debug', 'foo')
