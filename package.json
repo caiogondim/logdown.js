@@ -46,6 +46,7 @@
   },
   "jest": {
     "roots": [
+      "src/",
       "test/"
     ],
     "collectCoverage": true,
