@@ -214,6 +214,52 @@ NODE_DEBUG=*,-foo node foo.js
 NODE_DEBUG=*foo*,-foobar node foo.js
 ```
 
+## Additional transports integration
+
+If you'd like to send some part of logs into e.g. sentry or some file. You can extend logdown by adding a transport functions:
+
+```js
+logdown.transports = [ transport, transport2, ... ];
+```
+
+`logdown.transports` is simply an array of functions. You can modify it at runtime in any way you like.
+
+Each transport function will be called with an Object as an argument. The object has the following fields:
+
+* `state: Object` — contains the current [state object](#state)
+* `instance: string` — the instance name, you've specified, when created a logger instance
+* `level: string` — the name of the method, that was called (e.g. `'warn'` for `logger.warn('foo')`)
+* `args: Array<any>` — an array of arguments passed to logging method
+* `msg: string` — contains a string with instance name and concatenated args (except objects). For `logdown('foo')('bar', {quz: 1}, 'baz')` it will produce `[foo] bar baz`
+
+Please note, that transport functions will be called even if the `logger.state.isEnabled === false`. You must decide inside your transport function whether you want to consider the global `isEnabled` state.
+
+Example of transport implementation:
+
+```js
+function transport({msg, level, args, state}) {
+  if (!state.isEnabled) {
+    // we dont care, but we can use this if we want
+  }
+
+  const levelMap = {
+      warn: 'warning',
+      error: 'error'
+  };
+
+  if (levelMap[level]
+      && process.env.NODE_ENV === 'production'
+  ) {
+    Raven.captureException(msg, {
+        level: levelMap[level],
+        extra: args[1]
+    });
+  }
+}
+
+logdown.transports = [ transport ];
+```
+
 ## Conventions
 
 If you're using this in one or more of your libraries, you should use the name of your library so

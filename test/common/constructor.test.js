@@ -35,7 +35,7 @@ describe('logdown()', () => {
     expect(log1.opts.prefixColor).toEqual(prefixColor)
   })
 
-  it.only('accepts custom logger', () => {
+  it('accepts custom logger', () => {
     process.env.NODE_DEBUG = 'foo'
     logdown._setPrefixRegExps()
 
