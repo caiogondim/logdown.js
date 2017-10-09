@@ -91,8 +91,9 @@ module.exports = function () {
   Logdown._decorateLoggerMethods = function (instance) {
     var logger = instance.opts.logger
 
-    Object.keys(logger)
-      .filter(method => typeof logger[method] === 'function')
+    Object
+      .keys(logger)
+      .filter(function (method) { return typeof logger[method] === 'function' })
       .forEach(function (method) {
         instance[method] = function () {
           var args = toArray(arguments)
@@ -100,9 +101,11 @@ module.exports = function () {
 
           if (Logdown.transports.length) {
             var msg = '[' + instance + '] ' +
-              args.filter((arg) => typeof arg !== 'object').join(' ')
+              args
+                .filter(function (arg) { return typeof arg !== 'object' })
+                .join(' ')
 
-            Logdown.transports.forEach((transport) => {
+            Logdown.transports.forEach(function (transport) {
               transport({
                 state: this.state,
                 instance: instance,
@@ -110,7 +113,7 @@ module.exports = function () {
                 args: args,
                 msg: msg
               })
-            })
+            }.bind(this))
           }
 
           if (this.state.isEnabled) {
