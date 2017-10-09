@@ -17,6 +17,8 @@ below.
 
 ## Installation
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/caiogondim/logdown.js.svg)](https://greenkeeper.io/)
+
 ```bash
 $ npm install --save logdown
 ```
