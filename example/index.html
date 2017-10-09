@@ -29,10 +29,6 @@
       text-align: center;
     }
 
-    .demo-is-running {
-      display: none;
-    }
-
     .fork-on-github {
       background-color: #999999;
       color: #FFFFFF;
@@ -52,7 +48,6 @@
 </head>
 <body>
   <h1 class="open-devtools">Open your devtools</h1>
-  <h1 class="demo-is-running">Demo is running</h1>
   <a
     href="https://github.com/caiogondim/logdown"
     class="fork-on-github"
@@ -64,7 +59,6 @@
     localStorage.debug = '*'
   </script>
   <script src="./lib/logdown.js"></script>
-  <script src="./lib/devtools-detect.js"></script>
   <script>
     var demo = logdown('demo')
 
@@ -130,14 +124,7 @@
       }, timeout)
     }
 
-    window.addEventListener('devtoolschange', function() {
-      if (!window.devtools.open) {
-        demo.log('Devtools was open')
-        document.querySelector('.open-devtools').style.display = 'none'
-        document.querySelector('.demo-is-running').style.display = 'block'
-        showLogMessages()
-      }
-    })
+    showLogMessages()
 
   </script>
   <script>
