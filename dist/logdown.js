@@ -1,138 +1,86 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.logdown = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var toArray = require('./util/to-array')
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["logdown"] = factory();
+	else
+		root["logdown"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = function () {
-  function Logdown (prefix, opts) {
-    if (!(this instanceof Logdown)) {
-      return new Logdown(prefix, opts)
-    }
-
-    if (Logdown._isPrefixAlreadyInUse(prefix)) {
-      return Logdown._getInstanceByPrefix(prefix)
-    }
-
-    this.opts = Logdown._normalizeOpts(prefix, opts)
-    this.state = Logdown._getInitialState(this.opts)
-
-    Logdown._decorateLoggerMethods(this)
-    Logdown._instances.push(this)
-
-    return this
-  }
-
-  //
-  // Static
-  //
-
-  Logdown.transports = []
-  Logdown._instances = []
-  Logdown._prefixRegExps = []
-
-  Logdown._prepareRegExpForPrefixSearch = function (str) {
-    return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
-  }
-
-  Logdown._isPrefixAlreadyInUse = function (prefix) {
-    return Logdown._instances.some(function (instance) {
-      return (instance.opts.prefix === prefix)
-    })
-  }
-
-  Logdown._getInstanceByPrefix = function (prefix) {
-    return Logdown._instances.filter(function (instanceCur) {
-      return instanceCur.opts.prefix === prefix
-    })[0]
-  }
-
-  Logdown._normalizeOpts = function (prefix, opts) {
-    if (typeof prefix !== 'string') {
-      throw new TypeError('prefix must be a string')
-    }
-
-    opts = opts || {}
-
-    var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
-    var prefixColor = opts.prefixColor || Logdown._getNextPrefixColor()
-    var logger = opts.logger || console
-
-    return {
-      logger: logger,
-      markdown: markdown,
-      prefix: prefix,
-      prefixColor: prefixColor
-    }
-  }
-
-  Logdown._getInitialState = function (opts) {
-    return {
-      isEnabled: Logdown._getEnableState(opts)
-    }
-  }
-
-  Logdown._getEnableState = function (opts) {
-    var isEnabled = false
-
-    Logdown._prefixRegExps.forEach(function (filter) {
-      if (
-        filter.type === 'enable' &&
-        filter.regExp.test(opts.prefix)
-      ) {
-        isEnabled = true
-      } else if (
-        filter.type === 'disable' &&
-        filter.regExp.test(opts.prefix)
-      ) {
-        isEnabled = false
-      }
-    })
-
-    return isEnabled
-  }
-
-  Logdown._decorateLoggerMethods = function (instance) {
-    var logger = instance.opts.logger
-
-    Object
-      .keys(logger)
-      .filter(function (method) { return typeof logger[method] === 'function' })
-      .forEach(function (method) {
-        instance[method] = function () {
-          var args = toArray(arguments)
-          var instance = this.opts.prefix
-
-          if (Logdown.transports.length) {
-            var msg = '[' + instance + '] ' +
-              args
-                .filter(function (arg) { return typeof arg !== 'object' })
-                .join(' ')
-
-            ;Logdown.transports.forEach(function (transport) {
-              transport({
-                state: this.state,
-                instance: instance,
-                level: method,
-                args: args,
-                msg: msg
-              })
-            }.bind(this))
-          }
-
-          if (this.state.isEnabled) {
-            var preparedOutput = this._prepareOutput(args, method)
-            logger[method].apply(logger, preparedOutput)
-          }
-        }
-      })
-  }
-
-  return Logdown
-}
-
-},{"./util/to-array":10}],2:[function(require,module,exports){
-var Logdown = require('./base')()
-var markdown = require('./markdown/browser')
-var isColorSupported = require('./util/is-color-supported/browser')
-var globalObject = require('./util/get-global')()
+var Logdown = __webpack_require__(1)()
+var markdown = __webpack_require__(3)
+var isColorSupported = __webpack_require__(6)
+var globalObject = __webpack_require__(9)()
 
 //
 // Static
@@ -242,9 +190,156 @@ Logdown._setPrefixRegExps()
 
 module.exports = Logdown
 
-},{"./base":1,"./markdown/browser":3,"./util/get-global":6,"./util/is-color-supported/browser":7}],3:[function(require,module,exports){
-var rules = require('./rules/browser')
-var getNextMatch = require('./get-next-match')
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toArray = __webpack_require__(2)
+
+module.exports = function () {
+  function Logdown (prefix, opts) {
+    if (!(this instanceof Logdown)) {
+      return new Logdown(prefix, opts)
+    }
+
+    if (Logdown._isPrefixAlreadyInUse(prefix)) {
+      return Logdown._getInstanceByPrefix(prefix)
+    }
+
+    this.opts = Logdown._normalizeOpts(prefix, opts)
+    this.state = Logdown._getInitialState(this.opts)
+
+    Logdown._decorateLoggerMethods(this)
+    Logdown._instances.push(this)
+
+    return this
+  }
+
+  //
+  // Static
+  //
+
+  Logdown.transports = []
+  Logdown._instances = []
+  Logdown._prefixRegExps = []
+
+  Logdown._prepareRegExpForPrefixSearch = function (str) {
+    return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
+  }
+
+  Logdown._isPrefixAlreadyInUse = function (prefix) {
+    return Logdown._instances.some(function (instance) {
+      return (instance.opts.prefix === prefix)
+    })
+  }
+
+  Logdown._getInstanceByPrefix = function (prefix) {
+    return Logdown._instances.filter(function (instanceCur) {
+      return instanceCur.opts.prefix === prefix
+    })[0]
+  }
+
+  Logdown._normalizeOpts = function (prefix, opts) {
+    if (typeof prefix !== 'string') {
+      throw new TypeError('prefix must be a string')
+    }
+
+    opts = opts || {}
+
+    var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
+    var prefixColor = opts.prefixColor || Logdown._getNextPrefixColor()
+    var logger = opts.logger || console
+
+    return {
+      logger: logger,
+      markdown: markdown,
+      prefix: prefix,
+      prefixColor: prefixColor
+    }
+  }
+
+  Logdown._getInitialState = function (opts) {
+    return {
+      isEnabled: Logdown._getEnableState(opts)
+    }
+  }
+
+  Logdown._getEnableState = function (opts) {
+    var isEnabled = false
+
+    Logdown._prefixRegExps.forEach(function (filter) {
+      if (
+        filter.type === 'enable' &&
+        filter.regExp.test(opts.prefix)
+      ) {
+        isEnabled = true
+      } else if (
+        filter.type === 'disable' &&
+        filter.regExp.test(opts.prefix)
+      ) {
+        isEnabled = false
+      }
+    })
+
+    return isEnabled
+  }
+
+  Logdown._decorateLoggerMethods = function (instance) {
+    var logger = instance.opts.logger
+
+    Object
+      .keys(logger)
+      .filter(function (method) { return typeof logger[method] === 'function' })
+      .forEach(function (method) {
+        instance[method] = function () {
+          var args = toArray(arguments)
+          var instance = this.opts.prefix
+
+          if (Logdown.transports.length) {
+            var msg = '[' + instance + '] ' +
+              args
+                .filter(function (arg) { return typeof arg !== 'object' })
+                .join(' ')
+
+            Logdown.transports.forEach(function (transport) {
+              transport({
+                state: this.state,
+                instance: instance,
+                level: method,
+                args: args,
+                msg: msg
+              })
+            }.bind(this))
+          }
+
+          if (this.state.isEnabled) {
+            var preparedOutput = this._prepareOutput(args, method)
+            logger[method].apply(logger, preparedOutput)
+          }
+        }
+      })
+  }
+
+  return Logdown
+}
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+module.exports = function toArray (arg) {
+  return Array.prototype.slice.call(arg, 0)
+}
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var rules = __webpack_require__(4)
+var getNextMatch = __webpack_require__(5)
 
 function parse (text) {
   var styles = []
@@ -272,33 +367,11 @@ module.exports = {
   parse: parse
 }
 
-},{"./get-next-match":4,"./rules/browser":5}],4:[function(require,module,exports){
-module.exports = function getNextMatch (text, rules) {
-  var matches = []
 
-  rules.forEach(function (rule) {
-    var match = text.match(rule.regexp)
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
 
-    if (match) {
-      matches.push({
-        rule: rule,
-        match: match
-      })
-    }
-  })
-
-  if (matches.length === 0) {
-    return null
-  }
-
-  matches.sort(function (a, b) {
-    return a.match.index - b.match.index
-  })
-
-  return matches[0]
-}
-
-},{}],5:[function(require,module,exports){
 module.exports = [
   {
     regexp: /\*([^*]+)\*/,
@@ -327,9 +400,81 @@ module.exports = [
   }
 ]
 
-},{}],6:[function(require,module,exports){
-(function (global){
-/* eslint-disable no-new-func */
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = function getNextMatch (text, rules) {
+  var matches = []
+
+  rules.forEach(function (rule) {
+    var match = text.match(rule.regexp)
+
+    if (match) {
+      matches.push({
+        rule: rule,
+        match: match
+      })
+    }
+  })
+
+  if (matches.length === 0) {
+    return null
+  }
+
+  matches.sort(function (a, b) {
+    return a.match.index - b.match.index
+  })
+
+  return matches[0]
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isWebkit = __webpack_require__(7)
+var isFirefox = __webpack_require__(8)
+
+module.exports = function isColorSupported () {
+  return (isWebkit() || isFirefox())
+}
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+// Is webkit? http://stackoverflow.com/a/16459606/376773
+module.exports = function isWebkit () {
+  try {
+    return ('WebkitAppearance' in document.documentElement.style)
+  } catch (error) {
+    return false
+  }
+}
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+module.exports = function isFirefox () {
+  try {
+    return navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)
+  } catch (error) {
+    return false
+  }
+}
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/* eslint-disable no-new-func */
 /* global self, global */
 
 module.exports = function getGlobal () {
@@ -343,38 +488,35 @@ module.exports = function getGlobal () {
   )
 }
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
-var isWebkit = require('../is-webkit')
-var isFirefox = require('../is-firefox')
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
-module.exports = function isColorSupported () {
-  return (isWebkit() || isFirefox())
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
 }
 
-},{"../is-firefox":8,"../is-webkit":9}],8:[function(require,module,exports){
-module.exports = function isFirefox () {
-  try {
-    return navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)
-  } catch (error) {
-    return false
-  }
-}
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
 
-},{}],9:[function(require,module,exports){
-// Is webkit? http://stackoverflow.com/a/16459606/376773
-module.exports = function isWebkit () {
-  try {
-    return ('WebkitAppearance' in document.documentElement.style)
-  } catch (error) {
-    return false
-  }
-}
+module.exports = g;
 
-},{}],10:[function(require,module,exports){
-module.exports = function toArray (arg) {
-  return Array.prototype.slice.call(arg, 0)
-}
 
-},{}]},{},[2])(2)
+/***/ })
+/******/ ]);
 });
