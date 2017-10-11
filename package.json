@@ -39,7 +39,7 @@
   "homepage": "https://github.com/caiogondim/logdown",
   "devDependencies": {
     "codecov": "^2.2.0",
-    "jest": "^20.0.4",
+    "jest": "^21.2.1",
     "standard": "^10.0.2",
     "uglify-js": "3.1.3",
     "webpack": "3.6.0"
