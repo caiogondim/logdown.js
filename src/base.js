@@ -91,9 +91,17 @@ module.exports = function () {
   Logdown._decorateLoggerMethods = function (instance) {
     var logger = instance.opts.logger
 
-    Object
+    var loggerMethods = Object
       .keys(logger)
       .filter(function (method) { return typeof logger[method] === 'function' })
+
+    // In old Safari and Chrome browsers, `console` methods are not iterable.
+    // In that case, we provide a minimum API.
+    if (loggerMethods.length === 0) {
+      loggerMethods = ['log', 'warn', 'error']
+    }
+
+    loggerMethods
       .forEach(function (method) {
         instance[method] = function () {
           var args = toArray(arguments)

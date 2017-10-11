@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["logdown"] = factory();
-	else
-		root["logdown"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
+window["logdown"] =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -288,9 +279,17 @@ module.exports = function () {
   Logdown._decorateLoggerMethods = function (instance) {
     var logger = instance.opts.logger
 
-    Object
+    var loggerMethods = Object
       .keys(logger)
       .filter(function (method) { return typeof logger[method] === 'function' })
+
+    // In old Safari and Chrome browsers, `console` methods are not iterable.
+    // In that case, we provide a minimum API.
+    if (loggerMethods.length === 0) {
+      loggerMethods = ['log', 'warn', 'error']
+    }
+
+    loggerMethods
       .forEach(function (method) {
         instance[method] = function () {
           var args = toArray(arguments)
@@ -519,4 +518,3 @@ module.exports = g;
 
 /***/ })
 /******/ ]);
-});
