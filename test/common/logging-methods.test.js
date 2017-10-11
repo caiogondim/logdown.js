@@ -6,14 +6,12 @@ const logdown = require('../../src/node')
 // Tests
 //
 
-function beforeEach () {
+beforeEach(() => {
   logdown._instances = []
   logdown._setPrefixRegExps()
-}
+})
 
 it('has a facade for every method on opts.logger', () => {
-  beforeEach()
-
   const logger = {
     log: jest.fn(),
     warn: jest.fn(),
@@ -28,8 +26,6 @@ it('has a facade for every method on opts.logger', () => {
 
 // Issue: https://github.com/caiogondim/logdown.js/issues/95
 it('exposes a basic API for `logger` with no iterable methods', () => {
-  beforeEach()
-
   const logger = {}
   const foo = logdown('foo', { logger: logger })
 
