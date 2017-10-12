@@ -14,6 +14,13 @@ const markdown = require('../../src/markdown/browser')
 const consoleMethods = Object.keys(console)
   .filter(method => typeof console[method] === 'function')
 
+const toMarkdown = (logger, str, ...rest) => {
+  let expectedArgs = logger._getDecoratedPrefix()
+  expectedArgs[0] = expectedArgs[0] + markdown.parse(str).text
+
+  return expectedArgs.concat(markdown.parse(str).styles).concat(rest)
+}
+
 consoleMethods.forEach((method) => {
   describe('logdown.' + method, () => {
     beforeEach(() => {
@@ -39,12 +46,17 @@ consoleMethods.forEach((method) => {
       ].forEach(str => {
         foo[method](str)
 
-        let expectedArgs = foo._getDecoratedPrefix()
-        expectedArgs[0] = expectedArgs[0] + markdown.parse(str).text
-        expectedArgs = expectedArgs.concat(markdown.parse(str).styles)
-
-        expect(console[method]).toHaveBeenLastCalledWith(...expectedArgs)
+        expect(console[method]).toHaveBeenLastCalledWith(...toMarkdown(foo, str))
       })
+    })
+
+    it('parses markdown only for first arg', () => {
+      const foo = logdown('foo', { markdown: true })
+      const str = 'lorem *ipsum*'
+
+      foo[method](str, str)
+
+      expect(console[method]).toHaveBeenLastCalledWith(...toMarkdown(foo, str, str))
     })
 
     it('doesnt parse markdown if disabled', () => {

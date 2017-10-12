@@ -7,17 +7,25 @@ describe('NODE_DEBUG and DEBUG environment variables', () => {
   // https://nodejs.org/api/util.html#util_util_debuglog_section
   // DEBUG is for compatibility with the debug lib
   var envVars = ['NODE_DEBUG', 'DEBUG']
+  var origEnv = process.env
 
   beforeEach(() => {
     console.log = jest.fn()
     logdown._instances = []
+    process.env = {}
   })
 
   afterEach(() => {
     console.log.mockClear()
-    envVars.forEach(function (envVar) {
-      process.env[envVar] = ''
-    })
+    process.env = origEnv
+  })
+
+  it('is disabled if no env vars set', () => {
+    delete process.env
+
+    logdown._setPrefixRegExps()
+
+    expect(logdown._prefixRegExps).toHaveLength(0)
   })
 
   envVars.forEach((envVar) => {
