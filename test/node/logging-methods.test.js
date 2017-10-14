@@ -7,6 +7,10 @@ const markdown = require('../../src/markdown/node')
 // Tests
 //
 
+if (!console.debug) {
+  console.debug = console.log.bind(console)
+}
+const origDebug = process.env.NODE_DEBUG
 const consoleMethods = Object.keys(console)
   .filter(method => typeof console[method] === 'function')
 
@@ -22,6 +26,7 @@ consoleMethods.forEach(method => {
 
     afterEach(() => {
       console[method].mockRestore()
+      process.env.NODE_DEBUG = origDebug
     })
 
     it('outputs multiple arguments', () => {

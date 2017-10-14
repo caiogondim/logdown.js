@@ -13,6 +13,7 @@
     "build": "webpack && cp dist/logdown.js example/lib/logdown.js && uglifyjs --compress --mangle  --screw-ie8 -- dist/logdown.js > dist/logdown.min.js && gzip dist/logdown.min.js --stdout --best > dist/logdown.min.js.gzip",
     "preversion": "npm run test",
     "test": "jest && npm run test:lint",
+    "test:watch": "jest --coverage=false --watch",
     "test:debug": "node --inspect --debug-brk ./node_modules/.bin/jest --runInBand",
     "test:lint": "standard './src/**/*.js' './test/**/*.js'",
     "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
@@ -38,8 +39,9 @@
   },
   "homepage": "https://github.com/caiogondim/logdown",
   "devDependencies": {
+    "babel-core": "^6.26.0",
     "codecov": "^2.2.0",
-    "jest": "^20.0.4",
+    "jest": "^21.2.1",
     "standard": "^10.0.2",
     "uglify-js": "3.1.3",
     "webpack": "3.6.0"

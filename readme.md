@@ -3,7 +3,10 @@
 <h1 align="center">logdown.js</h1>
 
 <div align="center">
-<img src="http://travis-ci.org/caiogondim/logdown.js.svg?branch=master" alt="Travis CI"> <img src="http://img.badgesize.io/caiogondim/logdown.js/master/dist/logdown.min.js?compression=gzip" alt="lib size"> <img src="https://codecov.io/gh/caiogondim/logdown.js/branch/master/graph/badge.svg" alt="codecov"> <a href="https://www.npmjs.com/package/logdown"><img src="https://img.shields.io/npm/v/logdown.svg" /></a>
+<a href="https://travis-ci.org/caiogondim/logdown.js?branch=master"><img src="http://travis-ci.org/caiogondim/logdown.js.svg?branch=master" alt="Travis CI" /></a>
+<img src="http://img.badgesize.io/caiogondim/logdown.js/master/dist/logdown.min.js?compression=gzip" alt="Lib Size" />
+<a href="https://codecov.io/gh/caiogondim/logdown.js"><img src="https://codecov.io/gh/caiogondim/logdown.js/branch/master/graph/badge.svg" alt="Codecov" /></a>
+<a href="https://www.npmjs.com/package/logdown"><img src="https://img.shields.io/npm/v/logdown.svg" alt="npm" /></a>
 </div>
 
 <br>

@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`prefixColor allows to set hex color 1`] = `
+Array [
+  Array [
+    "[37m [39m  [1m[96mfoo[39m[22m",
+    "hello world",
+  ],
+]
+`;
+
+exports[`prefixColor allows to set named color 1`] = `
+Array [
+  Array [
+    "[37m [39m  [1m[33mfoo[39m[22m",
+    "hello world",
+  ],
+]
+`;
+
+exports[`prefixColor does not applies color if not supported 1`] = `
+Array [
+  Array [
+    "[37m [39m  [foo]",
+    "hello world",
+  ],
+]
+`;

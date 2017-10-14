@@ -27,6 +27,8 @@ Logdown.prefixColors = [
 Logdown._setPrefixRegExps = function () {
   // Parsing `NODE_DEBUG` and `DEBUG` env var
   var envVar = null
+  Logdown._prefixRegExps = []
+
   if (
     typeof process !== 'undefined' &&
     process.env !== undefined
@@ -45,8 +47,6 @@ Logdown._setPrefixRegExps = function () {
     }
 
     if (envVar) {
-      Logdown._prefixRegExps = []
-
       process.env[envVar]
         .split(',')
         .forEach(function (str) {
@@ -97,15 +97,15 @@ Logdown.prototype._getDecoratedPrefix = function (method) {
   }
 
   if (method === 'warn') {
-    decoratedPrefix = chalk.yellow(Logdown.methodEmoji.warn) + '  ' + (decoratedPrefix || '')
+    decoratedPrefix = chalk.yellow(Logdown.methodEmoji.warn) + '  ' + decoratedPrefix
   } else if (method === 'error') {
-    decoratedPrefix = chalk.red(Logdown.methodEmoji.error) + '  ' + (decoratedPrefix || '')
+    decoratedPrefix = chalk.red(Logdown.methodEmoji.error) + '  ' + decoratedPrefix
   } else if (method === 'info') {
-    decoratedPrefix = chalk.blue(Logdown.methodEmoji.info) + '  ' + (decoratedPrefix || '')
+    decoratedPrefix = chalk.blue(Logdown.methodEmoji.info) + '  ' + decoratedPrefix
   } else if (method === 'debug') {
-    decoratedPrefix = chalk.gray(Logdown.methodEmoji.debug) + '  ' + (decoratedPrefix || '')
+    decoratedPrefix = chalk.gray(Logdown.methodEmoji.debug) + '  ' + decoratedPrefix
   } else if (method === 'log') {
-    decoratedPrefix = chalk.white(Logdown.methodEmoji.log) + '  ' + (decoratedPrefix || '')
+    decoratedPrefix = chalk.white(Logdown.methodEmoji.log) + '  ' + decoratedPrefix
   }
 
   return decoratedPrefix
