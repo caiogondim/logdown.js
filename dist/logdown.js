@@ -458,7 +458,7 @@ module.exports = function isColorSupported () {
 // Is webkit? http://stackoverflow.com/a/16459606/376773
 module.exports = function isWebkit () {
   try {
-    return ('WebkitAppearance' in document.documentElement.style)
+    return ('WebkitAppearance' in document.documentElement.style) && !/Edge/.test(navigator.userAgent)
   } catch (error) {
     return false
   }
@@ -471,7 +471,7 @@ module.exports = function isWebkit () {
 
 module.exports = function isFirefox () {
   try {
-    return navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)
+    return /firefox\/(\d+)/i.test(navigator.userAgent)
   } catch (error) {
     return false
   }
@@ -485,16 +485,19 @@ module.exports = function isFirefox () {
 /* WEBPACK VAR INJECTION */(function(global) {/* eslint-disable no-new-func */
 /* global self, global */
 
-module.exports = function getGlobal () {
+function getGlobal (slf, glb) {
   // Return the global object based on the environment presently in.
   // window for browser and global for node.
   // Ref from -> https://github.com/purposeindustries/window-or-global/blob/master/lib/index.js
   return (
-        (typeof self === 'object' && self.self === self && self) ||
-        (typeof global === 'object' && global.global === global && global) ||
+        (typeof slf === 'object' && slf.self === slf && slf) ||
+        (typeof glb === 'object' && glb.global === glb && glb) ||
         this
   )
 }
+
+module.exports = getGlobal.bind(this, self, global)
+module.exports.getGlobal = getGlobal
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
