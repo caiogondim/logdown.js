@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="980px" height="400px" viewBox="0 0 980 400" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
     <title>Slice 1</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="github-banner" transform="translate(-16.000000, -21.000000)" fill="#4A4A4A">
-            <path d="M379.88514,295 L558.626374,295 L558.626374,285 L379,285 L379,289.744482 L379,147.496321 L506.299363,74 L633.598726,147.496321 L633.598726,294.488964 L506.299363,367.985286 L379.88514,295 Z M433.05356,183.324494 L525.391122,275.91 L558.312834,275.752809 L558.626374,242.742697 L466.132041,150 L433.05356,183.324494 Z M547.4957,264.749438 L532.445775,264.906629 L547.4957,249.816292 L547.4957,264.749438 Z M541.068128,240.699213 L523.509881,258.461798 L448.573795,183.324494 L466.132041,165.719101 L541.068128,240.699213 Z" id="Combined-Shape"></path>
+        <g id="github-banner" transform="translate(-16.000000, -21.000000)">
+            <g id="Group-2" transform="translate(363.000000, 76.000000)">
+                <path d="M146.992643,4.04145188 L23.19328,75.5170474 L23.19328,218.468239 L146.992643,289.943834 L270.792006,218.468239 L270.792006,75.5170474 L146.992643,4.04145188 Z" id="Polygon" stroke="#343334" stroke-width="7"></path>
+                <g id="Group" transform="translate(21.000000, 214.000000)" fill-rule="nonzero" fill="#343334">
+                    <polygon id="Rectangle-path" points="0 0 178 0 178 7 0 7"></polygon>
+                </g>
+                <g id="Group-Copy" transform="translate(21.000000, 204.000000)"></g>
+                <polygon id="Rectangle-path" fill="#FFFFFF" fill-rule="nonzero" points="18 207 196 207 196 214 18 214"></polygon>
+                <g id="Group-2-Copy-3" transform="translate(146.831998, 155.239069) rotate(-315.000000) translate(-146.831998, -155.239069) translate(73.831998, 135.239069)" fill="#343334">
+                    <polygon id="Rectangle-2" points="0 0 120 0 120 7 0 7"></polygon>
+                    <rect id="Rectangle-2-Copy-4" transform="translate(132.894811, 11.894811) rotate(-315.000000) translate(-132.894811, -11.894811) " x="120.018129" y="8.39481084" width="25.753364" height="7"></rect>
+                    <rect id="Rectangle-2-Copy-5" transform="translate(133.474269, 27.500604) rotate(-45.000000) translate(-133.474269, -27.500604) " x="119.313512" y="24.0006042" width="28.3215142" height="7"></rect>
+                    <polygon id="Rectangle-2-Copy-3" points="7 0 7 40 0 40 0 0"></polygon>
+                    <polygon id="Rectangle-2-Copy-6" points="126 0 126 40 119 40 119 0"></polygon>
+                    <rect id="Rectangle-2-Copy" x="0" y="33" width="120" height="7"></rect>
+                </g>
+            </g>
         </g>
     </g>
 </svg>
