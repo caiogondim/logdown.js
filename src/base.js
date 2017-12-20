@@ -44,22 +44,25 @@ module.exports = function () {
   }
 
   Logdown._normalizeOpts = function (prefix, opts) {
-    if (typeof prefix !== 'string') {
+    opts = opts || {}
+
+    if (typeof prefix === 'object') {
+      var originalPrefixVal = prefix
+      prefix = prefix.prefix
+      opts = originalPrefixVal
+    } else if (typeof prefix === 'string') {
+      opts.prefix = prefix
+    }
+
+    if (typeof opts.prefix !== 'string') {
       throw new TypeError('prefix must be a string')
     }
 
-    opts = opts || {}
+    opts.markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
+    opts.prefixColor = opts.prefixColor || Logdown._getNextPrefixColor()
+    opts.logger = opts.logger || console
 
-    var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
-    var prefixColor = opts.prefixColor || Logdown._getNextPrefixColor()
-    var logger = opts.logger || console
-
-    return {
-      logger: logger,
-      markdown: markdown,
-      prefix: prefix,
-      prefixColor: prefixColor
-    }
+    return opts
   }
 
   Logdown._getInitialState = function (opts) {
