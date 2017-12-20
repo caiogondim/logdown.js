@@ -58,4 +58,14 @@ describe('logdown()', () => {
     log1.log('lorem')
     expect(logger.log).toHaveBeenCalled()
   })
+
+  it('accepts prefix as option argument key', () => {
+    const outsideVar = 'bar'
+    const log1 = logdown({
+      get prefix () {
+        return `foo-${outsideVar}`
+      }
+    })
+    expect(log1.opts.prefix).toEqual('foo-bar')
+  })
 })
