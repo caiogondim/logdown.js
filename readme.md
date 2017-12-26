@@ -15,8 +15,7 @@
 
 It doesn't have any dependencies for the browser version and it's only 2K gzipped.
 
-You can see it in action in the [example page](//caiogondim.github.io/logdown.js) or in the preview
-below.
+You can see it in action in the [example page](//caiogondim.github.io/logdown.js) or in the preview below.
 
 ## Installation
 
@@ -39,8 +38,7 @@ Out-of-the box colors work well on both light and dark themes.
 
 ## Usage
 
-`logdown` exports a function. For the simplest use case, pass the name of your module and
-it will return a decorated `console`.
+`logdown` exports a function. For the simplest use case, pass the name of your module and it will return a decorated `console`.
 
 ```js
 const logdown = require('logdown')
@@ -53,8 +51,7 @@ Or in a more idiomatic way:
 const logger = require('logdown')('foo')
 ```
 
-Just like [debug.js](https://github.com/visionmedia/debug) and node core's [debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section), the enviroment variable `NODE_DEBUG` is used to decide which
-module will print debug information.
+Just like [debug.js](https://github.com/visionmedia/debug) and node core's [debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section), the enviroment variable `NODE_DEBUG` is used to decide which module will print debug information.
 
 ```js
 $ NODE_DEBUG=foo node example/node.js
@@ -62,9 +59,7 @@ $ NODE_DEBUG=foo node example/node.js
 
 ### Logging
 
-After creating your object, you can use the regular `log`, `warn`, `info` and `error` methods as we
-have on `console`, but now with Markdown support. If a method is not provided by `logdown`, it will
-just delegate to the original `console` object or `opts.logger` if passed.
+After creating your object, you can use the regular `log`, `warn`, `info` and `error` methods as we have on `console`, but now with Markdown support. If a method is not provided by `logdown`, it will just delegate to the original `console` object or `opts.logger` if passed.
 
 ```js
 logger.log('lorem *ipsum*')
@@ -86,7 +81,7 @@ The following options can be used for configuration.
 
 #### `prefix`
 
-- Type: `String`
+* Type: `String`
 
 ```js
 const logger = logdown('foo')
@@ -103,13 +98,13 @@ fooQuzLogger.log('Lorem Ipsum')
 
 #### `markdown`
 
-- Type: `Boolean`
-- Default: `true`
+* Type: `Boolean`
+* Default: `true`
 
 If setted to `false`, markdown will not be parsed.
 
 ```js
-var logger = logdown({ markdown: false })
+var logger = logdown({markdown: false})
 logger.log('Lorem *ipsum*') // Will not parse the markdown
 ```
 
@@ -128,32 +123,31 @@ logger.log('lorem `ipsum`')
 
 #### `prefixColor`
 
-- type: `String`
-- default: next value after last used on the `logdown.prefixColors` array.
+* type: `String`
+* default: next value after last used on the `logdown.prefixColors` array.
 
 Hex value for a custom color.
 
 ```js
-const logger1 = logdown('foo', { prefixColor: '#FF0000' }) // red prefix
-const logger2 = logdown('bar', { prefixColor: '#00FF00' }) // green prefix
-const logger3 = logdown('quz', { prefixColor: '#0000FF' }) // blue prefix
+const logger1 = logdown('foo', {prefixColor: '#FF0000'}) // red prefix
+const logger2 = logdown('bar', {prefixColor: '#00FF00'}) // green prefix
+const logger3 = logdown('quz', {prefixColor: '#0000FF'}) // blue prefix
 ```
 
 #### `logger`
 
-- type: 'Object'
-- default: `console`
+* type: 'Object'
+* default: `console`
 
-Custom logger. On Node it's possible to instantiate a new `console` setting it's output to a
-different stream other than `stdout` and `stderr`.
+Custom logger. On Node it's possible to instantiate a new `console` setting it's output to a different stream other than `stdout` and `stderr`.
 
 ```js
-const output = fs.createWriteStream('./stdout.log');
-const errorOutput = fs.createWriteStream('./stderr.log');
-const fileLogger =  new Console(output, errorOutput)
+const output = fs.createWriteStream('./stdout.log')
+const errorOutput = fs.createWriteStream('./stderr.log')
+const fileLogger = new Console(output, errorOutput)
 
 const logger = logdown('foo', {
-  logger: fileLogger
+  logger: fileLogger,
 })
 ```
 
@@ -161,8 +155,8 @@ const logger = logdown('foo', {
 
 #### `isEnabled`
 
-- type: 'Boolean'
-- default: default value is derived from `localStorage.debug` on browser and from env var `NODE_DEBUG` on node.
+* type: 'Boolean'
+* default: default value is derived from `localStorage.debug` on browser and from env var `NODE_DEBUG` on node.
 
 Used to enable/disable a given instance at runtime.
 
@@ -173,10 +167,7 @@ logger.state.isEnabled = false
 
 ## Enabling/disabling instances
 
-`logdown` is compatible with Node.js
-[util.debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) and
-[debug.js](https://github.com/visionmedia/debug) as it uses the `NODE_DEBUG` enviroment variable to
-control which instances are enabled to output debug info.
+`logdown` is compatible with Node.js [util.debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section) and [debug.js](https://github.com/visionmedia/debug) as it uses the `NODE_DEBUG` enviroment variable to control which instances are enabled to output debug info.
 
 For the browser use `localStorage.debug`.
 
@@ -246,29 +237,24 @@ function transport({msg, level, args, state}) {
   }
 
   const levelMap = {
-      warn: 'warning',
-      error: 'error'
-  };
+    warn: 'warning',
+    error: 'error',
+  }
 
-  if (levelMap[level]
-      && process.env.NODE_ENV === 'production'
-  ) {
+  if (levelMap[level] && process.env.NODE_ENV === 'production') {
     Raven.captureException(msg, {
-        level: levelMap[level],
-        extra: args[1]
-    });
+      level: levelMap[level],
+      extra: args[1],
+    })
   }
 }
 
-logdown.transports = [ transport ];
+logdown.transports = [transport]
 ```
 
 ## Conventions
 
-If you're using this in one or more of your libraries, you should use the name of your library so
-that developers may toggle debugging as desired without guessing names. If you have more than one
-debuggers you should prefix them with your library name and use ":" to separate features. For
-example "bodyParser" from Connect would then be "connect:bodyParser".
+If you're using this in one or more of your libraries, you should use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you should prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".
 
 ## FAQ
 
@@ -276,16 +262,13 @@ example "bodyParser" from Connect would then be "connect:bodyParser".
 
 ## Sponsor
 
-If you found this library useful and are willing to donate, transfer some
-bitcoins to `1BqqKiZA8Tq43CdukdBEwCdDD42jxuX9UY`.
+If you found this library useful and are willing to donate, transfer some bitcoins to `1BqqKiZA8Tq43CdukdBEwCdDD42jxuX9UY`.
 
 ## Credits
 
-- [debug.js](https://github.com/visionmedia/debug) for some pieces of copied documentation
-- [Node core's debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section)
+* [debug.js](https://github.com/visionmedia/debug) for some pieces of copied documentation
+* [Node core's debuglog](https://nodejs.org/docs/latest/api/util.html#util_util_debuglog_section)
 
 ---
 
-[caiogondim.com](https://caiogondim.com) &nbsp;&middot;&nbsp;
-GitHub [@caiogondim](https://github.com/caiogondim) &nbsp;&middot;&nbsp;
-Twitter [@caio_gondim](https://twitter.com/caio_gondim)
+[caiogondim.com](https://caiogondim.com) &nbsp;&middot;&nbsp; GitHub [@caiogondim](https://github.com/caiogondim) &nbsp;&middot;&nbsp; Twitter [@caio_gondim](https://twitter.com/caio_gondim)

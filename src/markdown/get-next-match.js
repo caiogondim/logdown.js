@@ -1,13 +1,13 @@
-module.exports = function getNextMatch (text, rules) {
-  var matches = []
+module.exports = function getNextMatch(text, rules) {
+  const matches = []
 
-  rules.forEach(function (rule) {
-    var match = text.match(rule.regexp)
+  rules.forEach(rule => {
+    const match = text.match(rule.regexp)
 
     if (match) {
       matches.push({
         rule: rule,
-        match: match
+        match: match,
       })
     }
   })
@@ -16,7 +16,7 @@ module.exports = function getNextMatch (text, rules) {
     return null
   }
 
-  matches.sort(function (a, b) {
+  matches.sort((a, b) => {
     return a.match.index - b.match.index
   })
 

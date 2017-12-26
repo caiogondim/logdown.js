@@ -1,6 +1,7 @@
 # FAQ
 
 ## Disabling one method on an instance at runtime
+
 ```js
 // To disable a given method, just pass a no-op to it
 logger.warn = function() {}
@@ -12,6 +13,7 @@ logger.warn = logdown.prototype.warn
 ## Align prefixes
 
 If you want to align the output of each instance, like the example below:
+
 ```
 [ipsum]   lorem
 [sitamet] lorem
@@ -19,17 +21,19 @@ If you want to align the output of each instance, like the example below:
 ```
 
 Use the the following function
+
 ```js
 function alignPrefixes(Logdown) {
-  var longest = logdown._instances.sort(function (a, b) {
+  var longest = logdown._instances.sort(function(a, b) {
     return b.opts.prefix.length - a.opts.prefix.length
   })[0]
 
-  logdown._instances
-    .forEach(function (instance) {
-      var padding = new Array(Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0)).join(' ')
-      instance.opts.prefix = instance.opts.prefix + padding
-    })
+  logdown._instances.forEach(function(instance) {
+    var padding = new Array(
+      Math.max(longest.opts.prefix.length - instance.opts.prefix.length + 1, 0),
+    ).join(' ')
+    instance.opts.prefix = instance.opts.prefix + padding
+  })
 }
 ```
 

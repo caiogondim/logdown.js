@@ -1,7 +1,7 @@
-var toArray = require('./util/to-array')
+const toArray = require('./util/to-array')
 
-module.exports = function () {
-  function Logdown (prefix, opts) {
+module.exports = function() {
+  function Logdown(prefix, opts) {
     if (!(this instanceof Logdown)) {
       return new Logdown(prefix, opts)
     }
@@ -27,60 +27,54 @@ module.exports = function () {
   Logdown._instances = []
   Logdown._prefixRegExps = []
 
-  Logdown._prepareRegExpForPrefixSearch = function (str) {
+  Logdown._prepareRegExpForPrefixSearch = function(str) {
     return new RegExp('^' + str.replace(/\*/g, '.*?') + '$')
   }
 
-  Logdown._isPrefixAlreadyInUse = function (prefix) {
-    return Logdown._instances.some(function (instance) {
-      return (instance.opts.prefix === prefix)
+  Logdown._isPrefixAlreadyInUse = function(prefix) {
+    return Logdown._instances.some(instance => {
+      return instance.opts.prefix === prefix
     })
   }
 
-  Logdown._getInstanceByPrefix = function (prefix) {
-    return Logdown._instances.filter(function (instanceCur) {
+  Logdown._getInstanceByPrefix = function(prefix) {
+    return Logdown._instances.filter(instanceCur => {
       return instanceCur.opts.prefix === prefix
     })[0]
   }
 
-  Logdown._normalizeOpts = function (prefix, opts) {
+  Logdown._normalizeOpts = function(prefix, opts) {
     if (typeof prefix !== 'string') {
       throw new TypeError('prefix must be a string')
     }
 
     opts = opts || {}
 
-    var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
-    var prefixColor = opts.prefixColor || Logdown._getNextPrefixColor()
-    var logger = opts.logger || console
+    const markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
+    const prefixColor = opts.prefixColor || Logdown._getNextPrefixColor()
+    const logger = opts.logger || console
 
     return {
       logger: logger,
       markdown: markdown,
       prefix: prefix,
-      prefixColor: prefixColor
+      prefixColor: prefixColor,
     }
   }
 
-  Logdown._getInitialState = function (opts) {
+  Logdown._getInitialState = function(opts) {
     return {
-      isEnabled: Logdown._getEnableState(opts)
+      isEnabled: Logdown._getEnableState(opts),
     }
   }
 
-  Logdown._getEnableState = function (opts) {
-    var isEnabled = false
+  Logdown._getEnableState = function(opts) {
+    let isEnabled = false
 
-    Logdown._prefixRegExps.forEach(function (filter) {
-      if (
-        filter.type === 'enable' &&
-        filter.regExp.test(opts.prefix)
-      ) {
+    Logdown._prefixRegExps.forEach(filter => {
+      if (filter.type === 'enable' && filter.regExp.test(opts.prefix)) {
         isEnabled = true
-      } else if (
-        filter.type === 'disable' &&
-        filter.regExp.test(opts.prefix)
-      ) {
+      } else if (filter.type === 'disable' && filter.regExp.test(opts.prefix)) {
         isEnabled = false
       }
     })
@@ -88,12 +82,12 @@ module.exports = function () {
     return isEnabled
   }
 
-  Logdown._decorateLoggerMethods = function (instance) {
-    var logger = instance.opts.logger
+  Logdown._decorateLoggerMethods = function(instance) {
+    const logger = instance.opts.logger
 
-    var loggerMethods = Object
-      .keys(logger)
-      .filter(function (method) { return typeof logger[method] === 'function' })
+    let loggerMethods = Object.keys(logger).filter(method => {
+      return typeof logger[method] === 'function'
+    })
 
     // In old Safari and Chrome browsers, `console` methods are not iterable.
     // In that case, we provide a minimum API.
@@ -101,35 +95,39 @@ module.exports = function () {
       loggerMethods = ['log', 'warn', 'error']
     }
 
-    loggerMethods
-      .forEach(function (method) {
-        instance[method] = function () {
-          var args = toArray(arguments)
-          var instance = this.opts.prefix
+    loggerMethods.forEach(method => {
+      instance[method] = function() {
+        const args = toArray(arguments)
+        const instance = this.opts.prefix
 
-          if (Logdown.transports.length) {
-            var msg = '[' + instance + '] ' +
-              args
-                .filter(function (arg) { return typeof arg !== 'object' })
-                .join(' ')
-
-            Logdown.transports.forEach(function (transport) {
-              transport({
-                state: this.state,
-                instance: instance,
-                level: method,
-                args: args,
-                msg: msg
+        if (Logdown.transports.length) {
+          const msg =
+            '[' +
+            instance +
+            '] ' +
+            args
+              .filter(arg => {
+                return typeof arg !== 'object'
               })
-            }.bind(this))
-          }
+              .join(' ')
 
-          if (this.state.isEnabled) {
-            var preparedOutput = this._prepareOutput(args, method)
-            logger[method].apply(logger, preparedOutput)
-          }
+          Logdown.transports.forEach(transport => {
+            transport({
+              state: this.state,
+              instance: instance,
+              level: method,
+              args: args,
+              msg: msg,
+            })
+          })
         }
-      })
+
+        if (this.state.isEnabled) {
+          const preparedOutput = this._prepareOutput(args, method)
+          logger[method].apply(logger, preparedOutput)
+        }
+      }
+    })
   }
 
   return Logdown

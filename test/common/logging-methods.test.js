@@ -15,9 +15,9 @@ it('has a facade for every method on opts.logger', () => {
   const logger = {
     log: jest.fn(),
     warn: jest.fn(),
-    error: 'not a function'
+    error: 'not a function',
   }
-  const foo = logdown('foo', { logger: logger })
+  const foo = logdown('foo', {logger: logger})
 
   expect(typeof foo.log).toBe('function')
   expect(typeof foo.warn).toBe('function')
@@ -27,7 +27,7 @@ it('has a facade for every method on opts.logger', () => {
 // Issue: https://github.com/caiogondim/logdown.js/issues/95
 it('exposes a basic API for `logger` with no iterable methods', () => {
   const logger = {}
-  const foo = logdown('foo', { logger: logger })
+  const foo = logdown('foo', {logger: logger})
 
   expect(typeof foo.log).toBe('function')
   expect(typeof foo.warn).toBe('function')

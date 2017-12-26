@@ -11,8 +11,9 @@ if (!console.debug) {
   console.debug = console.log.bind(console)
 }
 const origDebug = process.env.NODE_DEBUG
-const consoleMethods = Object.keys(console)
-  .filter(method => typeof console[method] === 'function')
+const consoleMethods = Object.keys(console).filter(
+  method => typeof console[method] === 'function',
+)
 
 consoleMethods.forEach(method => {
   describe(`logdown.${method}`, () => {
@@ -30,7 +31,7 @@ consoleMethods.forEach(method => {
     })
 
     it('outputs multiple arguments', () => {
-      const foo = logdown('foo', { markdown: true })
+      const foo = logdown('foo', {markdown: true})
 
       foo[method]('one', 'two', 'three')
 
@@ -38,7 +39,7 @@ consoleMethods.forEach(method => {
         foo._getDecoratedPrefix(method),
         'one',
         'two',
-        'three'
+        'three',
       )
     })
 
@@ -51,56 +52,56 @@ consoleMethods.forEach(method => {
         foo._getDecoratedPrefix(method),
         'one',
         markdown.parse('*two*').text,
-        'three'
+        'three',
       )
     })
 
     it('parses markdown if enabled', () => {
-      const foo = logdown('foo', { markdown: true })
+      const foo = logdown('foo', {markdown: true})
 
       foo[method]('lorem *ipsum*')
       expect(console[method]).toHaveBeenCalledWith(
         foo._getDecoratedPrefix(method),
-        markdown.parse('lorem *ipsum*').text
+        markdown.parse('lorem *ipsum*').text,
       )
 
       foo[method]('lorem _ipsum_')
       expect(console[method]).toHaveBeenCalledWith(
         foo._getDecoratedPrefix(method),
-        markdown.parse('lorem _ipsum_').text
+        markdown.parse('lorem _ipsum_').text,
       )
 
       foo[method]('lorem `ipsum`')
       expect(console[method]).toHaveBeenCalledWith(
         foo._getDecoratedPrefix(method),
-        markdown.parse('lorem `ipsum`').text
+        markdown.parse('lorem `ipsum`').text,
       )
     })
 
     it('doesnt parse markdown if disabled', () => {
-      const foo = logdown('foo', { markdown: false })
+      const foo = logdown('foo', {markdown: false})
 
       foo[method]('lorem *ipsum*')
       expect(console[method]).toHaveBeenCalledWith(
         foo._getDecoratedPrefix(method),
-        'lorem *ipsum*'
+        'lorem *ipsum*',
       )
 
       foo[method]('lorem _ipsum_ dolor')
       expect(console[method]).toHaveBeenCalledWith(
         foo._getDecoratedPrefix(method),
-        'lorem _ipsum_ dolor'
+        'lorem _ipsum_ dolor',
       )
     })
 
     // https://github.com/caiogondim/logdown/issues/14
     it('prints not-string arguments as is', () => {
       const foo = logdown('foo')
-      const obj = { bar: 2, foo: 1 }
+      const obj = {bar: 2, foo: 1}
       foo[method](obj)
       expect(console[method]).toHaveBeenCalledWith(
         foo._getDecoratedPrefix(method),
-        obj
+        obj,
       )
     })
 
@@ -113,7 +114,7 @@ consoleMethods.forEach(method => {
     })
 
     it('has a facade for every method on opts.logger', () => {
-      const foo = logdown('foo', { logger: console })
+      const foo = logdown('foo', {logger: console})
 
       consoleMethods.forEach(consoleMethod => {
         expect(typeof foo[consoleMethod]).toBe('function')

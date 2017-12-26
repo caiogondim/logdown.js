@@ -17,7 +17,7 @@
     "test": "jest && npm run test:lint",
     "test:watch": "jest --coverage=false --watch",
     "test:debug": "node --inspect --debug-brk ./node_modules/.bin/jest --runInBand",
-    "test:lint": "eslint --ignore-path .gitignore \"**/*.js\"",
+    "test:lint": "eslint --ignore-path .gitignore --ignore-path .prettierignore \"**/*.js\"",
     "test:lint:fix": "npm run test:lint -- --fix",
     "version": "npm run build && git add ."
   },
