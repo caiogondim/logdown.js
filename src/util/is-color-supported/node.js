@@ -1,4 +1,4 @@
-module.exports = function isColorSupported () {
+module.exports = function isColorSupported() {
   if (process.platform === 'win32') {
     return true
   }
@@ -7,9 +7,7 @@ module.exports = function isColorSupported () {
     return true
   }
 
-  if (
-    /^screen|^xterm|^vt100|color|ansi|cygwin|linux/i.test(process.env.TERM)
-  ) {
+  if (/^screen|^xterm|^vt100|color|ansi|cygwin|linux/i.test(process.env.TERM)) {
     return true
   }
 

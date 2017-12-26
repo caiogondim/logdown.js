@@ -4,34 +4,28 @@
   "description": "Debug utility with markdown support that runs on browser and server",
   "main": "src/node.js",
   "browser": "dist/logdown.min.js",
-  "files": [
-    "src/",
-    "test/",
-    "dist/"
-  ],
+  "files": ["src/", "test/", "dist/"],
+  "lint-staged": {
+    "*.js": ["eslint --fix", "git add"],
+    "*.{json,md}": ["prettier --write", "git add"]
+  },
   "scripts": {
     "build": "webpack && cp dist/logdown.js example/lib/logdown.js && uglifyjs --compress --mangle  --screw-ie8 -- dist/logdown.js > dist/logdown.min.js && gzip dist/logdown.min.js --stdout --best > dist/logdown.min.js.gzip",
+    "fix": "npm run fix:config && npm run test:lint:fix",
+    "fix:config": "prettier --ignore-path .gitignore --write \"**/*.{json,md}\"",
     "preversion": "npm run test",
     "test": "jest && npm run test:lint",
     "test:watch": "jest --coverage=false --watch",
     "test:debug": "node --inspect --debug-brk ./node_modules/.bin/jest --runInBand",
-    "test:lint": "standard './src/**/*.js' './test/**/*.js'",
-    "test:lint:fix": "standard './src/**/*.js' './test/**/*.js' --fix",
+    "test:lint": "eslint --ignore-path .gitignore --ignore-path .prettierignore \"**/*.js\"",
+    "test:lint:fix": "npm run test:lint -- --fix",
     "version": "npm run build && git add ."
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/caiogondim/logdown"
   },
-  "keywords": [
-    "log",
-    "markdown",
-    "debug",
-    "console",
-    "info",
-    "error",
-    "logging"
-  ],
+  "keywords": ["log", "markdown", "debug", "console", "info", "error", "logging"],
   "author": "Caio Gondim <me@caiogondim.com> (http://caiogondim.com)",
   "license": "MIT",
   "bugs": {
@@ -41,20 +35,20 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "codecov": "^2.2.0",
+    "eslint-config-prettier": "2.9.0",
+    "eslint-plugin-prettier": "2.4.0",
+    "eslint": "4.14.0",
+    "husky": "0.14.3",
     "jest": "^21.2.1",
-    "standard": "^10.0.2",
+    "lint-staged": "6.0.0",
+    "prettier": "1.9.2",
     "uglify-js": "3.1.3",
     "webpack": "3.6.0"
   },
   "jest": {
-    "roots": [
-      "src/",
-      "test/"
-    ],
+    "roots": ["src/", "test/"],
     "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**"
-    ]
+    "collectCoverageFrom": ["src/**"]
   },
   "dependencies": {
     "chalk": "^2.0.1"

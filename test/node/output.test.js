@@ -25,12 +25,12 @@ describe('prefixColor', () => {
 
   it('allows to set named color', () => {
     const logger = {
-      log: jest.fn()
+      log: jest.fn(),
     }
 
     const foo = logdown('foo', {
       logger,
-      prefixColor: 'yellow'
+      prefixColor: 'yellow',
     })
 
     foo.log('hello world')
@@ -40,12 +40,12 @@ describe('prefixColor', () => {
 
   it('allows to set hex color', () => {
     const logger = {
-      log: jest.fn()
+      log: jest.fn(),
     }
 
     const foo = logdown('foo', {
       logger,
-      prefixColor: '#0ff'
+      prefixColor: '#0ff',
     })
 
     foo.log('hello world')
@@ -57,12 +57,12 @@ describe('prefixColor', () => {
     isColorSupported.mockReturnValue(false)
 
     const logger = {
-      log: jest.fn()
+      log: jest.fn(),
     }
 
     const foo = logdown('foo', {
       logger,
-      prefixColor: '#0ff'
+      prefixColor: '#0ff',
     })
 
     foo.log('hello world')

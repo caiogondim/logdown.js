@@ -1,9 +1,9 @@
-var rules = require('./rules/browser')
-var getNextMatch = require('./get-next-match')
+const rules = require('./rules/browser')
+const getNextMatch = require('./get-next-match')
 
-function parse (text) {
-  var styles = []
-  var match = getNextMatch(text, rules)
+function parse(text) {
+  const styles = []
+  let match = getNextMatch(text, rules)
 
   while (match) {
     styles.push(match.rule.style)
@@ -15,7 +15,7 @@ function parse (text) {
 
   return {
     text: text,
-    styles: styles
+    styles: styles,
   }
 }
 
@@ -24,5 +24,5 @@ function parse (text) {
 //
 
 module.exports = {
-  parse: parse
+  parse: parse,
 }

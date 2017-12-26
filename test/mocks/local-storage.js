@@ -1,13 +1,13 @@
 const localStorage = {
-  setItem (key, value) {
+  setItem(key, value) {
     localStorage[key] = value
   },
-  getItem (key) {
+  getItem(key) {
     return localStorage[key]
   },
-  removeItem (item) {
+  removeItem(item) {
     localStorage[item] = undefined
-  }
+  },
 }
 
 module.exports = localStorage

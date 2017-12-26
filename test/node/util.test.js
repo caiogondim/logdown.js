@@ -29,7 +29,7 @@ it('should not allow color for dumb TERM', () => {
 
 it('should not allow outside TTY', () => {
   process.stdout = {
-    isTTY: false
+    isTTY: false,
   }
 
   expect(isColorSupported()).toBe(false)
@@ -46,17 +46,11 @@ it('should allow colors for COLORTERM', () => {
 })
 
 it('should allow colors for linux like terminals', () => {
-  [
-    'screen',
-    'xterm',
-    'vt100',
-    'color',
-    'ansi',
-    'cygwin',
-    'linux'
-  ].forEach((term) => {
-    process.env.TERM = term
+  ;['screen', 'xterm', 'vt100', 'color', 'ansi', 'cygwin', 'linux'].forEach(
+    term => {
+      process.env.TERM = term
 
-    expect(isColorSupported()).toBe(true)
-  })
+      expect(isColorSupported()).toBe(true)
+    },
+  )
 })

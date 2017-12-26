@@ -41,7 +41,7 @@ describe('logdown()', () => {
 
   it('accepts custom prefixColor', () => {
     const prefixColor = '#FF0000'
-    const log1 = logdown('foo', { prefixColor })
+    const log1 = logdown('foo', {prefixColor})
     expect(log1.opts.prefixColor).toEqual(prefixColor)
   })
 
@@ -50,9 +50,9 @@ describe('logdown()', () => {
     logdown._setPrefixRegExps()
 
     const logger = {
-      log: jest.fn()
+      log: jest.fn(),
     }
-    const log1 = logdown('foo', { logger })
+    const log1 = logdown('foo', {logger})
 
     expect(logger.log).not.toHaveBeenCalled()
     log1.log('lorem')

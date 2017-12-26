@@ -1,7 +1,7 @@
-var Logdown = require('./base')()
-var markdown = require('./markdown/browser')
-var isColorSupported = require('./util/is-color-supported/browser')
-var globalObject = require('./util/get-global')()
+const Logdown = require('./base')()
+const markdown = require('./markdown/browser')
+const isColorSupported = require('./util/is-color-supported/browser')
+const globalObject = require('./util/get-global')()
 
 //
 // Static
@@ -16,10 +16,10 @@ Logdown.prefixColors = [
   '#99CC99',
   '#66CCCC',
   '#6699CC',
-  '#CC99CC'
+  '#CC99CC',
 ]
 
-Logdown._setPrefixRegExps = function () {
+Logdown._setPrefixRegExps = function() {
   try {
     if (
       globalObject.localStorage &&
@@ -30,30 +30,30 @@ Logdown._setPrefixRegExps = function () {
       globalObject.localStorage
         .getItem('debug')
         .split(',')
-        .forEach(function (str) {
+        .forEach(str => {
           str = str.trim()
-          var type = 'enable'
+          let type = 'enable'
 
           if (str[0] === '-') {
             str = str.substr(1)
             type = 'disable'
           }
 
-          var regExp = Logdown._prepareRegExpForPrefixSearch(str)
+          const regExp = Logdown._prepareRegExpForPrefixSearch(str)
 
           Logdown._prefixRegExps.push({
             type: type,
-            regExp: regExp
+            regExp: regExp,
           })
         })
     }
   } catch (error) {}
 }
 
-Logdown._getNextPrefixColor = (function () {
-  var lastUsed = 0
+Logdown._getNextPrefixColor = (function() {
+  let lastUsed = 0
 
-  return function () {
+  return function() {
     lastUsed += 1
     return Logdown.prefixColors[lastUsed % Logdown.prefixColors.length]
   }
@@ -63,14 +63,14 @@ Logdown._getNextPrefixColor = (function () {
 // Instance
 //
 
-Logdown.prototype._getDecoratedPrefix = function () {
-  var decoratedPrefix = []
+Logdown.prototype._getDecoratedPrefix = function() {
+  const decoratedPrefix = []
 
   if (isColorSupported()) {
     decoratedPrefix.push('%c' + this.opts.prefix + '%c ')
     decoratedPrefix.push(
       'color:' + this.opts.prefixColor + '; font-weight:bold;',
-      '' // Empty string resets style.
+      '', // Empty string resets style.
     )
   } else {
     decoratedPrefix.push('[' + this.opts.prefix + '] ')
@@ -79,9 +79,9 @@ Logdown.prototype._getDecoratedPrefix = function () {
   return decoratedPrefix
 }
 
-Logdown.prototype._prepareOutput = function (args) {
-  var preparedOutput = this._getDecoratedPrefix()
-  var parsedMarkdown
+Logdown.prototype._prepareOutput = function(args) {
+  let preparedOutput = this._getDecoratedPrefix()
+  let parsedMarkdown
 
   // Only first argument on `console` can have style.
   if (typeof args[0] === 'string') {

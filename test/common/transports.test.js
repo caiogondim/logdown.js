@@ -21,17 +21,17 @@ describe('logdown.transports', () => {
   it('calls each transport function', () => {
     const transport = jest.fn()
 
-    const foo = logdown('foo', { logger: { log: () => {} } })
+    const foo = logdown('foo', {logger: {log: () => {}}})
     logdown.transports = [transport]
 
     foo.log('bar')
 
     expect(transport).toBeCalledWith({
-      state: { isEnabled: true },
+      state: {isEnabled: true},
       instance: 'foo',
       level: 'log',
       args: ['bar'],
-      msg: '[foo] bar'
+      msg: '[foo] bar',
     })
   })
 
@@ -39,14 +39,14 @@ describe('logdown.transports', () => {
     const transport1 = jest.fn(() => expect(transport2).not.toBeCalled())
     const transport2 = jest.fn()
     const expectedArg = {
-      state: { isEnabled: true },
+      state: {isEnabled: true},
       instance: 'foo',
       level: 'log',
       args: ['bar'],
-      msg: '[foo] bar'
+      msg: '[foo] bar',
     }
 
-    const foo = logdown('foo', { logger: { log: () => {} } })
+    const foo = logdown('foo', {logger: {log: () => {}}})
     logdown.transports = [transport1, transport2]
 
     foo.log('bar')
@@ -58,17 +58,17 @@ describe('logdown.transports', () => {
   it('allows remove transports at runtime', () => {
     const transport = jest.fn()
 
-    const foo = logdown('foo', { logger: { log: () => {} } })
+    const foo = logdown('foo', {logger: {log: () => {}}})
     logdown.transports = [transport]
 
     foo.log('bar')
 
     expect(transport).toBeCalledWith({
-      state: { isEnabled: true },
+      state: {isEnabled: true},
       instance: 'foo',
       level: 'log',
       args: ['bar'],
-      msg: '[foo] bar'
+      msg: '[foo] bar',
     })
 
     transport.mockReset()
@@ -82,25 +82,25 @@ describe('logdown.transports', () => {
   it('should not include objects into msg', () => {
     const transport = jest.fn()
 
-    const foo = logdown('foo', { logger: { log: () => {} } })
+    const foo = logdown('foo', {logger: {log: () => {}}})
     logdown.transports = [transport]
 
     foo.log('bar', {quz: 1}, 'baz')
 
     expect(transport).toBeCalledWith({
-      state: { isEnabled: true },
+      state: {isEnabled: true},
       instance: 'foo',
       level: 'log',
       args: ['bar', {quz: 1}, 'baz'],
-      msg: '[foo] bar baz'
+      msg: '[foo] bar baz',
     })
   })
 
   it('should execute transports even if state.isEnabled === false', () => {
     const transport = jest.fn()
-    const logger = { log: jest.fn() }
+    const logger = {log: jest.fn()}
 
-    const foo = logdown('foo', { logger: logger })
+    const foo = logdown('foo', {logger: logger})
     foo.state.isEnabled = false
     logdown.transports = [transport]
 
@@ -108,11 +108,11 @@ describe('logdown.transports', () => {
 
     expect(logger.log).not.toBeCalled()
     expect(transport).toBeCalledWith({
-      state: { isEnabled: false },
+      state: {isEnabled: false},
       instance: 'foo',
       level: 'log',
       args: ['bar'],
-      msg: '[foo] bar'
+      msg: '[foo] bar',
     })
   })
 })
