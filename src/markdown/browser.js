@@ -1,27 +1,39 @@
-var rules = require('./rules/browser')
-var getNextMatch = require('./get-next-match')
+var Markdown = require('./Markdown')
 
-function parse (text) {
-  var styles = []
-  var match = getNextMatch(text, rules)
+var styles = []
 
-  while (match) {
-    styles.push(match.rule.style)
+function createStyledRenderer (style) {
+  return function (input) {
+    styles.push(style)
     styles.push('') // Empty string resets style.
 
-    text = text.replace(match.rule.regexp, match.rule.replacer)
-    match = getNextMatch(text, rules)
-  }
-
-  return {
-    text: text,
-    styles: styles
+    return '%c' + input + '%c'
   }
 }
 
-//
-// API
-//
+var markdown = new Markdown({
+  renderer: {
+    '*': createStyledRenderer('font-weight:bold;'),
+    '_': createStyledRenderer('font-style:italic;'),
+    '`': createStyledRenderer(
+      'background-color:rgba(255,204,102, 0.1);' +
+      'color:#FFCC66;' +
+      'padding:2px 5px;' +
+      'border-radius:2px;'
+    )
+  }
+})
+
+function parse (text) {
+  var result = {
+    text: markdown.parse(text),
+    styles: [].concat(styles)
+  }
+
+  styles.length = 0
+
+  return result
+}
 
 module.exports = {
   parse: parse
