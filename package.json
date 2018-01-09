@@ -40,7 +40,7 @@
   "homepage": "https://github.com/caiogondim/logdown",
   "devDependencies": {
     "babel-core": "^6.26.0",
-    "codecov": "^2.2.0",
+    "codecov": "^3.0.0",
     "jest": "^21.2.1",
     "standard": "^10.0.3",
     "uglify-js": "3.1.3",
