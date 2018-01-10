@@ -240,22 +240,20 @@ Please note, that transport functions will be called even if the `logger.state.i
 Example of transport implementation:
 
 ```js
-function transport({msg, level, args, state}) {
+function transport({ msg, level, args, state }) {
   if (!state.isEnabled) {
     // We dont care, but we can use this if we want
   }
 
   const levelMap = {
-      warn: 'warning',
-      error: 'error'
+    warn: 'warning',
+    error: 'error'
   }
 
-  if (levelMap[level]
-      && process.env.NODE_ENV === 'production'
-  ) {
+  if (levelMap[level] && process.env.NODE_ENV === 'production') {
     Raven.captureException(msg, {
-        level: levelMap[level],
-        extra: args[1]
+      level: levelMap[level],
+      extra: args[1]
     })
   }
 }
