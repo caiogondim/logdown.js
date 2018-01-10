@@ -181,21 +181,25 @@ control which instances are enabled to output debug info.
 For the browser use `localStorage.debug`.
 
 ```bash
-NODE_DEBUG=foo node foo.js # Will enable instances with *foo* prefix
+# Will enable instances with *foo* prefix
+NODE_DEBUG=foo node foo.js
 ```
 
 ```js
-localStorage.debug = 'foo' // Will enable instances with *foo* prefix
+// Will enable instances with *foo* prefix
+localStorage.debug = 'foo'
 ```
 
 Multiple instances should be separated by comma
 
 ```bash
-NODE_DEBUG=foo,bar node foo.js # Will enable instance with *foo* or *bar* prefix
+# Will enable instance with *foo* or *bar* prefix
+NODE_DEBUG=foo,bar node foo.js
 ```
 
 ```js
-localStorage.debug = 'foo,bar' // Will enable instance with *foo* or *bar* prefix
+// Will enable instance with *foo* or *bar* prefix
+localStorage.debug = 'foo,bar'
 ```
 
 ### Wildcards
@@ -203,8 +207,11 @@ localStorage.debug = 'foo,bar' // Will enable instance with *foo* or *bar* prefi
 Wildcard `*` is supported.
 
 ```bash
-NODE_DEBUG=* node foo.js # Enables all instances
-NODE_DEBUG=foo* node foo.js # Enables all instances with a prefix starting with *foo*
+# Enables all instances
+NODE_DEBUG=* node foo.js
+
+# Enables all instances with a prefix starting with *foo*
+NODE_DEBUG=foo* node foo.js
 ```
 
 Use `-` to do a negation.
