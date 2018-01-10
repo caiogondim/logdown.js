@@ -122,7 +122,7 @@ logger.log('lorem *ipsum*')
 // Italic with "_" between words
 logger.log('lorem _ipsum_')
 
-// Code with ` (backtick) between words
+// Code with "`" (backtick) between words
 logger.log('lorem `ipsum`')
 ```
 
@@ -134,9 +134,9 @@ logger.log('lorem `ipsum`')
 Hex value for a custom color.
 
 ```js
-const logger1 = logdown('foo', { prefixColor: '#FF0000' }) // red prefix
-const logger2 = logdown('bar', { prefixColor: '#00FF00' }) // green prefix
-const logger3 = logdown('quz', { prefixColor: '#0000FF' }) // blue prefix
+const logger1 = logdown('foo', { prefixColor: '#FF0000' }) // Red prefix
+const logger2 = logdown('bar', { prefixColor: '#00FF00' }) // Green prefix
+const logger3 = logdown('quz', { prefixColor: '#0000FF' }) // Blue prefix
 ```
 
 #### `logger`
@@ -181,21 +181,21 @@ control which instances are enabled to output debug info.
 For the browser use `localStorage.debug`.
 
 ```bash
-NODE_DEBUG=foo node foo.js # will enable instances with *foo* prefix
+NODE_DEBUG=foo node foo.js # Will enable instances with *foo* prefix
 ```
 
 ```js
-localStorage.debug = 'foo' // will enable instances with *foo* prefix
+localStorage.debug = 'foo' // Will enable instances with *foo* prefix
 ```
 
 Multiple instances should be separated by comma
 
 ```bash
-NODE_DEBUG=foo,bar node foo.js # will enable instance with *foo* or *bar* prefix
+NODE_DEBUG=foo,bar node foo.js # Will enable instance with *foo* or *bar* prefix
 ```
 
 ```js
-localStorage.debug = 'foo,bar' // will enable instance with *foo* or *bar* prefix
+localStorage.debug = 'foo,bar' // Will enable instance with *foo* or *bar* prefix
 ```
 
 ### Wildcards
@@ -203,17 +203,17 @@ localStorage.debug = 'foo,bar' // will enable instance with *foo* or *bar* prefi
 Wildcard `*` is supported.
 
 ```bash
-NODE_DEBUG=* node foo.js # enables all instances
-NODE_DEBUG=foo* node foo.js # enables all instances with a prefix starting with *foo*
+NODE_DEBUG=* node foo.js # Enables all instances
+NODE_DEBUG=foo* node foo.js # Enables all instances with a prefix starting with *foo*
 ```
 
 Use `-` to do a negation.
 
 ```bash
-# enables all instances but the ones with *foo* prefix
+# Enables all instances but the ones with *foo* prefix
 NODE_DEBUG=*,-foo node foo.js
 
-# enables all intances with foo in the prefix and disable *foobar*
+# Enables all intances with foo in the prefix and disable *foobar*
 NODE_DEBUG=*foo*,-foobar node foo.js
 ```
 
@@ -222,7 +222,7 @@ NODE_DEBUG=*foo*,-foobar node foo.js
 If you'd like to send some part of logs into e.g. sentry or some file. You can extend logdown by adding a transport functions:
 
 ```js
-logdown.transports = [ transport, transport2, ... ];
+logdown.transports = [ transport, transport2, ... ]
 ```
 
 `logdown.transports` is simply an array of functions. You can modify it at runtime in any way you like.
@@ -242,13 +242,13 @@ Example of transport implementation:
 ```js
 function transport({msg, level, args, state}) {
   if (!state.isEnabled) {
-    // we dont care, but we can use this if we want
+    // We dont care, but we can use this if we want
   }
 
   const levelMap = {
       warn: 'warning',
       error: 'error'
-  };
+  }
 
   if (levelMap[level]
       && process.env.NODE_ENV === 'production'
@@ -256,11 +256,11 @@ function transport({msg, level, args, state}) {
     Raven.captureException(msg, {
         level: levelMap[level],
         extra: args[1]
-    });
+    })
   }
 }
 
-logdown.transports = [ transport ];
+logdown.transports = [ transport ]
 ```
 
 ## Conventions
