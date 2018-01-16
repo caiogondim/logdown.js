@@ -79,8 +79,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 var Logdown = __webpack_require__(1)()
 var markdown = __webpack_require__(3)
-var isColorSupported = __webpack_require__(6)
-var globalObject = __webpack_require__(9)()
+var isColorSupported = __webpack_require__(5)
+var globalObject = __webpack_require__(8)()
 
 //
 // Static
@@ -346,30 +346,42 @@ module.exports = function toArray (arg) {
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var rules = __webpack_require__(4)
-var getNextMatch = __webpack_require__(5)
+var Markdown = __webpack_require__(4)
 
-function parse (text) {
-  var styles = []
-  var match = getNextMatch(text, rules)
+var styles = []
 
-  while (match) {
-    styles.push(match.rule.style)
+function createStyledRenderer (style) {
+  return function (input) {
+    styles.push(style)
     styles.push('') // Empty string resets style.
 
-    text = text.replace(match.rule.regexp, match.rule.replacer)
-    match = getNextMatch(text, rules)
-  }
-
-  return {
-    text: text,
-    styles: styles
+    return '%c' + input + '%c'
   }
 }
 
-//
-// API
-//
+var markdown = new Markdown({
+  renderer: {
+    '*': createStyledRenderer('font-weight:bold;'),
+    '_': createStyledRenderer('font-style:italic;'),
+    '`': createStyledRenderer(
+      'background-color:rgba(255,204,102, 0.1);' +
+      'color:#FFCC66;' +
+      'padding:2px 5px;' +
+      'border-radius:2px;'
+    )
+  }
+})
+
+function parse (text) {
+  var result = {
+    text: markdown.parse(text),
+    styles: [].concat(styles)
+  }
+
+  styles.length = 0
+
+  return result
+}
 
 module.exports = {
   parse: parse
@@ -380,71 +392,123 @@ module.exports = {
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = [
-  {
-    regexp: /\*([^*]+)\*/,
-    replacer: function (match, submatch1) {
-      return '%c' + submatch1 + '%c'
-    },
-    style: 'font-weight:bold;'
-  },
-  {
-    regexp: /_([^_]+)_/,
-    replacer: function (match, submatch1) {
-      return '%c' + submatch1 + '%c'
-    },
-    style: 'font-style:italic;'
-  },
-  {
-    regexp: /`([^`]+)`/,
-    replacer: function (match, submatch1) {
-      return '%c' + submatch1 + '%c'
-    },
-    style:
-      'background-color:rgba(255,204,102, 0.1);' +
-      'color:#FFCC66;' +
-      'padding:2px 5px;' +
-      'border-radius:2px;'
+var lexemeRe = /([_*`\\]|[^_*`\\]+)/g
+var mdTagRe = /[_*`]/
+
+function Markdown (options) {
+  this.renderer = options.renderer
+}
+
+function isMdTag (lexeme) {
+  return mdTagRe.test(lexeme)
+}
+
+Markdown.prototype.parse = function (text) {
+  var lexemes = text.match(lexemeRe)
+  var render = this.renderer
+
+  var formattedText = ''
+  var currentScope
+  var scopesStack = []
+  var activeScopes = {}
+  var buffer
+  var lexeme
+  var cursor = 0
+
+  function drainTillLexeme (lexeme) {
+    var buffer = ''
+
+    while (currentScope && currentScope.tag !== lexeme) {
+      buffer = currentScope.tag + currentScope.text + buffer
+      activeScopes[currentScope.tag] = false
+      currentScope = scopesStack.pop()
+    }
+
+    return buffer
   }
-]
+
+  while (lexeme = lexemes[cursor]) { // eslint-disable-line
+    buffer = ''
+    cursor++
+
+    if (isMdTag(lexeme)) {
+      if (activeScopes[lexeme]) {
+        // we've found matching closing tag
+        // if we have some other unclosed tags in-between - treat them as a plain text
+        buffer = drainTillLexeme(lexeme)
+
+        // now currentScope holds the scope for the tag (`lexeme`) we are trying to close
+        buffer = render[currentScope.tag](currentScope.text + buffer)
+        activeScopes[lexeme] = false
+        currentScope = scopesStack.pop()
+      } else {
+        var initialText = ''
+
+        if (lexeme === '`') {
+          // `code` according to spec has the highest priority
+          // and does not allow nesting
+          // looking if we can find the closing delimiter
+
+          // NOTE: we have already incremented cursor, so we do not need to add 1
+          var newCursor = lexemes.indexOf(lexeme, cursor)
+
+          if (newCursor !== -1) {
+            formattedText += drainTillLexeme() // if we already have activeScopes, treat them as plain text
+            initialText = lexemes.slice(cursor, newCursor).join('')
+            cursor = newCursor // set cursor to the closing backticks
+          }
+        }
+
+        if (currentScope) {
+          scopesStack.push(currentScope)
+        }
+
+        activeScopes[lexeme] = true
+        currentScope = {
+          tag: lexeme,
+          text: initialText
+        }
+      }
+    } else {
+      buffer = lexeme
+
+      if (lexeme === '\\') { // process escaping
+        var nextLexeme = lexemes[cursor]
+
+        if (isMdTag(nextLexeme) || nextLexeme === '\\') {
+          // ignore next md tag, because it is escaped
+          buffer = nextLexeme
+          cursor++
+        }
+      }
+    }
+
+    if (buffer) {
+      if (currentScope) {
+        currentScope.text += buffer
+      } else {
+        formattedText += buffer
+      }
+
+      buffer = ''
+    }
+  }
+
+  // get the rest of the unclosed tags
+  formattedText += drainTillLexeme()
+
+  return formattedText
+}
+
+module.exports = Markdown
 
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
-
-module.exports = function getNextMatch (text, rules) {
-  var matches = []
-
-  rules.forEach(function (rule) {
-    var match = text.match(rule.regexp)
-
-    if (match) {
-      matches.push({
-        rule: rule,
-        match: match
-      })
-    }
-  })
-
-  if (matches.length === 0) {
-    return null
-  }
-
-  matches.sort(function (a, b) {
-    return a.match.index - b.match.index
-  })
-
-  return matches[0]
-}
-
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isWebkit = __webpack_require__(7)
-var isFirefox = __webpack_require__(8)
+var isWebkit = __webpack_require__(6)
+var isFirefox = __webpack_require__(7)
 
 module.exports = function isColorSupported () {
   return (isWebkit() || isFirefox())
@@ -452,7 +516,7 @@ module.exports = function isColorSupported () {
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 // Is webkit? http://stackoverflow.com/a/16459606/376773
@@ -466,7 +530,7 @@ module.exports = function isWebkit () {
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = function isFirefox () {
@@ -479,7 +543,7 @@ module.exports = function isFirefox () {
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/* eslint-disable no-new-func */
@@ -499,10 +563,10 @@ function getGlobal (slf, glb) {
 module.exports = getGlobal.bind(this, self, global)
 module.exports.getGlobal = getGlobal
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports) {
 
 var g;
