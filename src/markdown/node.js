@@ -1,24 +1,20 @@
-var rules = require('./rules/node')
-var getNextMatch = require('./get-next-match')
+var chalk = require('chalk')
+var Markdown = require('./Markdown')
+
+var markdown = new Markdown({
+  renderer: {
+    '*': chalk.bold.bind(chalk),
+    '_': chalk.italic.bind(chalk),
+    '`': chalk.yellow.bind(chalk)
+  }
+})
 
 function parse (text) {
-  var styles = []
-  var match = getNextMatch(text, rules)
-
-  while (match) {
-    text = text.replace(match.rule.regexp, match.rule.replacer)
-    match = getNextMatch(text, rules)
-  }
-
   return {
-    text: text,
-    styles: styles
+    text: markdown.parse(text),
+    styles: []
   }
 }
-
-//
-// API
-//
 
 module.exports = {
   parse: parse
