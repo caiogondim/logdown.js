@@ -43,7 +43,7 @@
     "codecov": "^3.0.0",
     "jest": "^21.2.1",
     "standard": "^10.0.3",
-    "uglify-js": "3.3.10",
+    "uglify-js": "3.3.14",
     "webpack": "4.0.0"
   },
   "jest": {
