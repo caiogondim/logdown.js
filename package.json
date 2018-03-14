@@ -42,7 +42,7 @@
     "babel-core": "^6.26.0",
     "codecov": "^3.0.0",
     "jest": "^21.2.1",
-    "standard": "^10.0.3",
+    "standard": "^11.0.0",
     "uglify-js": "3.3.14",
     "webpack": "4.0.0"
   },
