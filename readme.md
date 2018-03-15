@@ -275,6 +275,10 @@ that developers may toggle debugging as desired without guessing names. If you h
 debuggers you should prefix them with your library name and use ":" to separate features. For
 example "bodyParser" from Connect would then be "connect:bodyParser".
 
+## Plugins
+- [redux-logdown](https://github.com/caiogondim/redux-logdown.js/)
+- [logdown-cast](https://github.com/caiogondim/logdown-cast.js/)
+
 ## FAQ
 
 [Link](doc/faq.md)
