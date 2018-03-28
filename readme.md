@@ -60,6 +60,14 @@ module will print debug information.
 $ NODE_DEBUG=foo node example/node.js
 ```
 
+The corresponding command for browsers is:
+
+```js
+window.localStorage.debug = 'foo';
+```
+
+Multiple comma-separated logger names and wildcards can be specified as well.
+
 ### Logging
 
 After creating your object, you can use the regular `log`, `warn`, `info` and `error` methods as we
