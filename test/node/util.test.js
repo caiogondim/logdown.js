@@ -8,14 +8,14 @@ const origStdout = process.stdout
 
 beforeEach(() => {
   process.env = {}
-  process.platform = 'jest'
+  Object.defineProperty(process, 'platform', { value: 'jest' })
   delete process.stdout
 })
 
 afterEach(() => {
   process.env = origEnv
   process.stdout = origStdout
-  process.platform = origPlatform
+  Object.defineProperty(process, 'platform', { value: origPlatform })
 })
 
 it('should return false if no color support', () => {
@@ -36,7 +36,7 @@ it('should not allow outside TTY', () => {
 })
 
 it('should allow colors for win32', () => {
-  process.platform = 'win32'
+  Object.defineProperty(process, 'platform', { value: 'win32' })
   expect(isColorSupported()).toBe(true)
 })
 
