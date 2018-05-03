@@ -158,7 +158,7 @@ different stream other than `stdout` and `stderr`.
 ```js
 const output = fs.createWriteStream('./stdout.log');
 const errorOutput = fs.createWriteStream('./stderr.log');
-const fileLogger =  new Console(output, errorOutput)
+const fileLogger =  new console.Console(output, errorOutput)
 
 const logger = logdown('foo', {
   logger: fileLogger
