@@ -44,7 +44,7 @@
     "jest": "^22.4.3",
     "standard": "^10.0.3",
     "uglify-js": "3.3.24",
-    "webpack": "4.8.3"
+    "webpack": "4.9.1"
   },
   "jest": {
     "roots": [
