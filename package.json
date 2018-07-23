@@ -58,6 +58,5 @@
   },
   "dependencies": {
     "chalk": "^2.3.0"
-  },
-  "types": "index.d.ts"
+  }
 }
