@@ -1,6 +1,6 @@
 {
   "name": "logdown",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "Debug utility with markdown support that runs on browser and server",
   "main": "src/node.js",
   "browser": "dist/logdown.min.js",
@@ -46,7 +46,7 @@
     "standard": "^10.0.3",
     "uglify-js": "3.4.3",
     "webpack": "4.16.2",
-    "webpack-cli": "3.1.0"
+    "webpack-cli": "^3.1.0"
   },
   "jest": {
     "roots": [
