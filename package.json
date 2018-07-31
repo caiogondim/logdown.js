@@ -7,7 +7,8 @@
   "files": [
     "src/",
     "test/",
-    "dist/"
+    "dist/",
+    "index.d.ts",
   ],
   "scripts": {
     "build": "webpack && cpx dist/logdown.js example/lib && uglifyjs --compress --mangle  --screw-ie8 -- dist/logdown.js > dist/logdown.min.js && gzip dist/logdown.min.js --stdout --best > dist/logdown.min.js.gzip",
