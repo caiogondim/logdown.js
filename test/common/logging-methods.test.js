@@ -32,4 +32,5 @@ it('exposes a basic API for `logger` with no iterable methods', () => {
   expect(typeof foo.log).toBe('function')
   expect(typeof foo.warn).toBe('function')
   expect(typeof foo.error).toBe('function')
+  expect(typeof foo.info).toBe('function')
 })
