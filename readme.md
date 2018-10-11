@@ -68,6 +68,14 @@ window.localStorage.debug = 'foo';
 
 Multiple comma-separated logger names and wildcards can be specified as well.
 
+With the `isEnabled` state a specific logger instance can always be enabled, independent of the `NODE_DEBUG` setting:
+
+```js
+const logger = require('logdown')('foo');
+logger.state.isEnabled = true;
+logger.log('I will always log.');
+```
+
 ### Logging
 
 After creating your object, you can use the regular `log`, `warn`, `info` and `error` methods as we
