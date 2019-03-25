@@ -19,7 +19,7 @@ declare namespace logdown {
     state: LoggerState;
   }
 
-  const transports: TransportFunction[];
+  let transports: TransportFunction[];
 
   class Logger {
     constructor(prefix: string, opts?: LogdownOptions);
