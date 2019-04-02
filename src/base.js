@@ -98,7 +98,7 @@ module.exports = function () {
     // In old Safari and Chrome browsers, `console` methods are not iterable.
     // In that case, we provide a minimum API.
     if (loggerMethods.length === 0) {
-      loggerMethods = ['log', 'warn', 'error', 'info']
+      loggerMethods = ['debug', 'log', 'warn', 'error', 'info']
     }
 
     loggerMethods
