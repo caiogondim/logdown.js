@@ -126,7 +126,11 @@ module.exports = function () {
 
           if (this.state.isEnabled) {
             var preparedOutput = this._prepareOutput(args, method)
-            logger[method].apply(logger, preparedOutput)
+            var loggerMethod = logger[method]
+            if (typeof loggerMethod !== 'function') {
+              loggerMethod = logger.log
+            }
+            loggerMethod.apply(logger, preparedOutput)
           }
         }
       })
