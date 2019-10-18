@@ -85,7 +85,7 @@ Logdown._getNextPrefixColor = (function () {
 Logdown.prototype._getDecoratedPrefix = function (method) {
   var decoratedPrefix
 
-  if (isColorSupported()) {
+  if (isColorSupported() && !this.opts.plaintext) {
     // If is a hex color value
     if (this.opts.prefixColor[0] === '#') {
       decoratedPrefix = chalk.bold.hex(this.opts.prefixColor)(this.opts.prefix)
@@ -127,6 +127,15 @@ Logdown.prototype._prepareOutput = function (args, method) {
       preparedOutput.push(arg)
     }
   }, this)
+
+  if (this.opts.plaintext) {
+    const outputString = preparedOutput.reduce((result, output) => {
+      const stringified = typeof output === 'string' ? output : JSON.stringify(output)
+      result += stringified + ' '
+      return result
+    }, '').trim()
+    return [outputString]
+  }
 
   return preparedOutput
 }

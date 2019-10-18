@@ -42,6 +42,14 @@ consoleMethods.forEach(method => {
       )
     })
 
+    it('outputs a single argument with plaintext option', () => {
+      const foo = logdown('foo', { plaintext: true })
+
+      foo[method]('one', 'two', 'three')
+
+      expect(console[method]).toHaveBeenCalledWith(foo._getDecoratedPrefix(method) + ' one two three')
+    })
+
     it('parses markdown in multiple arguments', () => {
       const foo = logdown('foo')
 

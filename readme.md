@@ -173,6 +173,19 @@ const logger = logdown('foo', {
 })
 ```
 
+#### `plaintext` (Node.js only)
+
+- type: 'Boolean'
+- default: `false`
+
+This will enable plaintext logging, that means, all objects will be stringified and the
+logging function will use only one argument (i.e. `console.log('[my project] my message')` instead
+of `console.log('[my project]', 'my message')`.).
+
+```js
+const logger = logdown('foo', { plaintext: 'true' });
+```
+
 ### State
 
 #### `isEnabled`

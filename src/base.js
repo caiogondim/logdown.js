@@ -53,10 +53,12 @@ module.exports = function () {
     var markdown = opts.markdown === undefined ? true : Boolean(opts.markdown)
     var prefixColor = opts.prefixColor || Logdown._getNextPrefixColor()
     var logger = opts.logger || console
+    var plaintext = Boolean(opts.plaintext)
 
     return {
       logger: logger,
       markdown: markdown,
+      plaintext: plaintext,
       prefix: prefix,
       prefixColor: prefixColor
     }
