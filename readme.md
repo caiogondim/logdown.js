@@ -63,7 +63,7 @@ $ NODE_DEBUG=foo node example/node.js
 The corresponding command for browsers is:
 
 ```js
-window.localStorage.debug = 'foo';
+window.localStorage.debug = 'foo'
 ```
 
 Multiple comma-separated logger names and wildcards can be specified as well.
@@ -71,9 +71,9 @@ Multiple comma-separated logger names and wildcards can be specified as well.
 With the `isEnabled` state a specific logger instance can always be enabled, independent of the `NODE_DEBUG` setting:
 
 ```js
-const logger = require('logdown')('foo');
-logger.state.isEnabled = true;
-logger.log('I will always log.');
+const logger = require('logdown')('foo')
+logger.state.isEnabled = true
+logger.log('I will always log.')
 ```
 
 ### Logging
@@ -171,6 +171,19 @@ const fileLogger =  new console.Console(output, errorOutput)
 const logger = logdown('foo', {
   logger: fileLogger
 })
+```
+
+#### `plaintext` (Node.js only)
+
+- type: 'Boolean'
+- default: `false`
+
+This will enable plaintext logging, that means, all objects will be stringified and the
+logging function will use only one argument (i.e. `console.log('[my project] my message')` instead
+of `console.log('[my project]', 'my message')`.).
+
+```js
+const logger = logdown('foo', { plaintext: 'true' })
 ```
 
 ### State

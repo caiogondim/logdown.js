@@ -9,6 +9,7 @@ declare namespace logdown {
     markdown?: boolean;
     prefix?: string;
     prefixColor?: string;
+    plaintext?: boolean;
   }
 
   interface TransportOptions {
