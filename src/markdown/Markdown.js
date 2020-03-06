@@ -10,6 +10,8 @@ function isMdTag (lexeme) {
 }
 
 Markdown.prototype.parse = function (text) {
+  if (text === '') return ''
+
   var lexemes = text.match(lexemeRe)
   var render = this.renderer
 

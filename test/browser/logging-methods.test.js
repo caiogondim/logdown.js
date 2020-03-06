@@ -104,5 +104,13 @@ consoleMethods.forEach((method) => {
         expect(typeof foo[consoleMethod]).toBe('function')
       })
     })
+
+    // https://github.com/caiogondim/logdown.js/issues/229
+    it('works with empty string', () => {
+      const foo = logdown('foo')
+      foo[method]('')
+
+      expect(console[method]).toHaveBeenCalled()
+    })
   })
 })
